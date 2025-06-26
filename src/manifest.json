@@ -3,15 +3,15 @@
   "icon": "icon.png",
   "commands": [
     {
-      "name": "my-command",
-      "identifier": "my-plugin.my-command-identifier",
+      "name": "go",
+      "identifier": "LoCoGo.my-command-identifier",
       "script": "./my-command.js"
     }
   ],
   "menu": {
-    "title": "my-plugin",
+    "title": "LoCoGo",
     "items": [
-      "my-plugin.my-command-identifier"
+      "LoCoGo.my-command-identifier"
     ]
   }
 }

@@ -1,14 +1,14 @@
 {
-  "name": "my-plugin",
+  "name": "LoCoGo",
   "description": "",
   "version": "0.1.0",
   "engines": {
     "sketch": ">=49.0"
   },
   "skpm": {
-    "name": "my-plugin",
+    "name": "LoCoGo",
     "manifest": "src/manifest.json",
-    "main": "my-plugin.sketchplugin",
+    "main": "LoCoGo.sketchplugin",
     "assets": [
       "assets/**/*"
     ],
@@ -23,5 +23,10 @@
   "devDependencies": {
     "@skpm/builder": "^0.9.5"
   },
-  "author": "Ren Tianxiang <315380189@qq.com>"
+  "author": "Ren Tianxiang <315380189@qq.com>",
+  "dependencies": {
+    "@babel/runtime": "^7.27.6",
+    "@skpm/fs": "^0.2.6",
+    "@skpm/path": "^0.1.4"
+  }
 }

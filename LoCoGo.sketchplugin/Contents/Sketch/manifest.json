@@ -3,21 +3,21 @@
   "icon": "icon.png",
   "commands": [
     {
-      "name": "my-command",
-      "identifier": "my-plugin.my-command-identifier",
+      "name": "go",
+      "identifier": "LoCoGo.my-command-identifier",
       "script": "__my-command.js"
     }
   ],
   "menu": {
-    "title": "my-plugin",
+    "title": "LoCoGo",
     "items": [
-      "my-plugin.my-command-identifier"
+      "LoCoGo.my-command-identifier"
     ]
   },
   "version": "0.1.0",
   "description": "",
-  "name": "my-plugin",
-  "identifier": "my-plugin",
+  "name": "LoCoGo",
+  "identifier": "LoCoGo",
   "disableCocoaScriptPreprocessor": true,
   "appcast": "https://raw.githubusercontent.com//master/.appcast.xml",
   "author": "Ren Tianxiang",
