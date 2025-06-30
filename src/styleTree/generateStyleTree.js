@@ -7,9 +7,11 @@ const generateStyleTree = (currentLayer, parentLayoutType = 'block', parentSize 
   const currentSize = currentLayer.frame
     ? { width: currentLayer.frame.width, height: currentLayer.frame.height }
     : parentSize;
+    
+    
 
-  // 叶子节点（无子 layers 或只有一个）
-  if (!currentLayer.layers || currentLayer.layers.length < 2) {
+  // 叶子节点（无子 layers）
+  if (!currentLayer.layers) {
     // mode 控制宽高类型，flexMode 下传递 parentSize
     const style = getCurrentStyle(
       currentLayer,
@@ -23,7 +25,7 @@ const generateStyleTree = (currentLayer, parentLayoutType = 'block', parentSize 
       children: []
     }
   }
-
+  
   // 容器节点
   const { layers } = currentLayer;
   const xList = layers.map(layer => layer.frame.x);
@@ -37,12 +39,9 @@ const generateStyleTree = (currentLayer, parentLayoutType = 'block', parentSize 
   if (columnCount > 1 && rowCount > 1) {
     style = getGridLayoutStyle(layers, uniqueXList, uniqueYList);
     layoutType = 'grid';
-  } else if (columnCount > 1 || rowCount > 1) {
+  } else {
     style = getFlexLayoutStyle(currentLayer, getCurrentStyle(currentLayer, { flexMode: parentLayoutType === 'flex', parentSize: parentSize }), columnCount, rowCount);
     layoutType = 'flex';
-  } else {
-    style = { display: 'block' };
-    layoutType = 'block';
   }
 
   // 递归处理子节点，先按 x 升序，再按 y 升序

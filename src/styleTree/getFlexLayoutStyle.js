@@ -5,11 +5,12 @@ function getFlexLayoutStyle(currentLayer, layout = {}, columnCount, rowCount) {
   // 生成的布局对象
   const genLayout = { display: 'flex' };
 
+
   // 计算 padding
-  const leftPadding = Math.min(...children.map(l => l.frame.x - parentFrame.x));
-  const topPadding = Math.min(...children.map(l => l.frame.y - parentFrame.y));
-  const rightPadding = Math.min(...children.map(l => (parentFrame.x + parentFrame.width) - (l.frame.x + l.frame.width)));
-  const bottomPadding = Math.min(...children.map(l => (parentFrame.y + parentFrame.height) - (l.frame.y + l.frame.height)));
+  const leftPadding = Math.min(...children.map(l => l.frame.x));
+  const topPadding = Math.min(...children.map(l => l.frame.y));
+  const rightPadding = currentLayer.frame.width - Math.max(...children.map(l => l.frame.x + l.frame.width));
+  const bottomPadding = currentLayer.frame.height - Math.max(...children.map(l => l.frame.y + l.frame.height));
   genLayout.padding = `${topPadding}px ${rightPadding}px ${bottomPadding}px ${leftPadding}px`;
 
   // 只有一行，是水平 Flex

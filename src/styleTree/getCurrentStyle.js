@@ -1,7 +1,9 @@
 function getCurrentStyle(layer, options = {}) {
   if (!layer) return {};
   const style = layer.style || {};
-  const css = {};
+  const css = {
+    name: layer.name
+  };
   const flexMode = options.flexMode === true;
   const parentSize = options.parentSize;
 

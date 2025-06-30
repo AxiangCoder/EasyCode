@@ -1525,8 +1525,8 @@ var _generateStyleTree = function generateStyleTree(currentLayer) {
     height: currentLayer.frame.height
   } : parentSize;
 
-  // 叶子节点（无子 layers 或只有一个）
-  if (!currentLayer.layers || currentLayer.layers.length < 2) {
+  // 叶子节点（无子 layers）
+  if (!currentLayer.layers) {
     // mode 控制宽高类型，flexMode 下传递 parentSize
     var _style = Object(_getCurrentStyle__WEBPACK_IMPORTED_MODULE_1__["default"])(currentLayer, {
       flexMode: parentLayoutType === 'flex',
@@ -1558,17 +1558,12 @@ var _generateStyleTree = function generateStyleTree(currentLayer) {
   if (columnCount > 1 && rowCount > 1) {
     style = Object(_getGridLayoutStyle__WEBPACK_IMPORTED_MODULE_3__["getGridLayoutStyle"])(layers, uniqueXList, uniqueYList);
     layoutType = 'grid';
-  } else if (columnCount > 1 || rowCount > 1) {
+  } else {
     style = Object(_getFlexLayoutStyle__WEBPACK_IMPORTED_MODULE_2__["getFlexLayoutStyle"])(currentLayer, Object(_getCurrentStyle__WEBPACK_IMPORTED_MODULE_1__["default"])(currentLayer, {
       flexMode: parentLayoutType === 'flex',
       parentSize: parentSize
     }), columnCount, rowCount);
     layoutType = 'flex';
-  } else {
-    style = {
-      display: 'block'
-    };
-    layoutType = 'block';
   }
 
   // 递归处理子节点，先按 x 升序，再按 y 升序
@@ -1603,7 +1598,9 @@ function getCurrentStyle(layer) {
   var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   if (!layer) return {};
   var style = layer.style || {};
-  var css = {};
+  var css = {
+    name: layer.name
+  };
   var flexMode = options.flexMode === true;
   var parentSize = options.parentSize;
 
@@ -1729,16 +1726,16 @@ function getFlexLayoutStyle(currentLayer) {
 
   // 计算 padding
   var leftPadding = Math.min.apply(Math, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()(children.map(function (l) {
-    return l.frame.x - parentFrame.x;
+    return l.frame.x;
   })));
   var topPadding = Math.min.apply(Math, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()(children.map(function (l) {
-    return l.frame.y - parentFrame.y;
+    return l.frame.y;
   })));
-  var rightPadding = Math.min.apply(Math, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()(children.map(function (l) {
-    return parentFrame.x + parentFrame.width - (l.frame.x + l.frame.width);
+  var rightPadding = currentLayer.frame.width - Math.max.apply(Math, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()(children.map(function (l) {
+    return l.frame.x + l.frame.width;
   })));
-  var bottomPadding = Math.min.apply(Math, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()(children.map(function (l) {
-    return parentFrame.y + parentFrame.height - (l.frame.y + l.frame.height);
+  var bottomPadding = currentLayer.frame.height - Math.max.apply(Math, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()(children.map(function (l) {
+    return l.frame.y + l.frame.height;
   })));
   genLayout.padding = "".concat(topPadding, "px ").concat(rightPadding, "px ").concat(bottomPadding, "px ").concat(leftPadding, "px");
 
