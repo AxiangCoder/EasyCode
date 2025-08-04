@@ -1,23 +1,27 @@
 function getFlexLayoutStyle(currentLayer, layout = {}, columnCount, rowCount) {
+
   const children = currentLayer.layers;
   const parentFrame = currentLayer.frame;
-
+  
   // 生成的布局对象
   const genLayout = { display: 'flex' };
-
-
+  
+  
   // 计算 padding
   const leftPadding = Math.min(...children.map(l => l.frame.x));
   const topPadding = Math.min(...children.map(l => l.frame.y));
   const rightPadding = currentLayer.frame.width - Math.max(...children.map(l => l.frame.x + l.frame.width));
   const bottomPadding = currentLayer.frame.height - Math.max(...children.map(l => l.frame.y + l.frame.height));
   genLayout.padding = `${topPadding}px ${rightPadding}px ${bottomPadding}px ${leftPadding}px`;
-
+  
   // 只有一行，是水平 Flex
   if (rowCount === 1) {
     genLayout.flexDirection = 'row';
+    console.log(children);
+    
     const sortedLayers = [...children].sort((a, b) => a.frame.x - b.frame.x);
     let gap = 0;
+    
     if (sortedLayers.length > 1) {
       gap = sortedLayers[1].frame.x - (sortedLayers[0].frame.x + sortedLayers[0].frame.width);
       // 百分比方式
@@ -26,7 +30,7 @@ function getFlexLayoutStyle(currentLayer, layout = {}, columnCount, rowCount) {
     } else {
       genLayout.gap = '0%';
     }
-
+    
     // 推断 justify-content
     const first = sortedLayers[0];
     const last = sortedLayers[sortedLayers.length - 1];

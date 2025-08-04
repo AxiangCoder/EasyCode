@@ -28,8 +28,14 @@ const generateStyleTree = (currentLayer, parentLayoutType = 'block', parentSize 
   
   // 容器节点
   const { layers } = currentLayer;
+  
   const xList = layers.map(layer => layer.frame.x);
   const yList = layers.map(layer => layer.frame.y);
+  console.log('==');
+  console.log(currentLayer);
+  console.log('==');
+  
+  
   const uniqueXList = [...new Set(xList)].sort((a, b) => a - b);
   const uniqueYList = [...new Set(yList)].sort((a, b) => a - b);
   const columnCount = uniqueXList.length;

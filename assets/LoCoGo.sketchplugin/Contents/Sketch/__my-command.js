@@ -1538,16 +1538,7 @@ __webpack_require__.r(__webpack_exports__);
   */
 
   // 处理原始样式（所有逻辑都在 originalStyles 中完成）
-  var document = sketch__WEBPACK_IMPORTED_MODULE_0___default.a.getSelectedDocument();
-  var selection = document.selectedLayers;
-  var filePath = _skpm_path__WEBPACK_IMPORTED_MODULE_3___default.a.join('/Users/rentianxiang/Desktop/life/project/LowCode/code', 'styleTree.json');
-  sketch__WEBPACK_IMPORTED_MODULE_0___default.a.export(selection.layers, {
-    format: 'json',
-    path: filePath
-  });
-  console.log('filePath', filePath);
-
-  // processOriginalStyles(sketch, fs, path)
+  Object(_originalStyles__WEBPACK_IMPORTED_MODULE_4__["processOriginalStyles"])(sketch__WEBPACK_IMPORTED_MODULE_0___default.a, _skpm_fs__WEBPACK_IMPORTED_MODULE_2___default.a, _skpm_path__WEBPACK_IMPORTED_MODULE_3___default.a);
   console.log('==============');
 });
 
@@ -2003,6 +1994,7 @@ __webpack_require__.r(__webpack_exports__);
 
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
 function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2___default()(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+var Document = __webpack_require__(/*! sketch/dom */ "sketch/dom").Document;
 
 
 
@@ -2240,12 +2232,12 @@ var processOriginalStyles = function processOriginalStyles(sketch, fs, path) {
         error: '没有选中的图层'
       };
     }
-    console.log('selection', selection.layers);
 
     // 2. 创建上下文对象
     var sketchContext = {
       selection: selection
     };
+    console.log(sketchContext);
 
     // 3. 一键获取并导出原始样式
     var result = getAndExportOriginalStyles(sketchContext);
@@ -2718,6 +2710,17 @@ module.exports = require("buffer");
 /***/ (function(module, exports) {
 
 module.exports = require("sketch");
+
+/***/ }),
+
+/***/ "sketch/dom":
+/*!*****************************!*\
+  !*** external "sketch/dom" ***!
+  \*****************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("sketch/dom");
 
 /***/ }),
 
