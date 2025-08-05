@@ -9,71 +9,44 @@ import { exportOriginalStyles, exportStylesToClipboard, getStylesStatistics } fr
  * @returns {Object} 完整的结果对象
  */
 const getAndExportOriginalStyles = (sketchContext, options = {}) => {
-  try {
-    // 1. 验证选择
-    console.log(1);
-
-    const validation = validateLayerSelection(sketchContext);
-    console.log(validation);
-
-    if (!validation.valid) {
-      return {
-        success: false,
-        error: validation.message,
-        type: 'validation_error'
-      };
-    }
-
-    // 2. 获取原始样式
-    const stylesData = getSelectedLayerOriginalStyles(sketchContext);
-    console.log(stylesData);
-
-    if (stylesData.error) {
-      return {
-        success: false,
-        error: stylesData.error,
-        type: 'styles_error'
-      };
-    }
-
-    // 3. 导出样式
-    const exportResult = exportOriginalStyles(sketchContext, {
-      includeMetadata: true,
-      format: 'pretty',
-      ...options
-    });
-
-    if (!exportResult.success) {
-      return {
-        success: false,
-        error: exportResult.error,
-        type: 'export_error',
-        stylesData: stylesData
-      };
-    }
-
-    // 4. 返回完整结果
-    return {
-      success: true,
-      validation: validation,
-      stylesData: stylesData,
-      exportResult: exportResult,
-      statistics: {
-        layerCount: exportResult.layerCount,
-        dataSize: exportResult.dataSize,
-        fileName: exportResult.fileName,
-        containerName: stylesData.container ? stylesData.container.name : 'N/A',
-        containerType: stylesData.container ? stylesData.container.type : 'N/A'
-      }
-    };
-
-  } catch (error) {
-    return {
-      success: false,
-      error: error.message,
-      type: 'unknown_error'
-    };
+  // 1. 验证选择
+  const validation = validateLayerSelection(sketchContext);
+  if (!validation.valid) {
+    throw new Error(validation.message);
   }
+
+  // 2. 获取原始样式
+  const stylesData = getSelectedLayerOriginalStyles(sketchContext);
+  
+  if (stylesData.error) {
+    throw new Error(stylesData.error);
+  }
+
+  // 3. 导出样式
+  const exportResult = exportOriginalStyles(sketchContext, {
+    includeMetadata: true,
+    format: 'pretty',
+    ...options
+  });
+
+  if (!exportResult.success) {
+    throw new Error(exportResult.error);
+  }
+
+  // 4. 返回完整结果
+  return {
+    success: true,
+    validation: validation,
+    stylesData: stylesData,
+    exportResult: exportResult,
+    statistics: {
+      layerCount: exportResult.layerCount,
+      dataSize: exportResult.dataSize,
+      fileName: exportResult.fileName,
+      containerName: stylesData.name || 'N/A',
+      containerType: stylesData.type || 'N/A'
+    }
+  };
 };
 
 /**
@@ -90,24 +63,34 @@ const validateLayerSelection = (sketchContext) => {
     };
   }
 
-  console.log('selectedLayers', selectedLayers);
-  console.log('selectedLayers.length', selectedLayers.length);
+  // 使用 forEach 获取第一个选中的图层
+  let firstLayer = null;
+  selectedLayers.forEach(layer => {
+    if (!firstLayer) {
+      firstLayer = layer;
+    }
+  });
 
-  const layer = selectedLayers[0];
-  console.log('layer', layer);
-  const isContainer = layer.type === 'Group' || layer.type === 'Artboard';
+  if (!firstLayer) {
+    return {
+      valid: false,
+      message: '选中的图层无效或为空'
+    };
+  }
+
+  const isContainer = firstLayer.type === 'Group' || firstLayer.type === 'Artboard';
 
   if (isContainer) {
     return {
       valid: true,
-      message: `选中了${layer.type}类型的容器: ${layer.name}`,
-      layerType: layer.type,
-      layerName: layer.name
+      message: `选中了${firstLayer.type}类型的容器: ${firstLayer.name}`,
+      layerType: firstLayer.type,
+      layerName: firstLayer.name
     };
   }
 
   // 检查是否有父级容器
-  let parent = layer.parent;
+  let parent = firstLayer.parent;
   while (parent) {
     if (parent.type === 'Group' || parent.type === 'Artboard') {
       return {
@@ -115,7 +98,7 @@ const validateLayerSelection = (sketchContext) => {
         message: `选中了${parent.type}类型的父级容器: ${parent.name}`,
         layerType: parent.type,
         layerName: parent.name,
-        selectedLayer: layer.name
+        selectedLayer: firstLayer.name
       };
     }
     parent = parent.parent;
@@ -135,18 +118,13 @@ const validateLayerSelection = (sketchContext) => {
 const quickGetOriginalStyles = (sketchContext) => {
   const validation = validateLayerSelection(sketchContext);
   if (!validation.valid) {
-    return {
-      success: false,
-      error: validation.message
-    };
+    throw new Error(validation.message);
   }
 
   const stylesData = getSelectedLayerOriginalStyles(sketchContext);
+  
   if (stylesData.error) {
-    return {
-      success: false,
-      error: stylesData.error
-    };
+    throw new Error(stylesData.error);
   }
 
   return {
@@ -228,66 +206,51 @@ const createOriginalStylesManager = (context) => {
  * @returns {Object} 处理结果
  */
 const processOriginalStyles = (sketch, fs, path) => {
-  try {
-    // 1. 获取当前文档和选择
-    const document = sketch.getSelectedDocument();
-    const selection = document.selectedLayers;
+  // 1. 获取当前文档和选择
+  const document = sketch.getSelectedDocument();
+  const selection = document.selectedLayers;
 
-    if (!selection || selection.length === 0) {
-      sketch.UI.message('请先选择一个编组或框架');
-      return {
-        success: false,
-        error: '没有选中的图层'
-      };
-    }
-    console.log('selection', selection.layers);
-    
-
-    // 2. 创建上下文对象
-    const sketchContext = { selection };
-
-
-    // 3. 一键获取并导出原始样式
-    const result = getAndExportOriginalStyles(sketchContext);
-
-    if (result.success) {
-      // 4. 导出到插件根目录
-      const filePath = path.join(process.cwd(), result.exportResult.fileName);
-      fs.writeFileSync(filePath, result.exportResult.fileContent, 'utf8');
-
-      // 5. 显示成功消息
-      sketch.UI.message(`原始样式已导出到: ${result.exportResult.fileName}`);
-
-      // 6. 输出统计信息
-      console.log('导出统计:', {
-        图层数量: result.statistics.layerCount,
-        文件大小: result.statistics.dataSize + ' bytes',
-        容器名称: result.statistics.containerName,
-        容器类型: result.statistics.containerType
-      });
-
-      return {
-        success: true,
-        fileName: result.exportResult.fileName,
-        statistics: result.statistics
-      };
-    } else {
-      // 7. 显示错误消息
-      sketch.UI.message('导出失败: ' + result.error);
-      return {
-        success: false,
-        error: result.error
-      };
-    }
-
-  } catch (error) {
-    const errorMessage = '处理原始样式时发生错误: ' + error.message;
-    sketch.UI.message(errorMessage);
-    return {
-      success: false,
-      error: errorMessage
-    };
+  if (!selection || selection.length === 0) {
+    throw new Error('请先选择一个编组或框架');
   }
+
+  // 使用 map 获取所有选中图层的 ID
+  const selectedLayerIds = [];
+  selection.forEach(layer => {
+    selectedLayerIds.push(layer.id);
+  });
+
+  // 2. 创建上下文对象
+  const sketchContext = { selection };
+
+  // 3. 一键获取并导出原始样式
+  const result = getAndExportOriginalStyles(sketchContext);
+  
+  // 调试：打印图层结构
+  console.log('=== 图层结构 ===');
+  console.log(JSON.stringify(result.stylesData, null, 2));
+  console.log('=== 结构结束 ===');
+   
+  // 4. 导出到插件根目录
+  const filePath = path.join(process.cwd(), result.exportResult.fileName);
+  fs.writeFileSync(filePath, result.exportResult.fileContent, 'utf8');
+  
+  // 5. 显示成功消息
+  sketch.UI.message(`原始样式已导出到: ${result.exportResult.fileName}`);
+
+  // 6. 输出统计信息
+  console.log('导出统计:', {
+    图层数量: result.statistics.layerCount,
+    文件大小: result.statistics.dataSize + ' bytes',
+    容器名称: result.statistics.containerName,
+    容器类型: result.statistics.containerType
+  });
+
+  return {
+    success: true,
+    fileName: result.exportResult.fileName,
+    statistics: result.statistics
+  };
 };
 
 export {

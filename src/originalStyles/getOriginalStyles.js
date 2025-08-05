@@ -151,9 +151,19 @@ const getContainerOriginalStyles = (container) => {
   if (!container) {
     return null;
   }
-
+  console.log(1);
+  
   const result = {
-    container: getLayerOriginalStyles(container),
+    id: container.id,
+    name: container.name,
+    type: container.type,
+    frame: container.frame ? {
+      x: container.frame.x,
+      y: container.frame.y,
+      width: container.frame.width,
+      height: container.frame.height
+    } : null,
+    style: getLayerOriginalStyles(container).style,
     children: [],
     metadata: {
       totalLayers: 0,
@@ -161,19 +171,36 @@ const getContainerOriginalStyles = (container) => {
       timestamp: new Date().toISOString()
     }
   };
-
+  
+  console.log(2);
   // 递归处理子图层
   if (container.layers && container.layers.length > 0) {
     result.children = container.layers.map(child => {
-      const childStyles = getLayerOriginalStyles(child);
-      
       // 统计图层类型
       if (child.type) {
         result.metadata.layerTypes[child.type] = (result.metadata.layerTypes[child.type] || 0) + 1;
       }
       result.metadata.totalLayers++;
       
-      return childStyles;
+      // 递归处理子元素：如果子元素也是容器，则递归获取其子元素
+      if (child.type === 'Group' || child.type === 'Artboard') {
+        return getContainerOriginalStyles(child);
+      } else {
+        // 叶子节点：返回完整的图层信息
+        return {
+          id: child.id,
+          name: child.name,
+          type: child.type,
+          frame: child.frame ? {
+            x: child.frame.x,
+            y: child.frame.y,
+            width: child.frame.width,
+            height: child.frame.height
+          } : null,
+          style: getLayerOriginalStyles(child).style,
+          children: [] // 叶子节点没有子元素
+        };
+      }
     });
   }
 
@@ -186,49 +213,95 @@ const getContainerOriginalStyles = (container) => {
  * @returns {Object} 包含原始样式的JSON对象
  */
 const getSelectedLayerOriginalStyles = (context) => {
-  try {
-    const selectedLayers = context.selection;
-    
-    if (!selectedLayers || selectedLayers.length === 0) {
-      return {
-        error: '没有选中的图层',
-        timestamp: new Date().toISOString()
-      };
-    }
+  const selectedLayers = context.selection;
+  
+  if (!selectedLayers || selectedLayers.length === 0) {
+    throw new Error('没有选中的图层');
+  }
 
-    const clickedLayer = selectedLayers[0];
-    
-    // 检查是否为容器类型
-    if (clickedLayer.type === 'Group' || clickedLayer.type === 'Artboard') {
-      return getContainerOriginalStyles(clickedLayer);
+  // 使用 forEach 获取第一个选中的图层
+  let clickedLayer = null;
+  selectedLayers.forEach(layer => {
+    if (!clickedLayer) {
+      clickedLayer = layer;
     }
-    
-    // 如果不是容器，查找父级容器
-    let parentLayer = clickedLayer.parent;
-    while (parentLayer) {
-      if (parentLayer.type === 'Group' || parentLayer.type === 'Artboard') {
-        return getContainerOriginalStyles(parentLayer);
-      }
-      parentLayer = parentLayer.parent;
+  });
+
+  // 检查第一个元素是否存在
+  if (!clickedLayer) {
+    throw new Error('选中的图层无效或为空');
+  }
+  
+  // 检查是否为容器类型
+  if (clickedLayer.type === 'Group' || clickedLayer.type === 'Artboard') {
+    return getContainerOriginalStyles(clickedLayer);
+  }
+  
+  // 如果不是容器，查找父级容器
+  let parentLayer = clickedLayer.parent;
+  while (parentLayer) {
+    if (parentLayer.type === 'Group' || parentLayer.type === 'Artboard') {
+      return getContainerOriginalStyles(parentLayer);
     }
-    
-    // 如果都没有找到容器，返回单个图层的样式
-    return {
-      singleLayer: getLayerOriginalStyles(clickedLayer),
-      note: '未找到容器，返回单个图层样式',
-      timestamp: new Date().toISOString()
-    };
-    
-  } catch (error) {
-    return {
-      error: error.message,
-      timestamp: new Date().toISOString()
-    };
+    parentLayer = parentLayer.parent;
+  }
+  
+  // 如果都没有找到容器，返回单个图层的样式（也支持递归）
+  return {
+    id: clickedLayer.id,
+    name: clickedLayer.name,
+    type: clickedLayer.type,
+    frame: clickedLayer.frame ? {
+      x: clickedLayer.frame.x,
+      y: clickedLayer.frame.y,
+      width: clickedLayer.frame.width,
+      height: clickedLayer.frame.height
+    } : null,
+    style: getLayerOriginalStyles(clickedLayer).style,
+    children: clickedLayer.layers && clickedLayer.layers.length > 0 ? 
+      clickedLayer.layers.map(child => {
+        if (child.type === 'Group' || child.type === 'Artboard') {
+          return getContainerOriginalStyles(child);
+        } else {
+          return {
+            id: child.id,
+            name: child.name,
+            type: child.type,
+            frame: child.frame ? {
+              x: child.frame.x,
+              y: child.frame.y,
+              width: child.frame.width,
+              height: child.frame.height
+            } : null,
+            style: getLayerOriginalStyles(child).style,
+            children: []
+          };
+        }
+      }) : [],
+    note: '单个图层样式',
+    timestamp: new Date().toISOString()
+  };
+};
+
+/**
+ * 递归打印图层结构（用于调试）
+ * @param {Object} node - 图层节点
+ * @param {number} depth - 当前深度
+ */
+const debugPrintLayerStructure = (node, depth = 0) => {
+  const indent = '  '.repeat(depth);
+  console.log(`${indent}${node.type}: ${node.name} (${node.children ? node.children.length : 0} children)`);
+  
+  if (node.children && node.children.length > 0) {
+    node.children.forEach(child => {
+      debugPrintLayerStructure(child, depth + 1);
+    });
   }
 };
 
 export { 
   getLayerOriginalStyles, 
   getContainerOriginalStyles, 
-  getSelectedLayerOriginalStyles 
+  getSelectedLayerOriginalStyles,
+  debugPrintLayerStructure
 }; 

@@ -23,17 +23,9 @@ export default function () {
   */
 
   // 处理原始样式（所有逻辑都在 originalStyles 中完成）
-  const document = sketch.getSelectedDocument();
-  const selection = document.selectedLayers;
-  const filePath = path.join('/Users/rentianxiang/Desktop/life/project/LowCode/code', 'styleTree.json')
-  sketch.export (selection.layers, {
-    format: 'json',
-    path: filePath
-  })
-  console.log('filePath', filePath);
-  
-  // processOriginalStyles(sketch, fs, path)
-  console.log('==============');
-  
 
+  processOriginalStyles(sketch, fs, path)
+  
+  console.log('end');
+  
 }

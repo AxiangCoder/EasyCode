@@ -1,0 +1,1372 @@
+{
+  "metadata": {
+    "exportType": "original_styles",
+    "exportTime": "2025-08-05T03:09:09.574Z",
+    "fileName": "original_styles_unknown_layer_2025-08-05T03-09-09-574Z.json",
+    "options": {
+      "includeMetadata": true,
+      "format": "pretty"
+    }
+  },
+  "styles": {
+    "id": "18FF75A9-B1FE-4917-BF10-882BFE30C130",
+    "name": "编组 4",
+    "type": "Group",
+    "frame": {
+      "x": 1235,
+      "y": 271,
+      "width": 418,
+      "height": 522
+    },
+    "style": {
+      "fills": [],
+      "borders": [],
+      "shadows": [],
+      "innerShadows": [],
+      "opacity": 1
+    },
+    "children": [
+      {
+        "id": "5D935F1B-31C0-4A54-91D2-9DB99355587F",
+        "name": "矩形",
+        "type": "ShapePath",
+        "frame": {
+          "x": 0,
+          "y": 0,
+          "width": 418,
+          "height": 522
+        },
+        "style": {
+          "fills": [
+            {
+              "fillType": "Color",
+              "color": {},
+              "gradient": {
+                "gradientType": "Linear",
+                "from": {
+                  "x": 0.5,
+                  "y": 0
+                },
+                "to": {
+                  "x": 0.5,
+                  "y": 1
+                },
+                "aspectRatio": 0,
+                "stops": [
+                  {
+                    "position": 0,
+                    "color": "#ffffffff"
+                  },
+                  {
+                    "position": 1,
+                    "color": "#000000ff"
+                  }
+                ]
+              },
+              "pattern": {
+                "patternType": "Fill",
+                "image": null,
+                "tileScale": 1
+              }
+            }
+          ],
+          "borders": [
+            {
+              "fillType": "Color",
+              "color": {},
+              "thickness": 1,
+              "position": "Inside"
+            }
+          ],
+          "shadows": [
+            {
+              "color": {},
+              "spread": 0
+            }
+          ],
+          "innerShadows": [],
+          "opacity": 1
+        },
+        "children": []
+      },
+      {
+        "id": "6B1901D5-8701-4B0D-AFDE-2170B713A939",
+        "name": "编组 8",
+        "type": "Group",
+        "frame": {
+          "x": 41,
+          "y": 64,
+          "width": 336,
+          "height": 395
+        },
+        "style": {
+          "fills": [],
+          "borders": [],
+          "shadows": [],
+          "innerShadows": [],
+          "opacity": 1
+        },
+        "children": [
+          {
+            "id": "45DABCEE-388C-4BB4-86DD-F10F57497D3E",
+            "name": "button",
+            "type": "Group",
+            "frame": {
+              "x": 0,
+              "y": 355,
+              "width": 336,
+              "height": 40
+            },
+            "style": {
+              "fills": [],
+              "borders": [],
+              "shadows": [
+                {
+                  "color": {},
+                  "spread": 0
+                }
+              ],
+              "innerShadows": [],
+              "opacity": 1
+            },
+            "children": [
+              {
+                "id": "433C4910-2BB3-4867-BAE3-9D7313F69832",
+                "name": "矩形",
+                "type": "ShapePath",
+                "frame": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 336,
+                  "height": 40
+                },
+                "style": {
+                  "fills": [
+                    {
+                      "fillType": "Color",
+                      "color": {},
+                      "gradient": {
+                        "gradientType": "Linear",
+                        "from": {
+                          "x": 0.175538408965549,
+                          "y": 1
+                        },
+                        "to": {
+                          "x": 1,
+                          "y": 0
+                        },
+                        "aspectRatio": 0,
+                        "stops": [
+                          {
+                            "position": 0,
+                            "color": "#b1e8b6ff"
+                          },
+                          {
+                            "position": 1,
+                            "color": "#06cbcbff"
+                          },
+                          {
+                            "position": 1,
+                            "color": "#06cbcbff"
+                          }
+                        ]
+                      },
+                      "pattern": {
+                        "patternType": "Fill",
+                        "image": null,
+                        "tileScale": 1
+                      }
+                    }
+                  ],
+                  "borders": [
+                    {
+                      "fillType": "Color",
+                      "color": {},
+                      "thickness": 1,
+                      "position": "Inside"
+                    }
+                  ],
+                  "shadows": [],
+                  "innerShadows": [],
+                  "opacity": 1
+                },
+                "children": []
+              },
+              {
+                "id": "A1ED9650-10A7-486C-B799-17ABB6BE545A",
+                "name": "登录",
+                "type": "Text",
+                "frame": {
+                  "x": 152,
+                  "y": 9,
+                  "width": 32,
+                  "height": 22
+                },
+                "style": {
+                  "fills": [],
+                  "borders": [],
+                  "shadows": [],
+                  "innerShadows": [],
+                  "opacity": 1
+                },
+                "children": []
+              }
+            ],
+            "metadata": {
+              "totalLayers": 2,
+              "layerTypes": {
+                "ShapePath": 1,
+                "Text": 1
+              },
+              "timestamp": "2025-08-05T03:09:09.498Z"
+            }
+          },
+          {
+            "id": "250D1A8E-F622-476A-80BD-B47C9AF8544F",
+            "name": "编组 8",
+            "type": "Group",
+            "frame": {
+              "x": 0,
+              "y": 81,
+              "width": 336,
+              "height": 215
+            },
+            "style": {
+              "fills": [],
+              "borders": [],
+              "shadows": [],
+              "innerShadows": [],
+              "opacity": 1
+            },
+            "children": [
+              {
+                "id": "E40393B0-F657-422C-BE07-23F4CD463D45",
+                "name": "input",
+                "type": "Group",
+                "frame": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 336,
+                  "height": 45
+                },
+                "style": {
+                  "fills": [],
+                  "borders": [],
+                  "shadows": [],
+                  "innerShadows": [],
+                  "opacity": 1
+                },
+                "children": [
+                  {
+                    "id": "0AB41416-8B93-4A97-B9FE-467B564B1B22",
+                    "name": "矩形",
+                    "type": "ShapePath",
+                    "frame": {
+                      "x": 0,
+                      "y": 44,
+                      "width": 336,
+                      "height": 1
+                    },
+                    "style": {
+                      "fills": [
+                        {
+                          "fillType": "Color",
+                          "color": {},
+                          "gradient": {
+                            "gradientType": "Linear",
+                            "from": {
+                              "x": 0.5,
+                              "y": 0
+                            },
+                            "to": {
+                              "x": 0.5,
+                              "y": 1
+                            },
+                            "aspectRatio": 0,
+                            "stops": [
+                              {
+                                "position": 0,
+                                "color": "#ffffffff"
+                              },
+                              {
+                                "position": 1,
+                                "color": "#000000ff"
+                              }
+                            ]
+                          },
+                          "pattern": {
+                            "patternType": "Fill",
+                            "image": null,
+                            "tileScale": 1
+                          }
+                        }
+                      ],
+                      "borders": [
+                        {
+                          "fillType": "Color",
+                          "color": {},
+                          "thickness": 1,
+                          "position": "Inside"
+                        }
+                      ],
+                      "shadows": [],
+                      "innerShadows": [],
+                      "opacity": 1
+                    },
+                    "children": []
+                  },
+                  {
+                    "id": "7A80F096-7F3A-4A37-8F52-4519D09700D2",
+                    "name": "账号",
+                    "type": "Text",
+                    "frame": {
+                      "x": 38,
+                      "y": 0,
+                      "width": 28,
+                      "height": 22
+                    },
+                    "style": {
+                      "fills": [],
+                      "borders": [],
+                      "shadows": [],
+                      "innerShadows": [],
+                      "opacity": 1
+                    },
+                    "children": []
+                  },
+                  {
+                    "id": "8DAE8980-EF99-4CEF-8BE6-8C4539712076",
+                    "name": "账号",
+                    "type": "Group",
+                    "frame": {
+                      "x": 0,
+                      "y": 2,
+                      "width": 18,
+                      "height": 18
+                    },
+                    "style": {
+                      "fills": [],
+                      "borders": [],
+                      "shadows": [],
+                      "innerShadows": [],
+                      "opacity": 1
+                    },
+                    "children": [
+                      {
+                        "id": "249F53E2-0498-49E1-9FAD-C0F0BA43B481",
+                        "name": "矩形",
+                        "type": "ShapePath",
+                        "frame": {
+                          "x": 0,
+                          "y": 0,
+                          "width": 18,
+                          "height": 18
+                        },
+                        "style": {
+                          "fills": [
+                            {
+                              "fillType": "Color",
+                              "color": {},
+                              "gradient": {
+                                "gradientType": "Linear",
+                                "from": {
+                                  "x": 0.5,
+                                  "y": 0
+                                },
+                                "to": {
+                                  "x": 0.5,
+                                  "y": 1
+                                },
+                                "aspectRatio": 0,
+                                "stops": [
+                                  {
+                                    "position": 0,
+                                    "color": "#ffffffff"
+                                  },
+                                  {
+                                    "position": 1,
+                                    "color": "#000000ff"
+                                  }
+                                ]
+                              },
+                              "pattern": {
+                                "patternType": "Fill",
+                                "image": null,
+                                "tileScale": 1
+                              }
+                            }
+                          ],
+                          "borders": [
+                            {
+                              "fillType": "Color",
+                              "color": {},
+                              "thickness": 0.818181818181818,
+                              "position": "Inside"
+                            }
+                          ],
+                          "shadows": [],
+                          "innerShadows": [],
+                          "opacity": 0
+                        },
+                        "children": []
+                      },
+                      {
+                        "id": "AD04202E-C63E-4FB1-B7C0-45A37AB4AF5C",
+                        "name": "形状结合",
+                        "type": "Shape",
+                        "frame": {
+                          "x": 0,
+                          "y": 0,
+                          "width": 18,
+                          "height": 18
+                        },
+                        "style": {
+                          "fills": [
+                            {
+                              "fillType": "Color",
+                              "color": {},
+                              "gradient": {
+                                "gradientType": "Linear",
+                                "from": {
+                                  "x": 0.5,
+                                  "y": 0
+                                },
+                                "to": {
+                                  "x": 0.5,
+                                  "y": 1
+                                },
+                                "aspectRatio": 0,
+                                "stops": [
+                                  {
+                                    "position": 0,
+                                    "color": "#ffffffff"
+                                  },
+                                  {
+                                    "position": 1,
+                                    "color": "#000000ff"
+                                  }
+                                ]
+                              },
+                              "pattern": {
+                                "patternType": "Fill",
+                                "image": null,
+                                "tileScale": 1
+                              }
+                            }
+                          ],
+                          "borders": [],
+                          "shadows": [],
+                          "innerShadows": [],
+                          "opacity": 1
+                        },
+                        "children": []
+                      }
+                    ],
+                    "metadata": {
+                      "totalLayers": 2,
+                      "layerTypes": {
+                        "ShapePath": 1,
+                        "Shape": 1
+                      },
+                      "timestamp": "2025-08-05T03:09:09.515Z"
+                    }
+                  }
+                ],
+                "metadata": {
+                  "totalLayers": 3,
+                  "layerTypes": {
+                    "ShapePath": 1,
+                    "Text": 1,
+                    "Group": 1
+                  },
+                  "timestamp": "2025-08-05T03:09:09.507Z"
+                }
+              },
+              {
+                "id": "51D99D83-D59C-4D09-A4E5-213DF86DAFDE",
+                "name": "input",
+                "type": "Group",
+                "frame": {
+                  "x": 0,
+                  "y": 163,
+                  "width": 336,
+                  "height": 52
+                },
+                "style": {
+                  "fills": [],
+                  "borders": [],
+                  "shadows": [],
+                  "innerShadows": [],
+                  "opacity": 1
+                },
+                "children": [
+                  {
+                    "id": "0922EBE0-E283-419E-BA7A-9E4C12844BC3",
+                    "name": "矩形",
+                    "type": "ShapePath",
+                    "frame": {
+                      "x": 0,
+                      "y": 51,
+                      "width": 336,
+                      "height": 1
+                    },
+                    "style": {
+                      "fills": [
+                        {
+                          "fillType": "Color",
+                          "color": {},
+                          "gradient": {
+                            "gradientType": "Linear",
+                            "from": {
+                              "x": 0.5,
+                              "y": 0
+                            },
+                            "to": {
+                              "x": 0.5,
+                              "y": 1
+                            },
+                            "aspectRatio": 0,
+                            "stops": [
+                              {
+                                "position": 0,
+                                "color": "#ffffffff"
+                              },
+                              {
+                                "position": 1,
+                                "color": "#000000ff"
+                              }
+                            ]
+                          },
+                          "pattern": {
+                            "patternType": "Fill",
+                            "image": null,
+                            "tileScale": 1
+                          }
+                        }
+                      ],
+                      "borders": [
+                        {
+                          "fillType": "Color",
+                          "color": {},
+                          "thickness": 1,
+                          "position": "Inside"
+                        }
+                      ],
+                      "shadows": [],
+                      "innerShadows": [],
+                      "opacity": 1
+                    },
+                    "children": []
+                  },
+                  {
+                    "id": "9C28BB7D-BFEC-4A8E-A00C-3B2901D0F78C",
+                    "name": "请输入验证码",
+                    "type": "Text",
+                    "frame": {
+                      "x": 38,
+                      "y": 7,
+                      "width": 84,
+                      "height": 22
+                    },
+                    "style": {
+                      "fills": [],
+                      "borders": [],
+                      "shadows": [],
+                      "innerShadows": [],
+                      "opacity": 1
+                    },
+                    "children": []
+                  },
+                  {
+                    "id": "9F67CFDE-053A-4E44-A064-ED0B018C6EE8",
+                    "name": "img",
+                    "type": "Group",
+                    "frame": {
+                      "x": 240,
+                      "y": 0,
+                      "width": 96,
+                      "height": 36
+                    },
+                    "style": {
+                      "fills": [],
+                      "borders": [],
+                      "shadows": [],
+                      "innerShadows": [],
+                      "opacity": 1
+                    },
+                    "children": [
+                      {
+                        "id": "702C4A60-9815-42C9-AEB0-1475979773FD",
+                        "name": "矩形",
+                        "type": "ShapePath",
+                        "frame": {
+                          "x": 0,
+                          "y": 0,
+                          "width": 96,
+                          "height": 36
+                        },
+                        "style": {
+                          "fills": [
+                            {
+                              "fillType": "Color",
+                              "color": {},
+                              "gradient": {
+                                "gradientType": "Linear",
+                                "from": {
+                                  "x": 0.5,
+                                  "y": 0
+                                },
+                                "to": {
+                                  "x": 0.5,
+                                  "y": 1
+                                },
+                                "aspectRatio": 0,
+                                "stops": [
+                                  {
+                                    "position": 0,
+                                    "color": "#ffffffff"
+                                  },
+                                  {
+                                    "position": 1,
+                                    "color": "#000000ff"
+                                  }
+                                ]
+                              },
+                              "pattern": {
+                                "patternType": "Fill",
+                                "image": null,
+                                "tileScale": 1
+                              }
+                            }
+                          ],
+                          "borders": [
+                            {
+                              "fillType": "Color",
+                              "color": {},
+                              "thickness": 0.6,
+                              "position": "Inside"
+                            }
+                          ],
+                          "shadows": [],
+                          "innerShadows": [],
+                          "opacity": 1
+                        },
+                        "children": []
+                      },
+                      {
+                        "id": "B9A5E9E0-2072-4A36-B559-2FBB9E3110F9",
+                        "name": "编组 9",
+                        "type": "Group",
+                        "frame": {
+                          "x": 20.1766156636487,
+                          "y": 2.06156497611093,
+                          "width": 55.6505530287337,
+                          "height": 32.5384350238892
+                        },
+                        "style": {
+                          "fills": [],
+                          "borders": [],
+                          "shadows": [],
+                          "innerShadows": [],
+                          "opacity": 1
+                        },
+                        "children": [
+                          {
+                            "id": "F31793C6-7C37-418E-AB17-948EBC62DD29",
+                            "name": "4",
+                            "type": "Text",
+                            "frame": {
+                              "x": 13.4233843363513,
+                              "y": 10.5384350238892,
+                              "width": 12,
+                              "height": 22
+                            },
+                            "style": {
+                              "fills": [],
+                              "borders": [],
+                              "shadows": [],
+                              "innerShadows": [],
+                              "opacity": 1
+                            },
+                            "children": []
+                          },
+                          {
+                            "id": "C5DBC8F0-0510-41F7-B34A-F9CADCA34597",
+                            "name": "C",
+                            "type": "Text",
+                            "frame": {
+                              "x": 25.4233843363513,
+                              "y": 5.73843502388911,
+                              "width": 13,
+                              "height": 22
+                            },
+                            "style": {
+                              "fills": [],
+                              "borders": [],
+                              "shadows": [],
+                              "innerShadows": [],
+                              "opacity": 1
+                            },
+                            "children": []
+                          },
+                          {
+                            "id": "6820980D-BBB4-4444-97B9-894E30F8BF57",
+                            "name": "D",
+                            "type": "Text",
+                            "frame": {
+                              "x": 35.9610804009952,
+                              "y": 5.36601960239909,
+                              "width": 15,
+                              "height": 22
+                            },
+                            "style": {
+                              "fills": [],
+                              "borders": [],
+                              "shadows": [],
+                              "innerShadows": [],
+                              "opacity": 1
+                            },
+                            "children": []
+                          },
+                          {
+                            "id": "FBE670E4-9B0D-4668-BA4A-4938CD02E746",
+                            "name": "7",
+                            "type": "Text",
+                            "frame": {
+                              "x": 4.9174004835038,
+                              "y": 1.50804464311989,
+                              "width": 12,
+                              "height": 22
+                            },
+                            "style": {
+                              "fills": [],
+                              "borders": [],
+                              "shadows": [],
+                              "innerShadows": [],
+                              "opacity": 1
+                            },
+                            "children": []
+                          }
+                        ],
+                        "metadata": {
+                          "totalLayers": 4,
+                          "layerTypes": {
+                            "Text": 4
+                          },
+                          "timestamp": "2025-08-05T03:09:09.533Z"
+                        }
+                      }
+                    ],
+                    "metadata": {
+                      "totalLayers": 2,
+                      "layerTypes": {
+                        "ShapePath": 1,
+                        "Group": 1
+                      },
+                      "timestamp": "2025-08-05T03:09:09.529Z"
+                    }
+                  },
+                  {
+                    "id": "BCB05EF3-EFAA-4FD9-B3F0-332C23D30156",
+                    "name": "图形验证码",
+                    "type": "Group",
+                    "frame": {
+                      "x": 0,
+                      "y": 9,
+                      "width": 18,
+                      "height": 18
+                    },
+                    "style": {
+                      "fills": [],
+                      "borders": [],
+                      "shadows": [],
+                      "innerShadows": [],
+                      "opacity": 1
+                    },
+                    "children": [
+                      {
+                        "id": "8D0A2653-79CC-4F12-A94D-13396889A716",
+                        "name": "矩形",
+                        "type": "ShapePath",
+                        "frame": {
+                          "x": 0,
+                          "y": 0,
+                          "width": 18,
+                          "height": 18
+                        },
+                        "style": {
+                          "fills": [
+                            {
+                              "fillType": "Color",
+                              "color": {},
+                              "gradient": {
+                                "gradientType": "Linear",
+                                "from": {
+                                  "x": 0.5,
+                                  "y": 0
+                                },
+                                "to": {
+                                  "x": 0.5,
+                                  "y": 1
+                                },
+                                "aspectRatio": 0,
+                                "stops": [
+                                  {
+                                    "position": 0,
+                                    "color": "#ffffffff"
+                                  },
+                                  {
+                                    "position": 1,
+                                    "color": "#000000ff"
+                                  }
+                                ]
+                              },
+                              "pattern": {
+                                "patternType": "Fill",
+                                "image": null,
+                                "tileScale": 1
+                              }
+                            }
+                          ],
+                          "borders": [
+                            {
+                              "fillType": "Color",
+                              "color": {},
+                              "thickness": 0.818181818181818,
+                              "position": "Inside"
+                            }
+                          ],
+                          "shadows": [],
+                          "innerShadows": [],
+                          "opacity": 0
+                        },
+                        "children": []
+                      },
+                      {
+                        "id": "31718488-2C9D-4351-9BE8-3541DD25593A",
+                        "name": "形状结合",
+                        "type": "Shape",
+                        "frame": {
+                          "x": 1,
+                          "y": 0,
+                          "width": 16.000002041587,
+                          "height": 18
+                        },
+                        "style": {
+                          "fills": [
+                            {
+                              "fillType": "Color",
+                              "color": {},
+                              "gradient": {
+                                "gradientType": "Linear",
+                                "from": {
+                                  "x": 0.5,
+                                  "y": 0
+                                },
+                                "to": {
+                                  "x": 0.5,
+                                  "y": 1
+                                },
+                                "aspectRatio": 0,
+                                "stops": [
+                                  {
+                                    "position": 0,
+                                    "color": "#ffffffff"
+                                  },
+                                  {
+                                    "position": 1,
+                                    "color": "#000000ff"
+                                  }
+                                ]
+                              },
+                              "pattern": {
+                                "patternType": "Fill",
+                                "image": null,
+                                "tileScale": 1
+                              }
+                            }
+                          ],
+                          "borders": [],
+                          "shadows": [],
+                          "innerShadows": [],
+                          "opacity": 1
+                        },
+                        "children": []
+                      }
+                    ],
+                    "metadata": {
+                      "totalLayers": 2,
+                      "layerTypes": {
+                        "ShapePath": 1,
+                        "Shape": 1
+                      },
+                      "timestamp": "2025-08-05T03:09:09.545Z"
+                    }
+                  }
+                ],
+                "metadata": {
+                  "totalLayers": 4,
+                  "layerTypes": {
+                    "ShapePath": 1,
+                    "Text": 1,
+                    "Group": 2
+                  },
+                  "timestamp": "2025-08-05T03:09:09.522Z"
+                }
+              },
+              {
+                "id": "716A3FFC-3BC1-4CBD-9ED3-385A95F5EC0D",
+                "name": "input",
+                "type": "Group",
+                "frame": {
+                  "x": 0,
+                  "y": 85,
+                  "width": 336,
+                  "height": 45
+                },
+                "style": {
+                  "fills": [],
+                  "borders": [],
+                  "shadows": [],
+                  "innerShadows": [],
+                  "opacity": 1
+                },
+                "children": [
+                  {
+                    "id": "585C0879-2C70-4687-8477-1522B5DEB62D",
+                    "name": "编组 5",
+                    "type": "Group",
+                    "frame": {
+                      "x": 0,
+                      "y": 0,
+                      "width": 336,
+                      "height": 45
+                    },
+                    "style": {
+                      "fills": [],
+                      "borders": [],
+                      "shadows": [],
+                      "innerShadows": [],
+                      "opacity": 1
+                    },
+                    "children": [
+                      {
+                        "id": "60B207FF-F381-42B3-B1A1-6B59C2C91B25",
+                        "name": "矩形",
+                        "type": "ShapePath",
+                        "frame": {
+                          "x": 0,
+                          "y": 44,
+                          "width": 336,
+                          "height": 1
+                        },
+                        "style": {
+                          "fills": [
+                            {
+                              "fillType": "Color",
+                              "color": {},
+                              "gradient": {
+                                "gradientType": "Linear",
+                                "from": {
+                                  "x": 0.5,
+                                  "y": 0
+                                },
+                                "to": {
+                                  "x": 0.5,
+                                  "y": 1
+                                },
+                                "aspectRatio": 0,
+                                "stops": [
+                                  {
+                                    "position": 0,
+                                    "color": "#ffffffff"
+                                  },
+                                  {
+                                    "position": 1,
+                                    "color": "#000000ff"
+                                  }
+                                ]
+                              },
+                              "pattern": {
+                                "patternType": "Fill",
+                                "image": null,
+                                "tileScale": 1
+                              }
+                            }
+                          ],
+                          "borders": [
+                            {
+                              "fillType": "Color",
+                              "color": {},
+                              "thickness": 1,
+                              "position": "Inside"
+                            }
+                          ],
+                          "shadows": [],
+                          "innerShadows": [],
+                          "opacity": 1
+                        },
+                        "children": []
+                      },
+                      {
+                        "id": "B648C136-EA0A-4A7D-BA7C-E239641EE46D",
+                        "name": "密码",
+                        "type": "Text",
+                        "frame": {
+                          "x": 38,
+                          "y": 0,
+                          "width": 28,
+                          "height": 22
+                        },
+                        "style": {
+                          "fills": [],
+                          "borders": [],
+                          "shadows": [],
+                          "innerShadows": [],
+                          "opacity": 1
+                        },
+                        "children": []
+                      },
+                      {
+                        "id": "6B166699-C66C-49BD-8E10-18D905BB8F09",
+                        "name": "账号密码",
+                        "type": "Group",
+                        "frame": {
+                          "x": 0,
+                          "y": 2,
+                          "width": 18,
+                          "height": 18
+                        },
+                        "style": {
+                          "fills": [],
+                          "borders": [],
+                          "shadows": [],
+                          "innerShadows": [],
+                          "opacity": 1
+                        },
+                        "children": [
+                          {
+                            "id": "E12C9093-59D3-4D1C-BEBE-46319A776068",
+                            "name": "矩形",
+                            "type": "ShapePath",
+                            "frame": {
+                              "x": 0,
+                              "y": 0,
+                              "width": 18,
+                              "height": 18
+                            },
+                            "style": {
+                              "fills": [
+                                {
+                                  "fillType": "Color",
+                                  "color": {},
+                                  "gradient": {
+                                    "gradientType": "Linear",
+                                    "from": {
+                                      "x": 0.5,
+                                      "y": 0
+                                    },
+                                    "to": {
+                                      "x": 0.5,
+                                      "y": 1
+                                    },
+                                    "aspectRatio": 0,
+                                    "stops": [
+                                      {
+                                        "position": 0,
+                                        "color": "#ffffffff"
+                                      },
+                                      {
+                                        "position": 1,
+                                        "color": "#000000ff"
+                                      }
+                                    ]
+                                  },
+                                  "pattern": {
+                                    "patternType": "Fill",
+                                    "image": null,
+                                    "tileScale": 1
+                                  }
+                                }
+                              ],
+                              "borders": [
+                                {
+                                  "fillType": "Color",
+                                  "color": {},
+                                  "thickness": 0.818181818181818,
+                                  "position": "Inside"
+                                }
+                              ],
+                              "shadows": [],
+                              "innerShadows": [],
+                              "opacity": 0
+                            },
+                            "children": []
+                          },
+                          {
+                            "id": "487399AA-E22E-4B11-A166-B676CB4842B3",
+                            "name": "形状",
+                            "type": "Shape",
+                            "frame": {
+                              "x": 1,
+                              "y": 0,
+                              "width": 16,
+                              "height": 18
+                            },
+                            "style": {
+                              "fills": [
+                                {
+                                  "fillType": "Color",
+                                  "color": {},
+                                  "gradient": {
+                                    "gradientType": "Linear",
+                                    "from": {
+                                      "x": 0.5,
+                                      "y": 0
+                                    },
+                                    "to": {
+                                      "x": 0.5,
+                                      "y": 1
+                                    },
+                                    "aspectRatio": 0,
+                                    "stops": [
+                                      {
+                                        "position": 0,
+                                        "color": "#ffffffff"
+                                      },
+                                      {
+                                        "position": 1,
+                                        "color": "#000000ff"
+                                      }
+                                    ]
+                                  },
+                                  "pattern": {
+                                    "patternType": "Fill",
+                                    "image": null,
+                                    "tileScale": 1
+                                  }
+                                }
+                              ],
+                              "borders": [],
+                              "shadows": [],
+                              "innerShadows": [],
+                              "opacity": 1
+                            },
+                            "children": []
+                          }
+                        ],
+                        "metadata": {
+                          "totalLayers": 2,
+                          "layerTypes": {
+                            "ShapePath": 1,
+                            "Shape": 1
+                          },
+                          "timestamp": "2025-08-05T03:09:09.561Z"
+                        }
+                      },
+                      {
+                        "id": "49FAEA81-A088-4D2F-88AF-11EE4FD4CB0D",
+                        "name": "编组 3",
+                        "type": "Group",
+                        "frame": {
+                          "x": 318,
+                          "y": 2,
+                          "width": 18,
+                          "height": 18
+                        },
+                        "style": {
+                          "fills": [],
+                          "borders": [],
+                          "shadows": [],
+                          "innerShadows": [],
+                          "opacity": 1
+                        },
+                        "children": [
+                          {
+                            "id": "66E4A711-D03C-4E98-A359-B4AF1DF48BC0",
+                            "name": "矩形",
+                            "type": "ShapePath",
+                            "frame": {
+                              "x": 0,
+                              "y": 0,
+                              "width": 18,
+                              "height": 18
+                            },
+                            "style": {
+                              "fills": [
+                                {
+                                  "fillType": "Color",
+                                  "color": {},
+                                  "gradient": {
+                                    "gradientType": "Linear",
+                                    "from": {
+                                      "x": 0.5,
+                                      "y": 0
+                                    },
+                                    "to": {
+                                      "x": 0.5,
+                                      "y": 1
+                                    },
+                                    "aspectRatio": 0,
+                                    "stops": [
+                                      {
+                                        "position": 0,
+                                        "color": "#ffffffff"
+                                      },
+                                      {
+                                        "position": 1,
+                                        "color": "#000000ff"
+                                      }
+                                    ]
+                                  },
+                                  "pattern": {
+                                    "patternType": "Fill",
+                                    "image": null,
+                                    "tileScale": 1
+                                  }
+                                }
+                              ],
+                              "borders": [
+                                {
+                                  "fillType": "Color",
+                                  "color": {},
+                                  "thickness": 0.818181818181818,
+                                  "position": "Inside"
+                                }
+                              ],
+                              "shadows": [],
+                              "innerShadows": [],
+                              "opacity": 0
+                            },
+                            "children": []
+                          },
+                          {
+                            "id": "90230E2C-C74F-484B-BF59-2394B6B029CC",
+                            "name": "形状",
+                            "type": "Shape",
+                            "frame": {
+                              "x": 1,
+                              "y": 4,
+                              "width": 16,
+                              "height": 10
+                            },
+                            "style": {
+                              "fills": [
+                                {
+                                  "fillType": "Color",
+                                  "color": {},
+                                  "gradient": {
+                                    "gradientType": "Linear",
+                                    "from": {
+                                      "x": 0.5,
+                                      "y": 0
+                                    },
+                                    "to": {
+                                      "x": 0.5,
+                                      "y": 1
+                                    },
+                                    "aspectRatio": 0,
+                                    "stops": [
+                                      {
+                                        "position": 0,
+                                        "color": "#ffffffff"
+                                      },
+                                      {
+                                        "position": 1,
+                                        "color": "#000000ff"
+                                      }
+                                    ]
+                                  },
+                                  "pattern": {
+                                    "patternType": "Fill",
+                                    "image": null,
+                                    "tileScale": 1
+                                  }
+                                }
+                              ],
+                              "borders": [],
+                              "shadows": [],
+                              "innerShadows": [],
+                              "opacity": 1
+                            },
+                            "children": []
+                          }
+                        ],
+                        "metadata": {
+                          "totalLayers": 2,
+                          "layerTypes": {
+                            "ShapePath": 1,
+                            "Shape": 1
+                          },
+                          "timestamp": "2025-08-05T03:09:09.567Z"
+                        }
+                      }
+                    ],
+                    "metadata": {
+                      "totalLayers": 4,
+                      "layerTypes": {
+                        "ShapePath": 1,
+                        "Text": 1,
+                        "Group": 2
+                      },
+                      "timestamp": "2025-08-05T03:09:09.554Z"
+                    }
+                  }
+                ],
+                "metadata": {
+                  "totalLayers": 1,
+                  "layerTypes": {
+                    "Group": 1
+                  },
+                  "timestamp": "2025-08-05T03:09:09.551Z"
+                }
+              }
+            ],
+            "metadata": {
+              "totalLayers": 3,
+              "layerTypes": {
+                "Group": 3
+              },
+              "timestamp": "2025-08-05T03:09:09.504Z"
+            }
+          },
+          {
+            "id": "07BF9EDE-6B90-4E66-87A4-B58A840BFD26",
+            "name": "账号密码登录",
+            "type": "Text",
+            "frame": {
+              "x": 0,
+              "y": 0,
+              "width": 144,
+              "height": 22
+            },
+            "style": {
+              "fills": [],
+              "borders": [],
+              "shadows": [],
+              "innerShadows": [],
+              "opacity": 1
+            },
+            "children": []
+          }
+        ],
+        "metadata": {
+          "totalLayers": 3,
+          "layerTypes": {
+            "Group": 2,
+            "Text": 1
+          },
+          "timestamp": "2025-08-05T03:09:09.495Z"
+        }
+      }
+    ],
+    "metadata": {
+      "totalLayers": 2,
+      "layerTypes": {
+        "ShapePath": 1,
+        "Group": 1
+      },
+      "timestamp": "2025-08-05T03:09:09.490Z"
+    }
+  }
+}

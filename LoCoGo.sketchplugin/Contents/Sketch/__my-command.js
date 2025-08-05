@@ -1538,17 +1538,9 @@ __webpack_require__.r(__webpack_exports__);
   */
 
   // 处理原始样式（所有逻辑都在 originalStyles 中完成）
-  var document = sketch__WEBPACK_IMPORTED_MODULE_0___default.a.getSelectedDocument();
-  var selection = document.selectedLayers;
-  var filePath = _skpm_path__WEBPACK_IMPORTED_MODULE_3___default.a.join('/Users/rentianxiang/Desktop/life/project/LowCode/code', 'styleTree.json');
-  sketch__WEBPACK_IMPORTED_MODULE_0___default.a.export(selection.layers, {
-    format: 'json',
-    path: filePath
-  });
-  console.log('filePath', filePath);
 
-  // processOriginalStyles(sketch, fs, path)
-  console.log('==============');
+  Object(_originalStyles__WEBPACK_IMPORTED_MODULE_4__["processOriginalStyles"])(sketch__WEBPACK_IMPORTED_MODULE_0___default.a, _skpm_fs__WEBPACK_IMPORTED_MODULE_2___default.a, _skpm_path__WEBPACK_IMPORTED_MODULE_3___default.a);
+  console.log('end');
 });
 
 /***/ }),
@@ -1576,56 +1568,56 @@ __webpack_require__.r(__webpack_exports__);
  */
 var exportOriginalStyles = function exportOriginalStyles(context) {
   var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  try {
-    // 获取原始样式数据
-    var stylesData = Object(_getOriginalStyles__WEBPACK_IMPORTED_MODULE_0__["getSelectedLayerOriginalStyles"])(context);
-    if (stylesData.error) {
-      return {
-        success: false,
-        error: stylesData.error,
-        timestamp: new Date().toISOString()
-      };
-    }
-
-    // 构建导出文件名
-    var timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    var layerName = stylesData.container ? stylesData.container.name.replace(/[^a-zA-Z0-9]/g, '_') : 'unknown_layer';
-    var fileName = "original_styles_".concat(layerName, "_").concat(timestamp, ".json");
-
-    // 构建完整的导出数据
-    var exportData = {
-      metadata: {
-        exportType: 'original_styles',
-        sketchVersion: context.api.version,
-        exportTime: new Date().toISOString(),
-        fileName: fileName,
-        options: options
-      },
-      styles: stylesData
-    };
-
-    // 格式化JSON字符串
-    var jsonString = JSON.stringify(exportData, null, 2);
-
-    // 创建文件内容
-    var fileContent = jsonString;
-
-    // 返回导出结果
-    return {
-      success: true,
-      fileName: fileName,
-      fileContent: fileContent,
-      dataSize: fileContent.length,
-      layerCount: stylesData.metadata ? stylesData.metadata.totalLayers : 1,
-      timestamp: new Date().toISOString()
-    };
-  } catch (error) {
-    return {
-      success: false,
-      error: error.message,
-      timestamp: new Date().toISOString()
-    };
+  // 获取原始样式数据
+  var stylesData = Object(_getOriginalStyles__WEBPACK_IMPORTED_MODULE_0__["getSelectedLayerOriginalStyles"])(context);
+  if (stylesData.error) {
+    throw new Error(stylesData.error);
   }
+
+  // 构建导出文件名
+  var timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+  var layerName = stylesData.container ? stylesData.container.name.replace(/[^a-zA-Z0-9]/g, '_') : 'unknown_layer';
+  var fileName = "original_styles_".concat(layerName, "_").concat(timestamp, ".json");
+
+  // 构建完整的导出数据
+  var exportData = {
+    metadata: {
+      exportType: 'original_styles',
+      // sketchVersion: context.api.version,
+      exportTime: new Date().toISOString(),
+      fileName: fileName,
+      options: options
+    },
+    styles: stylesData
+  };
+
+  // 格式化JSON字符串
+  var jsonString = JSON.stringify(exportData, null, 2);
+
+  // 创建文件内容
+  var fileContent = jsonString;
+
+  // 计算总图层数量（递归统计）
+  var _countLayers = function countLayers(node) {
+    var count = 1; // 当前节点
+    if (node.children && node.children.length > 0) {
+      node.children.forEach(function (child) {
+        count += _countLayers(child);
+      });
+    }
+    return count;
+  };
+  var totalLayers = _countLayers(stylesData);
+
+  // 返回导出结果
+  return {
+    success: true,
+    fileName: fileName,
+    fileContent: fileContent,
+    dataSize: fileContent.length,
+    layerCount: totalLayers,
+    timestamp: new Date().toISOString()
+  };
 };
 
 /**
@@ -1634,33 +1626,23 @@ var exportOriginalStyles = function exportOriginalStyles(context) {
  * @returns {Object} 导出结果
  */
 var exportStylesToClipboard = function exportStylesToClipboard(context) {
-  try {
-    var stylesData = Object(_getOriginalStyles__WEBPACK_IMPORTED_MODULE_0__["getSelectedLayerOriginalStyles"])(context);
-    if (stylesData.error) {
-      return {
-        success: false,
-        error: stylesData.error
-      };
-    }
-
-    // 格式化JSON字符串
-    var jsonString = JSON.stringify(stylesData, null, 2);
-
-    // 复制到剪贴板（需要Sketch API支持）
-    if (context.api && context.api.copyToClipboard) {
-      context.api.copyToClipboard(jsonString);
-    }
-    return {
-      success: true,
-      message: '样式数据已复制到剪贴板',
-      dataSize: jsonString.length
-    };
-  } catch (error) {
-    return {
-      success: false,
-      error: error.message
-    };
+  var stylesData = Object(_getOriginalStyles__WEBPACK_IMPORTED_MODULE_0__["getSelectedLayerOriginalStyles"])(context);
+  if (stylesData.error) {
+    throw new Error(stylesData.error);
   }
+
+  // 格式化JSON字符串
+  var jsonString = JSON.stringify(stylesData, null, 2);
+
+  // 复制到剪贴板（需要Sketch API支持）
+  if (context.api && context.api.copyToClipboard) {
+    context.api.copyToClipboard(jsonString);
+  }
+  return {
+    success: true,
+    message: '样式数据已复制到剪贴板',
+    dataSize: jsonString.length
+  };
 };
 
 /**
@@ -1669,55 +1651,45 @@ var exportStylesToClipboard = function exportStylesToClipboard(context) {
  * @returns {Object} 统计信息
  */
 var getStylesStatistics = function getStylesStatistics(context) {
-  try {
-    var stylesData = Object(_getOriginalStyles__WEBPACK_IMPORTED_MODULE_0__["getSelectedLayerOriginalStyles"])(context);
-    if (stylesData.error) {
-      return {
-        success: false,
-        error: stylesData.error
-      };
-    }
-    var stats = {
-      success: true,
-      containerName: stylesData.container ? stylesData.container.name : 'N/A',
-      containerType: stylesData.container ? stylesData.container.type : 'N/A',
-      totalLayers: stylesData.metadata ? stylesData.metadata.totalLayers : 1,
-      layerTypes: stylesData.metadata ? stylesData.metadata.layerTypes : {},
-      hasFills: false,
-      hasBorders: false,
-      hasShadows: false,
-      hasTextStyles: false,
-      timestamp: new Date().toISOString()
-    };
-
-    // 分析样式类型
-    var analyzeLayerStyles = function analyzeLayerStyles(layer) {
-      if (layer.style) {
-        if (layer.style.fills && layer.style.fills.length > 0) stats.hasFills = true;
-        if (layer.style.borders && layer.style.borders.length > 0) stats.hasBorders = true;
-        if (layer.style.shadows && layer.style.shadows.length > 0) stats.hasShadows = true;
-        if (layer.style.textStyle) stats.hasTextStyles = true;
-      }
-    };
-
-    // 分析容器样式
-    if (stylesData.container) {
-      analyzeLayerStyles(stylesData.container);
-    }
-
-    // 分析子图层样式
-    if (stylesData.children) {
-      stylesData.children.forEach(function (child) {
-        analyzeLayerStyles(child);
-      });
-    }
-    return stats;
-  } catch (error) {
-    return {
-      success: false,
-      error: error.message
-    };
+  var stylesData = Object(_getOriginalStyles__WEBPACK_IMPORTED_MODULE_0__["getSelectedLayerOriginalStyles"])(context);
+  if (stylesData.error) {
+    throw new Error(stylesData.error);
   }
+  var stats = {
+    success: true,
+    containerName: stylesData.container ? stylesData.container.name : 'N/A',
+    containerType: stylesData.container ? stylesData.container.type : 'N/A',
+    totalLayers: stylesData.metadata ? stylesData.metadata.totalLayers : 1,
+    layerTypes: stylesData.metadata ? stylesData.metadata.layerTypes : {},
+    hasFills: false,
+    hasBorders: false,
+    hasShadows: false,
+    hasTextStyles: false,
+    timestamp: new Date().toISOString()
+  };
+
+  // 分析样式类型
+  var analyzeLayerStyles = function analyzeLayerStyles(layer) {
+    if (layer.style) {
+      if (layer.style.fills && layer.style.fills.length > 0) stats.hasFills = true;
+      if (layer.style.borders && layer.style.borders.length > 0) stats.hasBorders = true;
+      if (layer.style.shadows && layer.style.shadows.length > 0) stats.hasShadows = true;
+      if (layer.style.textStyle) stats.hasTextStyles = true;
+    }
+  };
+
+  // 分析容器样式
+  if (stylesData.container) {
+    analyzeLayerStyles(stylesData.container);
+  }
+
+  // 分析子图层样式
+  if (stylesData.children) {
+    stylesData.children.forEach(function (child) {
+      analyzeLayerStyles(child);
+    });
+  }
+  return stats;
 };
 
 
@@ -1727,14 +1699,15 @@ var getStylesStatistics = function getStylesStatistics(context) {
 /*!*************************************************!*\
   !*** ./src/originalStyles/getOriginalStyles.js ***!
   \*************************************************/
-/*! exports provided: getLayerOriginalStyles, getContainerOriginalStyles, getSelectedLayerOriginalStyles */
+/*! exports provided: getLayerOriginalStyles, getContainerOriginalStyles, getSelectedLayerOriginalStyles, debugPrintLayerStructure */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getLayerOriginalStyles", function() { return getLayerOriginalStyles; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getContainerOriginalStyles", function() { return getContainerOriginalStyles; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getContainerOriginalStyles", function() { return _getContainerOriginalStyles; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSelectedLayerOriginalStyles", function() { return getSelectedLayerOriginalStyles; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "debugPrintLayerStructure", function() { return _debugPrintLayerStructure; });
 /**
  * 获取图层的原始样式属性
  * @param {Object} layer - Sketch 图层对象
@@ -1887,12 +1860,22 @@ var getLayerOriginalStyles = function getLayerOriginalStyles(layer) {
  * @param {Object} container - 容器图层（编组或框架）
  * @returns {Object} 包含容器和所有子元素样式的对象
  */
-var getContainerOriginalStyles = function getContainerOriginalStyles(container) {
+var _getContainerOriginalStyles = function getContainerOriginalStyles(container) {
   if (!container) {
     return null;
   }
+  console.log(1);
   var result = {
-    container: getLayerOriginalStyles(container),
+    id: container.id,
+    name: container.name,
+    type: container.type,
+    frame: container.frame ? {
+      x: container.frame.x,
+      y: container.frame.y,
+      width: container.frame.width,
+      height: container.frame.height
+    } : null,
+    style: getLayerOriginalStyles(container).style,
     children: [],
     metadata: {
       totalLayers: 0,
@@ -1900,18 +1883,35 @@ var getContainerOriginalStyles = function getContainerOriginalStyles(container) 
       timestamp: new Date().toISOString()
     }
   };
-
+  console.log(2);
   // 递归处理子图层
   if (container.layers && container.layers.length > 0) {
     result.children = container.layers.map(function (child) {
-      var childStyles = getLayerOriginalStyles(child);
-
       // 统计图层类型
       if (child.type) {
         result.metadata.layerTypes[child.type] = (result.metadata.layerTypes[child.type] || 0) + 1;
       }
       result.metadata.totalLayers++;
-      return childStyles;
+
+      // 递归处理子元素：如果子元素也是容器，则递归获取其子元素
+      if (child.type === 'Group' || child.type === 'Artboard') {
+        return _getContainerOriginalStyles(child);
+      } else {
+        // 叶子节点：返回完整的图层信息
+        return {
+          id: child.id,
+          name: child.name,
+          type: child.type,
+          frame: child.frame ? {
+            x: child.frame.x,
+            y: child.frame.y,
+            width: child.frame.width,
+            height: child.frame.height
+          } : null,
+          style: getLayerOriginalStyles(child).style,
+          children: [] // 叶子节点没有子元素
+        };
+      }
     });
   }
   return result;
@@ -1923,41 +1923,87 @@ var getContainerOriginalStyles = function getContainerOriginalStyles(container) 
  * @returns {Object} 包含原始样式的JSON对象
  */
 var getSelectedLayerOriginalStyles = function getSelectedLayerOriginalStyles(context) {
-  try {
-    var selectedLayers = context.selection;
-    if (!selectedLayers || selectedLayers.length === 0) {
-      return {
-        error: '没有选中的图层',
-        timestamp: new Date().toISOString()
-      };
-    }
-    var clickedLayer = selectedLayers[0];
+  var selectedLayers = context.selection;
+  if (!selectedLayers || selectedLayers.length === 0) {
+    throw new Error('没有选中的图层');
+  }
 
-    // 检查是否为容器类型
-    if (clickedLayer.type === 'Group' || clickedLayer.type === 'Artboard') {
-      return getContainerOriginalStyles(clickedLayer);
+  // 使用 forEach 获取第一个选中的图层
+  var clickedLayer = null;
+  selectedLayers.forEach(function (layer) {
+    if (!clickedLayer) {
+      clickedLayer = layer;
     }
+  });
 
-    // 如果不是容器，查找父级容器
-    var parentLayer = clickedLayer.parent;
-    while (parentLayer) {
-      if (parentLayer.type === 'Group' || parentLayer.type === 'Artboard') {
-        return getContainerOriginalStyles(parentLayer);
+  // 检查第一个元素是否存在
+  if (!clickedLayer) {
+    throw new Error('选中的图层无效或为空');
+  }
+
+  // 检查是否为容器类型
+  if (clickedLayer.type === 'Group' || clickedLayer.type === 'Artboard') {
+    return _getContainerOriginalStyles(clickedLayer);
+  }
+
+  // 如果不是容器，查找父级容器
+  var parentLayer = clickedLayer.parent;
+  while (parentLayer) {
+    if (parentLayer.type === 'Group' || parentLayer.type === 'Artboard') {
+      return _getContainerOriginalStyles(parentLayer);
+    }
+    parentLayer = parentLayer.parent;
+  }
+
+  // 如果都没有找到容器，返回单个图层的样式（也支持递归）
+  return {
+    id: clickedLayer.id,
+    name: clickedLayer.name,
+    type: clickedLayer.type,
+    frame: clickedLayer.frame ? {
+      x: clickedLayer.frame.x,
+      y: clickedLayer.frame.y,
+      width: clickedLayer.frame.width,
+      height: clickedLayer.frame.height
+    } : null,
+    style: getLayerOriginalStyles(clickedLayer).style,
+    children: clickedLayer.layers && clickedLayer.layers.length > 0 ? clickedLayer.layers.map(function (child) {
+      if (child.type === 'Group' || child.type === 'Artboard') {
+        return _getContainerOriginalStyles(child);
+      } else {
+        return {
+          id: child.id,
+          name: child.name,
+          type: child.type,
+          frame: child.frame ? {
+            x: child.frame.x,
+            y: child.frame.y,
+            width: child.frame.width,
+            height: child.frame.height
+          } : null,
+          style: getLayerOriginalStyles(child).style,
+          children: []
+        };
       }
-      parentLayer = parentLayer.parent;
-    }
+    }) : [],
+    note: '单个图层样式',
+    timestamp: new Date().toISOString()
+  };
+};
 
-    // 如果都没有找到容器，返回单个图层的样式
-    return {
-      singleLayer: getLayerOriginalStyles(clickedLayer),
-      note: '未找到容器，返回单个图层样式',
-      timestamp: new Date().toISOString()
-    };
-  } catch (error) {
-    return {
-      error: error.message,
-      timestamp: new Date().toISOString()
-    };
+/**
+ * 递归打印图层结构（用于调试）
+ * @param {Object} node - 图层节点
+ * @param {number} depth - 当前深度
+ */
+var _debugPrintLayerStructure = function debugPrintLayerStructure(node) {
+  var depth = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+  var indent = '  '.repeat(depth);
+  console.log("".concat(indent).concat(node.type, ": ").concat(node.name, " (").concat(node.children ? node.children.length : 0, " children)"));
+  if (node.children && node.children.length > 0) {
+    node.children.forEach(function (child) {
+      _debugPrintLayerStructure(child, depth + 1);
+    });
   }
 };
 
@@ -2015,65 +2061,41 @@ function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t =
  */
 var getAndExportOriginalStyles = function getAndExportOriginalStyles(sketchContext) {
   var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  try {
-    // 1. 验证选择
-    console.log(1);
-    var validation = validateLayerSelection(sketchContext);
-    console.log(validation);
-    if (!validation.valid) {
-      return {
-        success: false,
-        error: validation.message,
-        type: 'validation_error'
-      };
-    }
-
-    // 2. 获取原始样式
-    var stylesData = Object(_getOriginalStyles__WEBPACK_IMPORTED_MODULE_3__["getSelectedLayerOriginalStyles"])(sketchContext);
-    console.log(stylesData);
-    if (stylesData.error) {
-      return {
-        success: false,
-        error: stylesData.error,
-        type: 'styles_error'
-      };
-    }
-
-    // 3. 导出样式
-    var exportResult = Object(_exportStyles__WEBPACK_IMPORTED_MODULE_4__["exportOriginalStyles"])(sketchContext, _objectSpread({
-      includeMetadata: true,
-      format: 'pretty'
-    }, options));
-    if (!exportResult.success) {
-      return {
-        success: false,
-        error: exportResult.error,
-        type: 'export_error',
-        stylesData: stylesData
-      };
-    }
-
-    // 4. 返回完整结果
-    return {
-      success: true,
-      validation: validation,
-      stylesData: stylesData,
-      exportResult: exportResult,
-      statistics: {
-        layerCount: exportResult.layerCount,
-        dataSize: exportResult.dataSize,
-        fileName: exportResult.fileName,
-        containerName: stylesData.container ? stylesData.container.name : 'N/A',
-        containerType: stylesData.container ? stylesData.container.type : 'N/A'
-      }
-    };
-  } catch (error) {
-    return {
-      success: false,
-      error: error.message,
-      type: 'unknown_error'
-    };
+  // 1. 验证选择
+  var validation = validateLayerSelection(sketchContext);
+  if (!validation.valid) {
+    throw new Error(validation.message);
   }
+
+  // 2. 获取原始样式
+  var stylesData = Object(_getOriginalStyles__WEBPACK_IMPORTED_MODULE_3__["getSelectedLayerOriginalStyles"])(sketchContext);
+  if (stylesData.error) {
+    throw new Error(stylesData.error);
+  }
+
+  // 3. 导出样式
+  var exportResult = Object(_exportStyles__WEBPACK_IMPORTED_MODULE_4__["exportOriginalStyles"])(sketchContext, _objectSpread({
+    includeMetadata: true,
+    format: 'pretty'
+  }, options));
+  if (!exportResult.success) {
+    throw new Error(exportResult.error);
+  }
+
+  // 4. 返回完整结果
+  return {
+    success: true,
+    validation: validation,
+    stylesData: stylesData,
+    exportResult: exportResult,
+    statistics: {
+      layerCount: exportResult.layerCount,
+      dataSize: exportResult.dataSize,
+      fileName: exportResult.fileName,
+      containerName: stylesData.name || 'N/A',
+      containerType: stylesData.type || 'N/A'
+    }
+  };
 };
 
 /**
@@ -2089,22 +2111,32 @@ var validateLayerSelection = function validateLayerSelection(sketchContext) {
       message: '没有选中的图层'
     };
   }
-  console.log('selectedLayers', selectedLayers);
-  console.log('selectedLayers.length', selectedLayers.length);
-  var layer = selectedLayers[0];
-  console.log('layer', layer);
-  var isContainer = layer.type === 'Group' || layer.type === 'Artboard';
+
+  // 使用 forEach 获取第一个选中的图层
+  var firstLayer = null;
+  selectedLayers.forEach(function (layer) {
+    if (!firstLayer) {
+      firstLayer = layer;
+    }
+  });
+  if (!firstLayer) {
+    return {
+      valid: false,
+      message: '选中的图层无效或为空'
+    };
+  }
+  var isContainer = firstLayer.type === 'Group' || firstLayer.type === 'Artboard';
   if (isContainer) {
     return {
       valid: true,
-      message: "\u9009\u4E2D\u4E86".concat(layer.type, "\u7C7B\u578B\u7684\u5BB9\u5668: ").concat(layer.name),
-      layerType: layer.type,
-      layerName: layer.name
+      message: "\u9009\u4E2D\u4E86".concat(firstLayer.type, "\u7C7B\u578B\u7684\u5BB9\u5668: ").concat(firstLayer.name),
+      layerType: firstLayer.type,
+      layerName: firstLayer.name
     };
   }
 
   // 检查是否有父级容器
-  var parent = layer.parent;
+  var parent = firstLayer.parent;
   while (parent) {
     if (parent.type === 'Group' || parent.type === 'Artboard') {
       return {
@@ -2112,7 +2144,7 @@ var validateLayerSelection = function validateLayerSelection(sketchContext) {
         message: "\u9009\u4E2D\u4E86".concat(parent.type, "\u7C7B\u578B\u7684\u7236\u7EA7\u5BB9\u5668: ").concat(parent.name),
         layerType: parent.type,
         layerName: parent.name,
-        selectedLayer: layer.name
+        selectedLayer: firstLayer.name
       };
     }
     parent = parent.parent;
@@ -2131,17 +2163,11 @@ var validateLayerSelection = function validateLayerSelection(sketchContext) {
 var quickGetOriginalStyles = function quickGetOriginalStyles(sketchContext) {
   var validation = validateLayerSelection(sketchContext);
   if (!validation.valid) {
-    return {
-      success: false,
-      error: validation.message
-    };
+    throw new Error(validation.message);
   }
   var stylesData = Object(_getOriginalStyles__WEBPACK_IMPORTED_MODULE_3__["getSelectedLayerOriginalStyles"])(sketchContext);
   if (stylesData.error) {
-    return {
-      success: false,
-      error: stylesData.error
-    };
+    throw new Error(stylesData.error);
   }
   return {
     success: true,
@@ -2229,62 +2255,51 @@ var createOriginalStylesManager = function createOriginalStylesManager(context) 
  * @returns {Object} 处理结果
  */
 var processOriginalStyles = function processOriginalStyles(sketch, fs, path) {
-  try {
-    // 1. 获取当前文档和选择
-    var document = sketch.getSelectedDocument();
-    var selection = document.selectedLayers;
-    if (!selection || selection.length === 0) {
-      sketch.UI.message('请先选择一个编组或框架');
-      return {
-        success: false,
-        error: '没有选中的图层'
-      };
-    }
-    console.log('selection', selection.layers);
-
-    // 2. 创建上下文对象
-    var sketchContext = {
-      selection: selection
-    };
-
-    // 3. 一键获取并导出原始样式
-    var result = getAndExportOriginalStyles(sketchContext);
-    if (result.success) {
-      // 4. 导出到插件根目录
-      var filePath = path.join(process.cwd(), result.exportResult.fileName);
-      fs.writeFileSync(filePath, result.exportResult.fileContent, 'utf8');
-
-      // 5. 显示成功消息
-      sketch.UI.message("\u539F\u59CB\u6837\u5F0F\u5DF2\u5BFC\u51FA\u5230: ".concat(result.exportResult.fileName));
-
-      // 6. 输出统计信息
-      console.log('导出统计:', {
-        图层数量: result.statistics.layerCount,
-        文件大小: result.statistics.dataSize + ' bytes',
-        容器名称: result.statistics.containerName,
-        容器类型: result.statistics.containerType
-      });
-      return {
-        success: true,
-        fileName: result.exportResult.fileName,
-        statistics: result.statistics
-      };
-    } else {
-      // 7. 显示错误消息
-      sketch.UI.message('导出失败: ' + result.error);
-      return {
-        success: false,
-        error: result.error
-      };
-    }
-  } catch (error) {
-    var errorMessage = '处理原始样式时发生错误: ' + error.message;
-    sketch.UI.message(errorMessage);
-    return {
-      success: false,
-      error: errorMessage
-    };
+  // 1. 获取当前文档和选择
+  var document = sketch.getSelectedDocument();
+  var selection = document.selectedLayers;
+  if (!selection || selection.length === 0) {
+    throw new Error('请先选择一个编组或框架');
   }
+
+  // 使用 map 获取所有选中图层的 ID
+  var selectedLayerIds = [];
+  selection.forEach(function (layer) {
+    selectedLayerIds.push(layer.id);
+  });
+
+  // 2. 创建上下文对象
+  var sketchContext = {
+    selection: selection
+  };
+
+  // 3. 一键获取并导出原始样式
+  var result = getAndExportOriginalStyles(sketchContext);
+
+  // 调试：打印图层结构
+  console.log('=== 图层结构 ===');
+  console.log(JSON.stringify(result.stylesData, null, 2));
+  console.log('=== 结构结束 ===');
+
+  // 4. 导出到插件根目录
+  var filePath = path.join(process.cwd(), result.exportResult.fileName);
+  fs.writeFileSync(filePath, result.exportResult.fileContent, 'utf8');
+
+  // 5. 显示成功消息
+  sketch.UI.message("\u539F\u59CB\u6837\u5F0F\u5DF2\u5BFC\u51FA\u5230: ".concat(result.exportResult.fileName));
+
+  // 6. 输出统计信息
+  console.log('导出统计:', {
+    图层数量: result.statistics.layerCount,
+    文件大小: result.statistics.dataSize + ' bytes',
+    容器名称: result.statistics.containerName,
+    容器类型: result.statistics.containerType
+  });
+  return {
+    success: true,
+    fileName: result.exportResult.fileName,
+    statistics: result.statistics
+  };
 };
 
 
