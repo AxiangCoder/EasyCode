@@ -3,6 +3,8 @@
  * @param {Object} layer - Sketch 图层对象
  * @returns {Object} 包含所有原始样式属性的对象
  */
+import path from '@skpm/path'
+
 const getLayerOriginalStyles = (layer) => {
   if (!layer) {
     return null;
@@ -32,6 +34,14 @@ const getLayerOriginalStyles = (layer) => {
     // 样式属性
     style: {}
   };
+  console.log(layer.name);
+  if (layer.name === '矩形') {
+    console.log('====================', layer.name);
+    console.log(JSON.stringify (layer));
+    console.log('====================', layer.name);
+
+    
+  }
 
   // 填充样式
   if (layer.style && layer.style.fills) {

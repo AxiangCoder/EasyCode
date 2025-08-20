@@ -227,9 +227,9 @@ const processOriginalStyles = (sketch, fs, path) => {
   const result = getAndExportOriginalStyles(sketchContext);
   
   // 调试：打印图层结构
-  console.log('=== 图层结构 ===');
+/*   console.log('=== 图层结构 ===');
   console.log(JSON.stringify(result.stylesData, null, 2));
-  console.log('=== 结构结束 ===');
+  console.log('=== 结构结束 ==='); */
    
   // 4. 导出到插件根目录
   const filePath = path.join(process.cwd(), result.exportResult.fileName);
@@ -239,12 +239,12 @@ const processOriginalStyles = (sketch, fs, path) => {
   sketch.UI.message(`原始样式已导出到: ${result.exportResult.fileName}`);
 
   // 6. 输出统计信息
-  console.log('导出统计:', {
+/*   console.log('导出统计:', {
     图层数量: result.statistics.layerCount,
     文件大小: result.statistics.dataSize + ' bytes',
     容器名称: result.statistics.containerName,
     容器类型: result.statistics.containerType
-  });
+  }); */
 
   return {
     success: true,
