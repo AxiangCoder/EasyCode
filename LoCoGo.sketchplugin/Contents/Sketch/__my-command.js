@@ -1517,8 +1517,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _skpm_path__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_skpm_path__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _originalStyles__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./originalStyles */ "./src/originalStyles/index.js");
 /* harmony import */ var _sketchToCss_bordersToCss__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./sketchToCss/bordersToCss */ "./src/sketchToCss/bordersToCss.js");
+/* harmony import */ var _sketchToCss_test__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./sketchToCss/test */ "./src/sketchToCss/test.js");
 
 // documentation: https://developer.sketchapp.com/reference/api/
+
 
 
 
@@ -1542,7 +1544,7 @@ __webpack_require__.r(__webpack_exports__);
   // 处理原始样式（所有逻辑都在 originalStyles 中完成）
 
   // processOriginalStyles(sketch, fs, path)
-
+  Object(_sketchToCss_test__WEBPACK_IMPORTED_MODULE_6__["default"])();
   console.log('end');
 });
 
@@ -2328,84 +2330,128 @@ var processOriginalStyles = function processOriginalStyles(sketch, fs, path) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /**
- * 将Sketch图层的边框属性转换为Tailwind CSS风格的字符串
- * @param {Object} layer - Sketch图层对象（Layer, Group, Artboard, Shape, Image, Text等）
- * @returns {string} Tailwind CSS风格的边框样式字符串
+ * 将 Sketch 图层的边框样式转换为 Tailwind CSS 类名
+ * @param {Object} layer - Sketch 图层对象
+ * @returns {string} - Tailwind CSS 类名字符串
+ */
+/**
+ * 将 Sketch 图层的边框样式转换为 Tailwind CSS 类名
+ * @param {Object} layer - Sketch 图层对象
+ * @returns {string} - Tailwind CSS 类名字符串
  */
 var bordersToCss = function bordersToCss(layer) {
-  if (!layer || !layer.style || !layer.style.borders) {
+  var _layer$style, _layer$style$borderOp;
+  // 检查是否有样式和边框
+  if (!((_layer$style = layer.style) !== null && _layer$style !== void 0 && _layer$style.borders) || layer.style.borders.length === 0) {
     return '';
   }
-  var borders = layer.style.borders;
-  if (!Array.isArray(borders) || borders.length === 0) {
+  var classes = [];
+
+  // 获取第一个边框样式
+  var border = layer.style.borders[0];
+
+  // 检查边框是否启用
+  if (!border.enabled) {
     return '';
   }
 
-  // 获取第一个边框（Sketch通常只使用第一个边框）
-  var border = borders[0];
-  if (!border || !border.isEnabled) {
-    return '';
-  }
-  var cssClasses = [];
-
-  // 边框宽度
-  if (border.thickness && border.thickness > 0) {
-    var thickness = Math.round(border.thickness);
-    cssClasses.push("border-[".concat(thickness, "px]"));
-  } else {
-    cssClasses.push('border-0');
+  // 处理边框宽度
+  var borderWidth = Math.round(border.thickness);
+  if (borderWidth > 0) {
+    // 处理边框位置
+    if (border.position === 'Inside') {
+      classes.push('border-inset');
+    }
+    classes.push("border-[".concat(borderWidth, "px]"));
   }
 
-  // 边框样式
-  cssClasses.push('border-solid'); // Sketch默认使用实线边框
-
-  // 边框颜色
+  // 处理边框颜色
   if (border.color) {
-    var _border$color = border.color,
-      red = _border$color.red,
-      green = _border$color.green,
-      blue = _border$color.blue,
-      alpha = _border$color.alpha;
-    if (red !== undefined && green !== undefined && blue !== undefined) {
-      // 转换为RGB值（0-255）
-      var r = Math.round(red * 255);
-      var g = Math.round(green * 255);
-      var b = Math.round(blue * 255);
-      if (alpha !== undefined && alpha < 1) {
-        // 有透明度，使用rgba
-        var a = Math.round(alpha * 100) / 100; // 保留两位小数
-        cssClasses.push("border-[rgba(".concat(r, ",").concat(g, ",").concat(b, ",").concat(a, ")]"));
-      } else {
-        // 无透明度，使用rgb
-        cssClasses.push("border-[rgb(".concat(r, ",").concat(g, ",").concat(b, ")]"));
+    var color = border.color.toLowerCase();
+
+    // 检查颜色是否包含透明度（8位十六进制）
+    if (color.length === 9) {
+      // 例如 #3a5bcde0
+      // 提取颜色部分（不包含透明度）
+      var colorHex = color.slice(0, 7);
+      // 提取透明度
+      var alpha = parseInt(color.slice(7), 16) / 255;
+
+      // 添加边框颜色
+      classes.push("border-[".concat(colorHex, "]"));
+
+      // 只有当透明度不是 100% 时才添加透明度类
+      if (alpha < 1) {
+        classes.push("border-opacity-[".concat(Math.round(alpha * 100), "]"));
       }
+    } else {
+      // 6位十六进制颜色（无透明度）
+      classes.push("border-[".concat(color, "]"));
     }
-  } else {
-    // 默认黑色边框
-    cssClasses.push('border-black');
   }
 
-  // 边框位置（Sketch的边框位置）
-  if (border.position) {
-    switch (border.position) {
-      case 'Inside':
-        // Tailwind CSS默认是外边框，Inside需要特殊处理
-        cssClasses.push('border-inset');
-        break;
-      case 'Center':
-        // 居中边框，Tailwind CSS默认行为
-        break;
-      case 'Outside':
-        // 外边框，Tailwind CSS默认行为
-        break;
-      default:
-        // 默认居中
-        break;
-    }
+  // 处理边框样式
+  if (border.fillType === 'Color') {
+    classes.push('border-solid');
   }
-  return cssClasses.join(' ');
+
+  // 处理圆角
+  // 从 borderOptions 中获取圆角信息
+  if (((_layer$style$borderOp = layer.style.borderOptions) === null || _layer$style$borderOp === void 0 ? void 0 : _layer$style$borderOp.lineJoin) === 'Round') {
+    classes.push('rounded');
+  }
+  return classes.join(' ');
 };
 /* harmony default export */ __webpack_exports__["default"] = (bordersToCss);
+
+/***/ }),
+
+/***/ "./src/sketchToCss/test.js":
+/*!*********************************!*\
+  !*** ./src/sketchToCss/test.js ***!
+  \*********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var sketch__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! sketch */ "sketch");
+/* harmony import */ var sketch__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(sketch__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _bordersToCss__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./bordersToCss */ "./src/sketchToCss/bordersToCss.js");
+/* harmony import */ var _utils_exportToJson__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/exportToJson */ "./src/utils/exportToJson.js");
+
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default()(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+
+
+
+var _iterate = function iterate(item, callback) {
+  var children = [];
+  if (item.layers.length > 0) {
+    children = item.layers.map(function (layer) {
+      return _iterate(layer, callback);
+    });
+  }
+  return {
+    name: item.name,
+    style: _objectSpread({}, callback(item)),
+    children: children
+  };
+};
+var test = function test() {
+  var document = sketch__WEBPACK_IMPORTED_MODULE_1___default.a.getSelectedDocument();
+  var page = document.pages[0];
+  Object(_utils_exportToJson__WEBPACK_IMPORTED_MODULE_3__["default"])(page, 'page.json');
+  var style = _iterate(page, function (layer) {
+    return {
+      border: Object(_bordersToCss__WEBPACK_IMPORTED_MODULE_2__["default"])(layer)
+    };
+  });
+  Object(_utils_exportToJson__WEBPACK_IMPORTED_MODULE_3__["default"])(style, 'style.json');
+};
+/* harmony default export */ __webpack_exports__["default"] = (test);
 
 /***/ }),
 
@@ -2815,6 +2861,34 @@ function getGridLayoutStyle(layers, uniqueXList, uniqueYList) {
   return layout;
 }
 
+
+/***/ }),
+
+/***/ "./src/utils/exportToJson.js":
+/*!***********************************!*\
+  !*** ./src/utils/exportToJson.js ***!
+  \***********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _skpm_fs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @skpm/fs */ "./node_modules/@skpm/fs/index.js");
+/* harmony import */ var _skpm_fs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_skpm_fs__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _skpm_path__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @skpm/path */ "./node_modules/@skpm/path/index.js");
+/* harmony import */ var _skpm_path__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_skpm_path__WEBPACK_IMPORTED_MODULE_1__);
+
+
+var exportToJson = function exportToJson(data, fileName) {
+  try {
+    var filePath = _skpm_path__WEBPACK_IMPORTED_MODULE_1___default.a.join(process.cwd(), fileName);
+    if (typeof data === 'string') return _skpm_fs__WEBPACK_IMPORTED_MODULE_0___default.a.writeFileSync(filePath, data, 'utf8');
+    return _skpm_fs__WEBPACK_IMPORTED_MODULE_0___default.a.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
+  } catch (error) {
+    console.error(error);
+  }
+};
+/* harmony default export */ __webpack_exports__["default"] = (exportToJson);
 
 /***/ }),
 

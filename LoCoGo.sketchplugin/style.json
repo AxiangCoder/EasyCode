@@ -1,0 +1,23 @@
+{
+  "name": "页面 1",
+  "style": {
+    "border": ""
+  },
+  "children": [
+    {
+      "name": "page",
+      "style": {
+        "border": ""
+      },
+      "children": [
+        {
+          "name": "图形",
+          "style": {
+            "border": "border-[10px] border-[#3a5bcd] border-opacity-[88] border-solid"
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}

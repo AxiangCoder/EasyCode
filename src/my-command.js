@@ -5,6 +5,7 @@ import fs from '@skpm/fs'
 import path from '@skpm/path'
 import { processOriginalStyles } from './originalStyles'
 import { bordersToCss } from './sketchToCss/bordersToCss'
+import test from './sketchToCss/test'
 export default function () {
   /* const document = sketch.getSelectedDocument()
   const page = document.pages[0];
@@ -25,6 +26,7 @@ export default function () {
   // 处理原始样式（所有逻辑都在 originalStyles 中完成）
 
   // processOriginalStyles(sketch, fs, path)
+  test()
   
   console.log('end');
   
