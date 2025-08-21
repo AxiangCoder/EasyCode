@@ -1,19 +1,19 @@
 {
-  "name": "页面 1",
+  "name": "测试用例",
   "style": {
     "border": ""
   },
   "children": [
     {
-      "name": "page",
+      "name": "components",
       "style": {
         "border": ""
       },
       "children": [
         {
-          "name": "图形",
+          "name": "圆角矩形",
           "style": {
-            "border": "border-[10px] border-[#3a5bcd] border-opacity-[88] border-solid"
+            "border": "border-[10px] border-[#1738aa] border-solid"
           },
           "children": []
         }

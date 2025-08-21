@@ -36,3 +36,18 @@ selection.reduce((initial, layer) => {
 6. corners对应的是border-radius
 7. 布局方式
 
+## 2025.8.16
+已经完成 border 的开发及单元测试，但是多了个问题，圆角无法识别，在测试中，我设置了圆角，但是没有corners属性
+1. blendingMode(混合模式，暂不处理)
+2. blurs
+3. fills
+4. borders（已完成）
+5. shadows
+6. corners对应的是border-radius
+7. 布局方式
+
+问题：
+1. 思路错了，不应该是通过插件的形式来处理，应该直接将 .sketch文件进行解压，然后根据 json 来进行样式布局
+2. document.json 对应的应该是获取插件中的 document文档
+3. document.json中 的 page 字段，对应的应该是 pages目录下的 json 文件，这个目录下的 json 文件应该是只有一个
+

@@ -22,7 +22,7 @@ const iterate = (item, callback) => {
 const test = () => {
   const document = sketch.getSelectedDocument()
   const page = document.pages[0];
-  exportToJson(page, 'page.json');
+  exportToJson(page, 'page1.json');
   const style = iterate(page, (layer) => {
     return {
       border: bordersToCss(layer)

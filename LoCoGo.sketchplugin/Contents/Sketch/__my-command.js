@@ -2443,7 +2443,7 @@ var _iterate = function iterate(item, callback) {
 var test = function test() {
   var document = sketch__WEBPACK_IMPORTED_MODULE_1___default.a.getSelectedDocument();
   var page = document.pages[0];
-  Object(_utils_exportToJson__WEBPACK_IMPORTED_MODULE_3__["default"])(page, 'page.json');
+  Object(_utils_exportToJson__WEBPACK_IMPORTED_MODULE_3__["default"])(page, 'page1.json');
   var style = _iterate(page, function (layer) {
     return {
       border: Object(_bordersToCss__WEBPACK_IMPORTED_MODULE_2__["default"])(layer)

@@ -7,7 +7,7 @@
     "width": 0,
     "height": 0
   },
-  "name": "页面 1",
+  "name": "测试用例",
   "selected": true,
   "horizontalSizing": 3,
   "verticalSizing": 3,
@@ -25,7 +25,7 @@
         "width": 1920,
         "height": 1080
       },
-      "name": "page",
+      "name": "components",
       "selected": false,
       "exportFormats": [
         {
@@ -104,8 +104,8 @@
             "width": 352,
             "height": 241
           },
-          "name": "图形",
-          "selected": true,
+          "name": "圆角矩形",
+          "selected": false,
           "hidden": false,
           "locked": false,
           "exportFormats": [],
@@ -169,7 +169,7 @@
               {
                 "fillType": "Color",
                 "position": "Outside",
-                "color": "#3a5bcde0",
+                "color": "#1738aaff",
                 "gradient": {
                   "gradientType": "Linear",
                   "from": {
@@ -222,7 +222,7 @@
           "path": "BF9262A5-E6E5-464A-96E1-57D01E118093",
           "property": "color:fill-0",
           "symbolOverride": false,
-          "value": "<MSImmutableColor: 0x600004989f80>(55485)",
+          "value": "<MSImmutableColor: 0x60002c9d5f80>(596703)",
           "isDefault": true,
           "editable": true,
           "selected": false
@@ -241,7 +241,7 @@
               "width": 352,
               "height": 241
             },
-            "name": "图形",
+            "name": "圆角矩形",
             "hidden": false,
             "locked": false,
             "exportFormats": [],
@@ -305,7 +305,7 @@
                 {
                   "fillType": "Color",
                   "position": "Outside",
-                  "color": "#3a5bcde0",
+                  "color": "#1738aaff",
                   "gradient": {
                     "gradientType": "Linear",
                     "from": {
@@ -343,10 +343,10 @@
             "smartLayout": null
           },
           "symbolOverride": false,
-          "value": "<MSImmutableColor: 0x600004989ce0>(55497)",
+          "value": "<MSImmutableColor: 0x60002c9d6290>(596715)",
           "isDefault": true,
           "editable": true,
-          "selected": true
+          "selected": false
         },
         {
           "type": "Override",
@@ -362,7 +362,7 @@
               "width": 352,
               "height": 241
             },
-            "name": "图形",
+            "name": "圆角矩形",
             "hidden": false,
             "locked": false,
             "exportFormats": [],
@@ -426,7 +426,7 @@
                 {
                   "fillType": "Color",
                   "position": "Outside",
-                  "color": "#3a5bcde0",
+                  "color": "#1738aaff",
                   "gradient": {
                     "gradientType": "Linear",
                     "from": {
@@ -464,10 +464,10 @@
             "smartLayout": null
           },
           "symbolOverride": false,
-          "value": "<MSImmutableColor: 0x600004989b20>(55507)",
+          "value": "<MSImmutableColor: 0x60002c9d64c0>(596725)",
           "isDefault": true,
           "editable": true,
-          "selected": true
+          "selected": false
         },
         {
           "type": "Override",
@@ -483,7 +483,7 @@
               "width": 352,
               "height": 241
             },
-            "name": "图形",
+            "name": "圆角矩形",
             "hidden": false,
             "locked": false,
             "exportFormats": [],
@@ -547,7 +547,7 @@
                 {
                   "fillType": "Color",
                   "position": "Outside",
-                  "color": "#3a5bcde0",
+                  "color": "#1738aaff",
                   "gradient": {
                     "gradientType": "Linear",
                     "from": {
@@ -588,7 +588,7 @@
           "value": ".fixed",
           "isDefault": true,
           "editable": true,
-          "selected": true
+          "selected": false
         },
         {
           "type": "Override",
@@ -604,7 +604,7 @@
               "width": 352,
               "height": 241
             },
-            "name": "图形",
+            "name": "圆角矩形",
             "hidden": false,
             "locked": false,
             "exportFormats": [],
@@ -668,7 +668,7 @@
                 {
                   "fillType": "Color",
                   "position": "Outside",
-                  "color": "#3a5bcde0",
+                  "color": "#1738aaff",
                   "gradient": {
                     "gradientType": "Linear",
                     "from": {
@@ -709,7 +709,7 @@
           "value": ".fixed",
           "isDefault": true,
           "editable": true,
-          "selected": true
+          "selected": false
         },
         {
           "type": "Override",
@@ -725,7 +725,7 @@
               "width": 352,
               "height": 241
             },
-            "name": "图形",
+            "name": "圆角矩形",
             "hidden": false,
             "locked": false,
             "exportFormats": [],
@@ -789,7 +789,7 @@
                 {
                   "fillType": "Color",
                   "position": "Outside",
-                  "color": "#3a5bcde0",
+                  "color": "#1738aaff",
                   "gradient": {
                     "gradientType": "Linear",
                     "from": {
@@ -830,7 +830,7 @@
           "value": "1",
           "isDefault": true,
           "editable": true,
-          "selected": true
+          "selected": false
         }
       ]
     }
