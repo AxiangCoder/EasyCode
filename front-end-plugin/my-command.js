@@ -1,9 +1,9 @@
 import sketch from 'sketch'
 // documentation: https://developer.sketchapp.com/reference/api/
-import { generateStyleTree } from './styleTree/generateStyleTree'
+import { generateStyleTree } from './src/styleTree/generateStyleTree'
 import fs from '@skpm/fs'
 import path from '@skpm/path'
-import { processOriginalStyles } from './originalStyles'
+import { processOriginalStyles } from './src/originalStyles'
 import { bordersToCss } from './sketchToCss/bordersToCss'
 import test from './sketchToCss/test'
 export default function () {

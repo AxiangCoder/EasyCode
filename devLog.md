@@ -59,3 +59,5 @@ selection.reduce((initial, layer) => {
 ## 2025.8.21
 
 今天转变思路，将之前开发的东西，作为 \_src 来备份，新的 src 中，将采用服务端的开发方式，模拟从前端接收到 .skecth 文件中的 page.json, 并解析该文件，需要保留之前开发的 sketchToCss 目录，及 utils/exportToJson
+
+以后，front-end-plugin 为插件开发，service 为服务器解析开发
