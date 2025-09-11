@@ -25,3 +25,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'email', 'password', 'id', 'username']
         # read_only_fields = ['id', 'created_at', 'updated_at']
         read_only_fields = ['id', 'email', 'password', 'id', 'username']
+
+class LoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField()

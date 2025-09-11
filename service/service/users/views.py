@@ -1,8 +1,13 @@
 from django.shortcuts import render
 from rest_framework import viewsets
+from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from .models import User
-from .serializers import UserSerializer, UserCreateSerializer
+from .serializers import UserSerializer, UserCreateSerializer, LoginSerializer
+from rest_framework.response import Response
+from rest_framework import status
+from django.contrib.auth import authenticate
+from rest_framework.authtoken.models import Token
 
 # Create your views here.
 
@@ -25,5 +30,27 @@ class UserView(viewsets.ModelViewSet):
             self.permission_classes = [AllowAny]
         # 对于其他操作，只允许管理员访问
         else:
-            self.permission_classes = [IsAdminUser]
+            # self.permission_classes = [IsAdminUser]
+            self.permission_classes = [AllowAny]
         return super().get_permissions()
+    
+
+class LoginView(APIView):
+    permission_classes = [AllowAny]
+    serializer_class = LoginSerializer
+    def post(self, request):
+        email = request.data.get('email')
+        password = request.data.get('password')
+        user = authenticate(email=email, password=password)
+        if user is not None:
+            token, created = Token.objects.get_or_create(user=user)
+            user_serializer = UserSerializer(user, many=False)
+            return Response(status=status.HTTP_200_OK, data={'token': token.key, 'user': user_serializer.data})
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        
+class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request):
+        request.auth.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
