@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 # Create your views here.
-from rest_framework.views import ViewSet,status
+from rest_framework import viewsets,status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .models import Sketch
@@ -9,7 +9,7 @@ from .serializers import SketchSerializer
 from rest_framework.parsers import MultiPartParser, FormParser
 
 
-class SketchView(ViewSet.ModelViewSet):
+class SketchView(viewsets.ModelViewSet):
     queryset = Sketch.objects.all()
     serializer_class = SketchSerializer
     permission_classes = [IsAuthenticated]

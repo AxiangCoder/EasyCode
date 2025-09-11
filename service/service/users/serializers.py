@@ -1,0 +1,27 @@
+from rest_framework import serializers
+from .models import User
+
+class UserCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['email', 'password', 'id',  'avatar', 'role', 'is_active', 'is_superuser', 'is_deleted', 'created_at', 'updated_at', 'username']
+        # read_only_fields = ['id', 'created_at', 'updated_at']
+        read_only_fields = ['id',  'avatar', 'role', 'is_active', 'is_superuser', 'is_deleted', 'created_at', 'updated_at', 'username']
+        extra_kwargs = {
+            'password': {'write_only': True}
+        }
+    def create(self, validated_data):
+        user = User.objects.create_user(**validated_data)
+        return user
+    def update(self, instance, validated_data):
+        instance.email = validated_data.get('email', instance.email)
+        instance.password = validated_data.get('password', instance.password)
+        instance.save()
+        return instance
+    
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'email', 'password', 'id', 'username']
+        # read_only_fields = ['id', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'email', 'password', 'id', 'username']
