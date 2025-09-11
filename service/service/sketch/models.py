@@ -3,11 +3,11 @@ from django.conf import settings
 
 # Create your models here.
 class Sketch(models.Model):
-    sketch_file = models.FileField(upload_to='sketches/')
+    file = models.FileField(upload_to='upload/sketches/')
     created_time = models.DateTimeField(auto_now_add=True)
     updated_time = models.DateTimeField(auto_now=True)
     id=models.AutoField(primary_key=True)
-    is_delete=models.BooleanField(default=False),
+    is_delete=models.BooleanField(default=False)
     # 关联到创建人
     creator = models.ForeignKey(
         settings.AUTH_USER_MODEL,  # 引用自定义的用户模型
@@ -16,4 +16,4 @@ class Sketch(models.Model):
     )
 
     def __str__(self):
-        return self.sketch_file.name
+        return self.file.name
