@@ -9,3 +9,7 @@ class SketchSerializer(serializers.ModelSerializer):
         # read_only_fields: 将这些字段设置为只读，客户端提交数据时不能包含它们
         # 这些字段将由后端自动填充
         read_only_fields = ['creator', 'created_time', 'updated_time', 'id']
+    def create (self, validated_data):
+        user = self.context['request'].user
+        validated_data['creator'] = user
+        return super().create(validated_data)
