@@ -1,37 +1,54 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html>
 <head>
-<meta charset="UTF-8">
-<title>响应式布局示例</title>
-<style>
-  html, body { margin:0; padding:0; height:100%; }
-  .page { 
-    width:100vw; height:100vh;
-    display:grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap:0.5rem;
-    box-sizing:border-box;
-    padding:1rem; /* 可根据需要添加 */
-  }
-  .rect { background:#d9d9d9; border-radius:4px; padding:0.3rem; box-sizing:border-box; }
-  .abs { position:absolute; right:2rem; bottom:3rem; background:#ff6b6b; width:4rem; height:2rem; }
-</style>
-<script>
-  function setRootRem() {
-    const base = Math.max(document.body.clientWidth / 192, 10);
-    document.documentElement.style.fontSize = `${base}px`;
-  }
-  window.addEventListener('resize', setRootRem);
-  setRootRem();
-</script>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-<div class="page">
-  <!-- 示例子元素 -->
-  <div class="rect" style="grid-column: span 2; grid-row: 1;">矩形1</div>
-  <div class="rect">矩形2</div>
-  <div class="rect">矩形3</div>
-  <div class="abs"></div> <!-- 绝对定位示例 -->
-</div>
+  <div class="flex flex-col w-[1920px] h-[1080px] absolute left-[0px] top-[0px] bg-[#ffffff]">
+    <svg class="w-[1920px] h-[1080px]"></svg>
+    <div class="flex flex-col md:flex-row gap-[12px]">
+      <img class="w-[38px] h-[34px]"/>
+      <img class="w-[105px] h-[24px]"/>
+      <div></div>
+    </div>
+    <div class="flex flex-col md:flex-row">
+      <svg class="w-[144px] h-[143px]"></svg>
+      <svg class="w-[144px] h-[143px]"></svg>
+    </div>
+    <div>
+      <svg class="w-[144px] h-[150px] absolute left-[1px] top-[0px]"></svg>
+      <svg class="w-[144px] h-[144px] absolute left-[1px] top-[10px]"></svg>
+      <svg class="w-[144px] h-[144px] absolute left-[0px] top-[10px]"></svg>
+      <svg class="w-[144px] h-[144px] absolute left-[1px] top-[25px]"></svg>
+      <svg class="w-[144px] h-[144px] absolute left-[1px] top-[27px]"></svg>
+      <svg class="w-[144px] h-[144px] absolute left-[1px] top-[30px]"></svg>
+      <svg class="w-[144px] h-[144px] absolute left-[1px] top-[30px]"></svg>
+      <svg class="w-[144px] h-[144px] absolute left-[1px] top-[33px]"></svg>
+      <svg class="w-[144px] h-[144px] absolute left-[1px] top-[36px]"></svg>
+      <svg class="w-[144px] h-[144px] absolute left-[1px] top-[36px]"></svg>
+      <svg class="w-[144px] h-[144px] absolute left-[1px] top-[38px]"></svg>
+      <svg class="w-[144px] h-[144px] absolute left-[1px] top-[42px]"></svg>
+      <svg class="w-[144px] h-[144px] absolute left-[1px] top-[46px]"></svg>
+    </div>
+    <div>
+      <svg class="w-[144px] h-[144px] absolute left-[25px] top-[0px]"></svg>
+      <svg class="w-[144px] h-[144px] absolute left-[22px] top-[5px]"></svg>
+      <svg class="w-[144px] h-[144px] absolute left-[3px] top-[5px]"></svg>
+      <svg class="w-[144px] h-[144px] absolute left-[0px] top-[9px]"></svg>
+      <svg class="w-[29px] h-[38px] absolute left-[81px] top-[54px]"></svg>
+      <svg class="w-[23px] h-[29px] absolute left-[62px] top-[64px]"></svg>
+    </div>
+    <svg class="w-[418px] h-[521px]"></svg>
+    <div>
+      <svg class="w-[144px] h-[144px] absolute left-[0px] top-[0px]"></svg>
+      <svg class="w-[144px] h-[144px] absolute left-[0px] top-[8px]"></svg>
+      <svg class="w-[144px] h-[144px] absolute left-[14px] top-[10px]"></svg>
+      <svg class="w-[144px] h-[144px] absolute left-[10px] top-[16px]"></svg>
+      <svg class="w-[144px] h-[144px] absolute left-[9px] top-[28px]"></svg>
+      <svg class="w-[144px] h-[144px] absolute left-[9px] top-[31px]"></svg>
+      <svg class="w-[144px] h-[144px] absolute left-[13px] top-[31px]"></svg>
+      <svg class="w-[31px] h-[45px] absolute left-[63px] top-[79px]"></svg>
+    </div>
+  </div>
 </body>
 </html>

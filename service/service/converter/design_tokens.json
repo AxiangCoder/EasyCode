@@ -1,0 +1,18 @@
+{
+  "colors": {
+    "#FFFFFF": "color-white",
+    "#000000": "color-black",
+    "#4A90E2": "color-brand-primary",
+    "#F5F5F5": "color-surface-background",
+    "#E0E0E0": "color-border-default"
+  },
+  "fonts": {
+    "PingFangSC-Semibold-32": "font-display-large",
+    "PingFangSC-Regular-16": "font-body-default",
+    "PingFangSC-Regular-14": "font-caption-default"
+  },
+  "shadows": {
+    "shadow-id-from-sketch-1": "shadow-medium",
+    "shadow-id-from-sketch-2": "shadow-large"
+  }
+}

@@ -14,13 +14,13 @@
 
 ### **通用图层属性 (页面和子图层共享)**
 
-* `booleanOperation`: 布尔运算类型。通常用于形状合并，`-1` 表示没有布尔运算。
-* `isFixedToViewport`: 布尔值，图层在滚动时是否固定在视口中。
-* `isFlippedHorizontal`, `isFlippedVertical`: 布尔值，图层是否水平或垂直翻转。
-* `isLocked`: 布尔值，图层在软件中是否被锁定。
-* `isTemplate`: 布尔值，是否为模板图层。
+<!-- * `booleanOperation`: 布尔运算类型。通常用于形状合并，`-1` 表示没有布尔运算。 -->
+<!-- * `isFixedToViewport`: 布尔值，图层在滚动时是否固定在视口中。 -->
+<!-- * `isFlippedHorizontal`, `isFlippedVertical`: 布尔值，图层是否水平或垂直翻转。 -->
+<!-- * `isLocked`: 布尔值，图层在软件中是否被锁定。 -->
+<!-- * `isTemplate`: 布尔值，是否为模板图层。 -->
 * `isVisible`: 布尔值，图层是否可见。
-* `hasCustomPrototypeVisibility`: 布尔值，是否自定义了原型可见性。
+<!-- * `hasCustomPrototypeVisibility`: 布尔值，是否自定义了原型可见性。 -->
 * `hasExplicitConstraints`: 布尔值，是否具有明确的布局约束。
 * `horizontalSizing`, `verticalSizing`: 定义图层在父容器改变大小时如何调整水平和垂直尺寸。
 * `horizontalPins`, `verticalPins`: 描述图层固定的水平和垂直边缘。
