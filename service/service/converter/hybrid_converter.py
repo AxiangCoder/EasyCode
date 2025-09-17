@@ -197,7 +197,12 @@ def traverse_layer(
         node["content"] = {"text": layer.get("stringValue")}
     elif layer_class in ["group", "artboard"]:
         node["type"] = "Group"
-    else:  # 忽略其他类型的图层，如 shapePath, rectangle 等
+    elif layer_class == "rectangle":
+        node["type"] = "Rectangle"
+    elif layer_class == "oval":
+        node["type"] = "Oval"
+    else:  # 忽略其他类型的图层，如 shapePath 等
+        print(f"[INFO] 忽略图层类型: {layer_class} (名称: '{layer.get('name')}')")
         return None
 
     node["name"] = layer.get("name")
@@ -487,7 +492,7 @@ You are an expert UI layout analyst. Your task is to analyze a list of layers an
           "type": "flex" | "grid",
           "direction": "row" | "column",
           "columns": <number>,
-          "gap": <number>,
+          "gap": <number>, // IMPORTANT: "gap" is the visual space BETWEEN elements, NOT the distance between their coordinates.
           "children_indices": [<index_of_child_1>, <index_of_child_2>, ...]
         }}
       ],
@@ -495,6 +500,14 @@ You are an expert UI layout analyst. Your task is to analyze a list of layers an
     }}
     - `children_indices` and `outlier_indices` refer to the 0-based index of the layers in the input array.
     - Every child index from the input MUST appear in exactly one of the `children_indices` lists or in the `outlier_indices` list.
+
+**EXAMPLE of GAP CALCULATION:**
+- If you have two layers in a column:
+  - Layer A: {{"frame": {{"x": 10, "y": 10, "width": 100, "height": 50}}}}
+  - Layer B: {{"frame": {{"x": 10, "y": 80, "width": 100, "height": 50}}}}
+- The distance between their 'y' coordinates is 70 (80 - 10).
+- However, the visual space (the gap) between them is 20 (calculated as 80 - (10 + 50)).
+- **You should return 20 as the `gap` value.**
 
 **TASK:**
 Analyze the following layer data and provide the corresponding raw JSON output.
