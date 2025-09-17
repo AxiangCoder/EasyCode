@@ -58,6 +58,18 @@ selection.reduce((initial, layer) => {
 
 ## 2025.8.21
 
-今天转变思路，将之前开发的东西，作为 \_src 来备份，新的 src 中，将采用服务端的开发方式，模拟从前端接收到 .skecth 文件中的 page.json, 并解析该文件，需要保留之前开发的 sketchToCss 目录，及 utils/exportToJson
+今天转变思路，将之前开发的东西，作为 _src 来备份，新的 src 中，将采用服务端的开发方式，模拟从前端接收到 .skecth 文件中的 page.json, 并解析该文件，需要保留之前开发的 sketchToCss 目录，及 utils/exportToJson
 
 以后，front-end-plugin 为插件开发，service 为服务器解析开发
+
+
+## 2025.9.16
+简单布局及所有元素都显示出来 完成
+todo：
+1. 移动端适配
+2. PC 端大屏和中屏自适应
+3. 绝对定位到底是 写 left 还是 right，top 还是 buttom
+4. flex 布局和离散元素的判断还是有点问题
+5. 还未测试grid 布局
+7. 椭圆形元素现在还是方形
+8. 单页面dsl 到项目dsl 组装
