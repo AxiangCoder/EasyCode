@@ -3,7 +3,7 @@ import os
 
 # --- 配置项 ---
 DSL_INPUT_FILE = os.path.join(
-    os.path.dirname(__file__), "..", "media", "sketches", "dsl_output_v3_2.json"
+    os.path.dirname(__file__), "..", "media", "sketches", "dsl_output.json"
 )
 HTML_OUTPUT_FILE = os.path.join(
     os.path.dirname(__file__), "..", "media", "sketches", "output.html"
