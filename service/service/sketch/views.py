@@ -4,11 +4,13 @@ from django.shortcuts import render
 from rest_framework import viewsets,status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from drf_spectacular.utils import extend_schema
 from .models import Sketch
 from .serializers import SketchSerializer
 from rest_framework.parsers import MultiPartParser, FormParser
 
 
+@extend_schema(tags=['草图模块'])
 class SketchView(viewsets.ModelViewSet):
     queryset = Sketch.objects.all()
     serializer_class = SketchSerializer

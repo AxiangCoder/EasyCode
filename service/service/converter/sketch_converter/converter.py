@@ -65,6 +65,7 @@ class SketchConverter:
         self._write_dsl_output(dsl_output)
         self._write_token_report()
         logging.info("Conversion process completed.")
+        return dsl_output  # 添加返回值
 
     def _load_sketch_data(self):
         try:

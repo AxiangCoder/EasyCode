@@ -47,3 +47,7 @@ LLM_MODEL_NAME = "Qwen/QwQ-32B"  # SiliconFlow (last used model from original sc
 LAYOUT_Y_THRESHOLD = 10
 # Threshold for horizontal alignment in column detection
 LAYOUT_X_THRESHOLD = 5
+
+# --- File Size Limits ---
+# Maximum file size allowed for processing (50MB)
+MAX_FILE_SIZE = 50 * 1024 * 1024

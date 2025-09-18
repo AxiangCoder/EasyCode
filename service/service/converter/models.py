@@ -1,21 +1,117 @@
 from django.db import models
-import uuid
-from .sketch_parser import load_sketch, filter_sketch_data
-from service.settings import MEDIA_ROOT
-from pathlib import Path
-import json
-# Create your models here.
-class Converter(models.Model):
-    project_name = models.CharField(max_length=100)
-    id=models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    def __init__(self):
-        self.sketch = load_sketch(Path (MEDIA_ROOT, 'sketches/0C46BA71-DAE4-4953-B743-9287F90A179D.json'))
-        self.sketch = filter_sketch_data(self.sketch)
-        with open(Path(MEDIA_ROOT, 'sketches/output.json'), "w", encoding="utf-8") as file:
-            # json.dump() 函数将 Python 对象转换为 JSON 格式并写入文件
-            json.dump(self.sketch, file, ensure_ascii=False, indent=4)
-        print('success')
-        
+from django.contrib.auth import get_user_model
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+from django.core.validators import FileExtensionValidator
+from core.models import BaseModel
 
-    
+User = get_user_model()
+
+class DesignTokens(BaseModel):
+    """设计令牌配置文件"""
+    name = models.CharField(max_length=100, help_text="令牌配置名称")
+    file = models.FileField(
+        upload_to='design_tokens/',
+        validators=[FileExtensionValidator(['json'])],
+        help_text="设计令牌JSON文件"
+    )
+
+    def __str__(self):
+        return f"{self.name} ({self.creator.email if self.creator else 'System'})"
+
+    class Meta:
+        verbose_name = '设计令牌'
+        verbose_name_plural = '设计令牌'
+
+
+class ConversionTask(BaseModel):
+    """转换任务"""
+    STATUS_CHOICES = [
+        ('pending', '待处理'),
+        ('processing', '处理中'),
+        ('completed', '已完成'),
+        ('failed', '失败'),
+    ]
+
+    name = models.CharField(max_length=200, help_text="任务名称", null=True, blank=True,)
+    input_file = models.FileField(
+        upload_to='conversion_inputs/',
+        help_text="输入的设计文件"
+    )
+    design_tokens = models.ForeignKey(
+        DesignTokens,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        help_text="使用的设计令牌"
+    )
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='pending',
+        help_text="任务状态"
+    )
+    progress = models.IntegerField(
+        default=0,
+        help_text="转换进度 (0-100)"
+    )
+    error_message = models.TextField(
+        blank=True,
+        help_text="错误信息"
+    )
+    started_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text="开始时间"
+    )
+    completed_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text="完成时间"
+    )
+
+    def __str__(self):
+        return f"{self.name} - {self.status}"
+
+    class Meta:
+        verbose_name = '转换任务'
+        verbose_name_plural = '转换任务'
+        ordering = ['-created_time']
+
+
+class ConversionResult(BaseModel):
+    """转换结果"""
+    task = models.OneToOneField(
+        ConversionTask,
+        on_delete=models.CASCADE,
+        related_name='result',
+        help_text="关联的转换任务"
+    )
+    dsl_output = models.JSONField(
+        help_text="DSL输出结果"
+    )
+    html_output = models.TextField(
+        blank=True,
+        help_text="HTML预览输出"
+    )
+    token_report = models.JSONField(
+        default=dict,
+        help_text="令牌使用报告"
+    )
+
+    def __str__(self):
+        return f"Result for {self.task.name}"
+
+    class Meta:
+        verbose_name = '转换结果'
+        verbose_name_plural = '转换结果'
+
+    def save_html_to_file(self):
+        """将HTML输出保存到文件"""
+        if not self.html_output:
+            return None
+
+        file_path = f"conversion_outputs/{self.task.id}/preview.html"
+        default_storage.save(file_path, ContentFile(self.html_output.encode('utf-8')))
+        return file_path
     

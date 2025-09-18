@@ -2,6 +2,7 @@ from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
+from drf_spectacular.utils import extend_schema
 from .models import User
 from .serializers import UserSerializer, UserCreateSerializer, LoginSerializer
 from rest_framework.response import Response
@@ -11,6 +12,7 @@ from rest_framework.authtoken.models import Token
 
 # Create your views here.
 
+@extend_schema(tags=['用户管理模块'])
 class UserView(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -35,6 +37,7 @@ class UserView(viewsets.ModelViewSet):
         return super().get_permissions()
     
 
+@extend_schema(tags=['用户认证模块'])
 class LoginView(APIView):
     permission_classes = [AllowAny]
     serializer_class = LoginSerializer
@@ -49,6 +52,7 @@ class LoginView(APIView):
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         
+@extend_schema(tags=['用户认证模块'])
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
     def post(self, request):

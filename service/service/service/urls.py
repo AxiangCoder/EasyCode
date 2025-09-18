@@ -27,7 +27,7 @@ urlpatterns = [
     # 可视化的 ReDoc UI 文档
     path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 
-    # path('api/', include('converter.urls')),
+    path('v1/converter/', include('converter.urls')),
     # path('api/', include('core.urls')),
     # path('api/', include('results.urls')),
     path('v1/', include('users.urls')),
