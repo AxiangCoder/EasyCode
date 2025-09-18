@@ -26,7 +26,8 @@ class BaseModel(models.Model):
     creator = models.ForeignKey(
         settings.AUTH_USER_MODEL,  # 引用自定义的用户模型
         on_delete=models.PROTECT,  # 用户被删除时，其创建的产品也一并删除
-        related_name='sketches',   # 反向关联名，可以通过 user.sketches 获取该用户创建的所有产品
         null=True, blank=True
     )
+    class Meta:
+        abstract = True
 

@@ -5,7 +5,7 @@ class ConverterConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'converter'
 
-    def ready(self):
+    """ def ready(self):
         from django.conf import settings
         if settings.DEBUG:
             print("--- 项目已启动，开始执行调试方法 ---")
@@ -16,4 +16,4 @@ class ConverterConfig(AppConfig):
             except Exception as e:
                 print(f"执行调试方法时发生错误: {e}")
 
-            print("--- 调试方法执行完毕 ---")
+            print("--- 调试方法执行完毕 ---") """
