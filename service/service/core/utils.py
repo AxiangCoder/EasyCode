@@ -61,7 +61,7 @@ def _standardize_drf_response(response: Response, exc: Exception) -> Response:
             "details": response.data if isinstance(response.data, dict) else {}
         },
         "timestamp": datetime.utcnow().isoformat() + 'Z',
-        "path": getattr(response, '_request', {}).get('path', '') if hasattr(response, '_request') else ''
+        "path": getattr(response, '_request', {}).get('path', '') if hasattr(response, '_request') and getattr(response, '_request') else ''
     }
 
     return Response(standardized_data, status=response.status_code)

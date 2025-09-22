@@ -50,4 +50,4 @@ LAYOUT_X_THRESHOLD = 5
 
 # --- File Size Limits ---
 # Maximum file size allowed for processing (50MB)
-MAX_FILE_SIZE = 50 * 1024 * 1024
+MAX_FILE_SIZE = 100 * 1024 * 1024
