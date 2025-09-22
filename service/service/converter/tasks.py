@@ -66,11 +66,14 @@ def convert_design_file_task_sync(task_id, task_instance=None):
         }
 
     except ConversionTask.DoesNotExist:
+        from .exceptions import TaskNotFoundError
         error_msg = f"转换任务不存在: {task_id}"
         logger.error(error_msg)
-        raise Exception(error_msg)
+        raise TaskNotFoundError(task_id)
 
     except Exception as e:
+        from .exceptions import ConversionError
+
         error_msg = f"转换任务失败: {str(e)}"
         logger.error(f"任务 {task_id} 失败: {error_msg}")
 
@@ -81,7 +84,11 @@ def convert_design_file_task_sync(task_id, task_instance=None):
             task.error_message = str(e)
             task.completed_at = timezone.now()
             task.save()
-        except Exception:
-            pass  # 忽略更新失败的错误
+        except Exception as update_error:
+            logger.warning(f"更新任务状态失败: {update_error}")
 
-        raise Exception(error_msg)
+        # 抛出自定义异常
+        raise ConversionError(
+            message=error_msg,
+            task_id=task_id
+        )

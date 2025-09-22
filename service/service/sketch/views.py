@@ -27,7 +27,8 @@ class SketchView(viewsets.ModelViewSet):
         # 并将其作为 creator 字段的值，保存到数据库
         serializer.save(creator=self.request.user)
 
-    def destory(self, request, *args, **kwargs):
+    def destroy(self, request, *args, **kwargs):
+        """正确删除草图（软删除）"""
         sketch = self.get_object()
         sketch.is_delete = True
         sketch.save()

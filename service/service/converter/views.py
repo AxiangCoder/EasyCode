@@ -67,15 +67,23 @@ class ConversionTaskViewSet(viewsets.ModelViewSet):
         # from .tasks import convert_design_file_task
         # convert_design_file_task.delay(str(task.id))
 
-        # 使用同步版本
+        # 使用同步版本执行转换任务
         from .tasks import convert_design_file_task_sync
+        from .exceptions import ConverterException
+
         try:
             result = convert_design_file_task_sync(str(task.id))
             print(f"同步任务执行完成: {result}")
-        except Exception as e:
-            print(f"同步任务执行失败: {e}")
-            # 可以选择重新抛出异常或者记录错误
+        except ConverterException:
+            # 自定义异常会由全局异常处理器处理
             raise
+        except Exception as e:
+            # 其他异常包装为ConverterException
+            from .exceptions import ConversionError
+            raise ConversionError(
+                message=f"转换任务执行失败: {str(e)}",
+                task_id=str(task.id)
+            )
 
     @action(detail=True, methods=['get'])
     def progress(self, request, pk=None):
@@ -110,15 +118,22 @@ class ConversionTaskViewSet(viewsets.ModelViewSet):
         # from .tasks import convert_design_file_task
         # convert_design_file_task.delay(str(task.id))
 
-        # 使用同步版本
+        # 使用同步版本重试转换任务
         from .tasks import convert_design_file_task_sync
+        from .exceptions import ConverterException, ConversionError
+
         try:
             result = convert_design_file_task_sync(str(task.id))
             print(f"同步重试任务执行完成: {result}")
-        except Exception as e:
-            print(f"同步重试任务执行失败: {e}")
-            # 可以选择重新抛出异常或者记录错误
+        except ConverterException:
+            # 自定义异常会由全局异常处理器处理
             raise
+        except Exception as e:
+            # 其他异常包装为ConverterException
+            raise ConversionError(
+                message=f"转换任务重试失败: {str(e)}",
+                task_id=str(task.id)
+            )
 
         serializer = self.get_serializer(task)
         return Response(serializer.data)

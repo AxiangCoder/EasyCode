@@ -1,0 +1,37 @@
+# Django核心
+Django==4.2.23
+djangorestframework==3.15.1
+django-cors-headers==4.4.0
+
+# DRF扩展
+drf-spectacular==0.27.2
+
+# 数据库
+# SQLite默认包含在Python中，无需额外安装
+
+# 任务队列 (可选，用于异步处理)
+celery==5.4.0
+
+# 缓存/消息队列 (可选)
+redis==5.0.3
+
+# 文件处理
+Pillow==10.3.0
+
+# 数据处理
+jsonschema==4.22.0
+
+# 开发工具
+black==24.4.2
+flake8==7.0.0
+isort==5.13.2
+
+# 测试
+pytest==8.2.1
+pytest-django==4.8.0
+
+# 环境变量管理
+python-decouple==3.8
+
+# 日志
+structlog==24.1.0

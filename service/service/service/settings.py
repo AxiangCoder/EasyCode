@@ -140,7 +140,9 @@ REST_FRAMEWORK = {
     # 默认权限类：所有视图默认需要认证才能访问
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
-    ]
+    ],
+    # 自定义异常处理器
+    'EXCEPTION_HANDLER': 'core.utils.custom_exception_handler',
 }
 
 SPECTACULAR_SETTINGS = {
