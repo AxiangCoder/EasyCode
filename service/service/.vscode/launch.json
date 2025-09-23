@@ -1,0 +1,64 @@
+{
+    // 使用 IntelliSense 了解相关属性。
+    // 悬停以查看现有属性的描述。
+    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run Celery Worker",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "celery",
+            "args": [
+                "-A", "service.celeryapp",
+                "worker",
+                "-l", "info",
+                "-Q", "converter",
+                "-E"
+                // macOS 遇到多进程问题可加: "--pool=solo"
+            ],
+            "cwd": "${workspaceFolder}",
+            "justMyCode": false,
+            "console": "integratedTerminal",
+            "env": {
+                "PATH": "${workspaceFolder}/.venv/bin:${env:PATH}"
+            }
+        },
+        {
+            "name": "Run Celery Flower",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "celery",
+            "args": [
+                "-A", "service.celeryapp",
+                "flower",
+                "--port=5555",
+            ],
+            "cwd": "${workspaceFolder}",
+            "justMyCode": false,
+            "console": "integratedTerminal",
+            "env": {
+                "PATH": "${workspaceFolder}/.venv/bin:${env:PATH}",
+                "CELERY_BROKER_URL": "redis://localhost:6379/0",
+                "CELERY_RESULT_BACKEND": "redis://localhost:6379/1"
+            }
+        },
+        {
+            "name": "Python Debugger: Django",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/manage.py",
+            "args": [
+                "runserver"
+            ],
+            "django": true,
+            "justMyCode": false
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Start All",
+            "configurations": ["Run Celery Worker", "Python Debugger: Django", "Run Celery Flower"]
+        }
+    ]
+}
