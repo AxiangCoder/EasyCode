@@ -99,6 +99,10 @@ class ConversionResult(BaseModel):
         default=dict,
         help_text="令牌使用报告"
     )
+    llm_usage = models.JSONField(
+        default=dict,
+        help_text="LLM token 用量汇总"
+    )
 
     def __str__(self):
         return f"Result for {self.task.name}"

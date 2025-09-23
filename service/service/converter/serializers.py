@@ -81,12 +81,12 @@ class ConversionResultSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'task', 'task_name', 'task_status', 'task_creator_email',
             'dsl_output', 'html_output', 'html_preview_url', 'token_report',
-            'created_time', 'updated_time'
+            'llm_usage', 'created_time', 'updated_time'
         ]
         read_only_fields = [
             'id', 'task', 'task_name', 'task_status', 'task_creator_email',
             'dsl_output', 'html_output', 'html_preview_url', 'token_report',
-            'created_time', 'updated_time'
+            'llm_usage', 'created_time', 'updated_time'
         ]
 
     def get_html_preview_url(self, obj):

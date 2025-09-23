@@ -69,7 +69,8 @@ class DesignConverterService:
             return {
                 'dsl': dsl_output,
                 'html': html_output,
-                'report': token_report
+                'report': token_report,
+                'llm_usage': converter.llm_usage
             }
 
         except Exception as e:

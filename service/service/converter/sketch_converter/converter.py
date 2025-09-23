@@ -39,6 +39,11 @@ class SketchConverter:
                     base_url=config.LLM_BASE_URL,
                 )
                 logging.info("OpenAI client initialized successfully.")
+                self.llm_usage = {
+                    "prompt_tokens": 0,
+                    "completion_tokens": 0,
+                    "total_tokens": 0,
+                }
             except Exception as e:
                 logging.error(f"Failed to initialize OpenAI client: {e}")
                 self.llm_client = None
@@ -429,9 +434,15 @@ Input Layers:
                 temperature=0.1,
                 # response_format={"type": "json_object"}, # Removed for compatibility
             )
+            print(response)
             
             if response.usage:
                 logging.info(f"Token usage: {response.usage.total_tokens} total tokens.")
+                usage = getattr(response, "usage", None)
+                if usage:
+                    self.llm_usage["prompt_tokens"] += usage.prompt_tokens
+                    self.llm_usage["completion_tokens"] += usage.completion_tokens
+                    self.llm_usage["total_tokens"] += usage.total_tokens
 
             # Defensive post-processing to remove markdown, restored from original script
             response_text = response.choices[0].message.content
