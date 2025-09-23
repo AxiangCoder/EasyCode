@@ -4,6 +4,7 @@ from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 from django.core.validators import FileExtensionValidator
 from core.models import BaseModel
+import json
 
 User = get_user_model()
 
@@ -113,5 +114,23 @@ class ConversionResult(BaseModel):
 
         file_path = f"conversion_outputs/{self.task.id}/preview.html"
         default_storage.save(file_path, ContentFile(self.html_output.encode('utf-8')))
+        return file_path
+
+    def save_dsl_to_file(self):
+        """将DSL输出保存到文件"""
+        if not self.dsl_output:
+            return None
+
+        file_path = f"conversion_outputs/{self.task.id}/dsl_output.json"
+        default_storage.save(file_path, ContentFile(json.dumps(self.dsl_output, ensure_ascii=False, indent=2)))
+        return file_path
+    
+    def save_token_report_to_file(self):
+        """将令牌报告保存到文件"""
+        if not self.token_report:
+            return None
+
+        file_path = f"conversion_outputs/{self.task.id}/token_report.json"
+        default_storage.save(file_path, ContentFile(json.dumps(self.token_report, ensure_ascii=False, indent=2)))
         return file_path
     

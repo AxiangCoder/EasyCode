@@ -55,6 +55,11 @@ def convert_design_file_task_sync(task_id, task_instance=None):
             token_report=result.get('report', {})
         )
 
+        # 保存结果至文件
+        conversion_result.save_html_to_file()
+        # conversion_result.save_dsl_to_file()
+        # conversion_result.save_token_report_to_file()
+
         # 更新进度：保存完成（仅在异步模式下）
         if task_instance:
             task_instance.update_state(state='PROGRESS', meta={'progress': 100})
