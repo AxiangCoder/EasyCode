@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from os import path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -154,4 +155,24 @@ SPECTACULAR_SETTINGS = {
 AUTH_USER_MODEL = 'users.User'
 
 MEDIA_ROOT = Path(BASE_DIR, 'media')
+
+# Celery配置
+CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL', 'redis://localhost:6379/0')  # Redis作为消息代理
+CELERY_RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND', 'redis://localhost:6379/0')  # Redis作为结果后端
+CELERY_ACCEPT_CONTENT = ['json']  # 接受的内容类型
+CELERY_TASK_SERIALIZER = 'json'  # 任务序列化格式
+CELERY_RESULT_SERIALIZER = 'json'  # 结果序列化格式
+CELERY_TIMEZONE = TIME_ZONE  # 使用Django的时区设置
+CELERY_TASK_RESULT_PREFIX = 'projectA_celery:'# 为 Celery 任务结果添加键前缀
+
+
+# Celery任务路由配置（可选，用于多队列）
+CELERY_TASK_ROUTES = {
+    'converter.tasks.convert_design_file_task': {'queue': 'converter'},
+}
+
+# Celery工作进程配置
+CELERY_WORKER_PREFETCH_MULTIPLIER = 1  # 每次只预取一个任务
+CELERY_TASK_ACKS_LATE = True  # 任务完成后确认
+CELERY_WORKER_MAX_TASKS_PER_CHILD = 50  # 每个子进程最多处理50个任务
 

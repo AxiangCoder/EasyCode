@@ -1,5 +1,6 @@
 import logging
 from celery import shared_task
+from service.celeryapp import app
 from django.utils import timezone
 
 from .models import ConversionTask, ConversionResult
@@ -8,7 +9,7 @@ from .services import ConversionTaskService
 logger = logging.getLogger(__name__)
 
 
-@shared_task(bind=True)
+@app.task(bind=True)
 def convert_design_file_task(self, task_id):
     """
     异步转换设计文件任务

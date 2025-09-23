@@ -64,14 +64,14 @@ class ConversionTaskViewSet(viewsets.ModelViewSet):
         task = serializer.save(creator=self.request.user)
 
         # 同步执行转换任务（注释掉异步调用）
-        # from .tasks import convert_design_file_task
-        # convert_design_file_task.delay(str(task.id))
+        from .tasks import convert_design_file_task
+        convert_design_file_task.delay(str(task.id))
 
         # 使用同步版本执行转换任务
-        from .tasks import convert_design_file_task_sync
-        from .exceptions import ConverterException
+        # from .tasks import convert_design_file_task_sync
+        # from .exceptions import ConverterException
 
-        try:
+        """ try:
             result = convert_design_file_task_sync(str(task.id))
             print(f"同步任务执行完成: {result}")
         except ConverterException:
@@ -83,7 +83,7 @@ class ConversionTaskViewSet(viewsets.ModelViewSet):
             raise ConversionError(
                 message=f"转换任务执行失败: {str(e)}",
                 task_id=str(task.id)
-            )
+            ) """
 
     @action(detail=True, methods=['get'])
     def progress(self, request, pk=None):
