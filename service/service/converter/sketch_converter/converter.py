@@ -32,7 +32,7 @@ class SketchConverter:
         self.report = defaultdict(dict)
         self.llm_client = None
         self.progress_callback = progress_callback
-        if config.ENABLE_LLM_FALLBACK and config.LLM_API_KEY:
+        if getattr(config, "ENABLE_LLM_FALLBACK", False)  and getattr(config, "LLM_API_KEY", None):
             try:
                 self.llm_client = OpenAI(
                     api_key=config.LLM_API_KEY,
@@ -110,15 +110,9 @@ class SketchConverter:
 
     def _find_main_artboard(self):
         """Finds the first visible artboard or group to process, especially if the root is a page."""
-        if self.sketch_data.get("_class") != constants.LAYER_PAGE:
+        if self.sketch_data.get("_class") in [constants.LAYER_PAGE, constants.LAYER_ARTBOARD, constants.LAYER_GROUP]:
+            logger.info(f"Found starting point: '{self.sketch_data.get('name')}' ({self.sketch_data.get('_class')})")
             return self.sketch_data
-
-        logger.info("Root node is a Page, searching for a processable artboard/group...")
-        for layer in self.sketch_data.get("layers", []):
-            if layer.get("_class") in [constants.LAYER_ARTBOARD, constants.LAYER_GROUP, constants.LAYER_PAGE] and layer.get("isVisible", True):
-                logger.info(f"Found starting point: '{layer.get('name')}' ({layer.get('_class')})")
-                return layer
-        return None
 
     def _map_styles_to_tokens(self, layer):
         """Maps layer styles to design tokens and reports unknown styles."""
@@ -232,15 +226,29 @@ class SketchConverter:
         elif layer_class == constants.LAYER_TEXT:
             node["type"] = constants.NODE_TEXT
             node["content"] = {"text": layer.get("stringValue")}
-        elif layer_class in [constants.LAYER_GROUP, constants.LAYER_ARTBOARD]:
+        elif layer_class == constants.LAYER_GROUP:
             node["type"] = constants.NODE_GROUP
         elif layer_class == constants.LAYER_RECTANGLE:
             node["type"] = constants.NODE_RECTANGLE
         elif layer_class == constants.LAYER_OVAL:
             node["type"] = constants.NODE_OVAL
+        elif layer_class == constants.LAYER_PAGE:
+            node["type"] = constants.NODE_PAGE
+        elif layer_class == constants.LAYER_ARTBOARD:
+            node["type"] = constants.NODE_ARTBOARD
+        elif layer_class == constants.LAYER_ARTBOARD:
+            node["type"] = constants.NODE_SHAPE_PATH
+        elif layer_class == constants.LAYER_ARTBOARD:
+            node["type"] = constants.NODE_SHAPE_GROUP
+        elif layer_class == constants.LAYER_ARTBOARD:
+            node["type"] = constants.NODE_BITMAP
+        elif layer_class == constants.LAYER_ARTBOARD:
+            node["type"] = constants.NODE_TRIANGLE
         else:
             logger.info(f"Ignoring layer type: {layer_class} (Name: '{layer.get('name')}')")
-            return None
+            # return None
+            node["type"] = constants.NODE_UNKNOWN_COMPONENT
+            node["class"] = layer_class
         
         node["name"] = layer.get("name")
         node["do_objectID"] = layer.get("do_objectID")

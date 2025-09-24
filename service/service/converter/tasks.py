@@ -133,7 +133,8 @@ def convert_design_file_task_sync(task_id, task_instance=None):
             task=task,
             dsl_output=result['dsl'],
             html_output=result['html'],
-            token_report=result.get('report', {})
+            token_report=result.get('report', {}),
+            llm_usage=result.get('llm_usage', {})
         )
 
         # 保存结果至文件

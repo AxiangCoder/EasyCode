@@ -109,6 +109,8 @@ class ConversionResult(BaseModel):
         help_text="关联的转换任务"
     )
     dsl_output = models.JSONField(
+        null=True,        # 允许数据库存储 NULL
+        blank=True, 
         help_text="DSL输出结果"
     )
     html_output = models.TextField(
