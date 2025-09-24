@@ -34,6 +34,7 @@ class ConversionTaskSerializer(serializers.ModelSerializer):
     design_tokens_name = serializers.CharField(source='design_tokens.name', read_only=True)
     status_display = serializers.CharField(source='get_status_display', read_only=True)
     has_result = serializers.SerializerMethodField()
+    result_id = serializers.SerializerMethodField()
 
     class Meta:
         model = ConversionTask
@@ -41,11 +42,11 @@ class ConversionTaskSerializer(serializers.ModelSerializer):
             'id', 'name', 'input_file', 'input_file_size', 'design_tokens',
             'design_tokens_name', 'status', 'status_display', 'progress',
             'error_message', 'started_at', 'completed_at', 'creator_email',
-            'has_result', 'input_nodes', 'handled_nodes', 'hidden_nodes','created_time', 'updated_time'
+            'has_result', 'result_id', 'input_nodes', 'handled_nodes', 'hidden_nodes','created_time', 'updated_time'
         ]
         read_only_fields = [
             'id', 'status', 'progress', 'error_message', 'started_at',
-            'completed_at', 'creator_email', 'has_result', 'input_nodes', 'handled_nodes', 'hidden_nodes','created_time', 'updated_time'
+            'completed_at', 'creator_email', 'has_result', 'result_id', 'input_nodes', 'handled_nodes', 'hidden_nodes','created_time', 'updated_time'
         ]
 
     def get_input_file_size(self, obj):
@@ -58,6 +59,12 @@ class ConversionTaskSerializer(serializers.ModelSerializer):
     def get_has_result(self, obj):
         """检查是否有转换结果"""
         return hasattr(obj, 'result')
+
+    def get_result_id(self, obj):
+        """获取转换结果ID"""
+        if hasattr(obj, 'result') and obj.result:
+            return obj.result.id
+        return None
 
     def create(self, validated_data):
         validated_data['creator'] = self.context['request'].user
