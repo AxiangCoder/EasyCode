@@ -236,13 +236,13 @@ class SketchConverter:
             node["type"] = constants.NODE_PAGE
         elif layer_class == constants.LAYER_ARTBOARD:
             node["type"] = constants.NODE_ARTBOARD
-        elif layer_class == constants.LAYER_ARTBOARD:
+        elif layer_class == constants.LAYER_SHAPE_PATH:
             node["type"] = constants.NODE_SHAPE_PATH
-        elif layer_class == constants.LAYER_ARTBOARD:
+        elif layer_class == constants.LAYER_SHAPE_GROUP:
             node["type"] = constants.NODE_SHAPE_GROUP
-        elif layer_class == constants.LAYER_ARTBOARD:
+        elif layer_class == constants.LAYER_BITMAP:
             node["type"] = constants.NODE_BITMAP
-        elif layer_class == constants.LAYER_ARTBOARD:
+        elif layer_class == constants.LAYER_TRIANGLE:
             node["type"] = constants.NODE_TRIANGLE
         else:
             logger.info(f"Ignoring layer type: {layer_class} (Name: '{layer.get('name')}')")
@@ -262,7 +262,7 @@ class SketchConverter:
         # 3. Handle layout and children
         layout = {}
         children_nodes = []
-        if node["type"] in [constants.NODE_GROUP, constants.NODE_ARTBOARD, constants.NODE_PAGE] and layer.get("layers"):
+        if layer.get("layers") and len(layer.get("layers")) > 0:
             child_layers = layer["layers"]
             layout_analysis = self._analyze_layout_with_llm(child_layers) if self.llm_client else None
             if layout_analysis and "layout_groups" in layout_analysis:
