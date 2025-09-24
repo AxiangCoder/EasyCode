@@ -244,6 +244,7 @@ class SketchConverter:
         
         node["type"] = layer_class
         node["name"] = layer.get("name")
+        node["do_objectID"] = layer.get("do_objectID")
 
         # 2. Map styles and dimensions
         style = self._map_styles_to_tokens(layer)

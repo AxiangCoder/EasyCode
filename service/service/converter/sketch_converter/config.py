@@ -35,7 +35,7 @@ LLM_BASE_URL = "http://127.0.0.1:1234/v1"
 
 # --- Model Name Configuration ---
 # The specific model to be used.
-# LLM_MODEL_NAME = "Qwen/QwQ-32B"  # SiliconFlow (last used model from original script)
+# LLM_MODEL_NAME = "Qwen/Qwen2.5-Coder-7B-Instruct"  # SiliconFlow (last used model from original script)
 # Original commented-out models for reference:
 # LLM_MODEL_NAME = "gemini-2.5-flash"
 LLM_MODEL_NAME = "openai/gpt-oss-20b"

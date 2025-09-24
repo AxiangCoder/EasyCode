@@ -2,6 +2,7 @@ import logging
 from celery import shared_task
 from service.celeryapp import app
 from django.utils import timezone
+from django.db.models import F
 
 from .models import ConversionTask, ConversionResult
 from .services import ConversionTaskService
@@ -93,21 +94,31 @@ def convert_design_file_task_sync(task_id, task_instance=None):
             return # 失败后中止任务
 
 
-        def progress_callback ():
-            """ node_counter[0] += 1
-            current_progress = int((node_counter[0] + 10) / (task.input_nodes * 85))
-            if current_progress > last_reported_progress[0]:
-                last_reported_progress[0] = current_progress
-                ConversionTask.objects.filter (id = task_id).update (
-                    progress = min (current_progress, 100),
-                    hidden_nodes = node_counter[0],
-                ) """
-            task.handled_nodes += 1
-            progress = ((task.handled_nodes + task.handled_nodes) // task.input_nodes) * 90 + 5
-            task.progress = progress
-            if task_instance:
-                task_instance.update_state(state='PROGRESS', meta={'progress': progress})
-            task.save (update_fields=["progress", "handled_nodes"])
+        def progress_callback():
+            """正确的进度回调函数"""
+            try:
+                # 先更新handled_nodes
+                ConversionTask.objects.filter(id=task_id).update(handled_nodes=F('handled_nodes') + 1)
+                
+                # 再获取更新后的值计算进度
+                task.refresh_from_db(fields=["handled_nodes", "hidden_nodes", "input_nodes"])
+                logger.info (f"input_nodes: {task.input_nodes}")
+                logger.info (f"handled_nodes: {task.handled_nodes}")
+                logger.info (f"hidden_nodes: {task.hidden_nodes}")
+                if task.input_nodes and task.input_nodes > 0:
+                    progress = ((task.handled_nodes + task.hidden_nodes)  * 90 // task.input_nodes) + 5
+                    logger.info (f"progress: {progress}")
+                else:
+                    progress = 5
+                
+                # 更新进度
+                ConversionTask.objects.filter(id=task_id).update(progress=progress)
+                
+                if task_instance:
+                    task_instance.update_state(state='PROGRESS', meta={'progress': progress})
+                    
+            except Exception as e:
+                logger.warning(f"更新进度失败: {e}")
 
         # 更新进度：开始处理（仅在异步模式下）
         if task_instance:
