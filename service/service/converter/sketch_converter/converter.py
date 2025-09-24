@@ -6,8 +6,8 @@ from openai import OpenAI
 
 from . import config, constants, utils
 
-# Setup basic logging
-logging.basicConfig(level=logging.INFO, format='[%(levelname)s] %(message)s')
+# Setup logging - use Django's logging configuration
+logger = logging.getLogger(__name__)
 
 
 class SketchConverter:
@@ -17,7 +17,7 @@ class SketchConverter:
     parsing layers, mapping styles to tokens, and generating output files.
     """
 
-    def __init__(self, input_file, tokens_file, dsl_output_file, report_output_file):
+    def __init__(self, input_file, tokens_file, dsl_output_file, report_output_file, progress_callback):
         """
         Initializes the converter with configuration.
         """
@@ -31,69 +31,68 @@ class SketchConverter:
         self.symbol_map = {}
         self.report = defaultdict(dict)
         self.llm_client = None
-
+        self.progress_callback = progress_callback
         if config.ENABLE_LLM_FALLBACK and config.LLM_API_KEY:
             try:
                 self.llm_client = OpenAI(
                     api_key=config.LLM_API_KEY,
                     base_url=config.LLM_BASE_URL,
                 )
-                logging.info("OpenAI client initialized successfully.")
+                logger.info("OpenAI client initialized successfully.")
                 self.llm_usage = {
                     "prompt_tokens": 0,
                     "completion_tokens": 0,
                     "total_tokens": 0,
                 }
             except Exception as e:
-                logging.error(f"Failed to initialize OpenAI client: {e}")
+                logger.error(f"Failed to initialize OpenAI client: {e}")
                 self.llm_client = None
         else:
-            logging.warning("LLM fallback is disabled or API key is not configured.")
+            logger.warning("LLM fallback is disabled or API key is not configured.")
 
     def run(self):
         """
         Executes the full conversion pipeline.
         """
-        logging.info(f"--- Sketch-to-DSL Converter (Refactored) ---")
+        logger.info(f"--- Sketch-to-DSL Converter (Refactored) ---")
+        logger.info("=== 转换器日志测试 ===")
         self._load_sketch_data()
         self._load_design_tokens()
         self._preprocess_symbols()
-
         target_layer = self._find_main_artboard()
         if not target_layer:
-            logging.error("No suitable artboard or group found to process in the Sketch file.")
+            logger.error("No suitable artboard or group found to process in the Sketch file.")
             return
 
-        logging.info("Starting conversion...")
+        logger.info("Starting conversion...")
         dsl_output = self._traverse_layer(target_layer)
-
         self._write_dsl_output(dsl_output)
         self._write_token_report()
-        logging.info("Conversion process completed.")
+        logger.info("Conversion process completed.")
         return dsl_output  # 添加返回值
 
     def _load_sketch_data(self):
         try:
             with open(self.input_file, "r", encoding="utf-8") as f:
                 self.sketch_data = json.load(f)
-                logging.info(f"Successfully loaded sketch file: {self.input_file}")
+                logger.info(f"Successfully loaded sketch file: {self.input_file}")
         except FileNotFoundError:
-            logging.error(f"Input file not found: {self.input_file}")
+            logger.error(f"Input file not found: {self.input_file}")
             raise
         except json.JSONDecodeError:
-            logging.error(f"Invalid JSON in sketch file: {self.input_file}")
+            logger.error(f"Invalid JSON in sketch file: {self.input_file}")
             raise
 
     def _load_design_tokens(self):
         try:
             with open(self.tokens_file, "r", encoding="utf-8") as f:
                 self.token_maps = json.load(f)
-                logging.info(f"Successfully loaded design tokens: {self.tokens_file}")
+                logger.info(f"Successfully loaded design tokens: {self.tokens_file}")
         except FileNotFoundError:
-            logging.warning(f"Design tokens file not found: {self.tokens_file}. Proceeding without tokens.")
+            logger.warning(f"Design tokens file not found: {self.tokens_file}. Proceeding without tokens.")
             self.token_maps = {}
         except json.JSONDecodeError:
-            logging.warning(f"Invalid JSON in tokens file: {self.tokens_file}. Proceeding without tokens.")
+            logger.warning(f"Invalid JSON in tokens file: {self.tokens_file}. Proceeding without tokens.")
             self.token_maps = {}
 
     def _preprocess_symbols(self):
@@ -107,17 +106,17 @@ class SketchConverter:
                     for item in artboard.get("layers", []):
                         if item.get("_class") == constants.LAYER_SYMBOL_MASTER:
                             self.symbol_map[item.get("symbolID")] = item.get("name")
-        logging.info(f"Preprocessing complete. Found {len(self.symbol_map)} symbols.")
+        logger.info(f"Preprocessing complete. Found {len(self.symbol_map)} symbols.")
 
     def _find_main_artboard(self):
         """Finds the first visible artboard or group to process, especially if the root is a page."""
         if self.sketch_data.get("_class") != constants.LAYER_PAGE:
             return self.sketch_data
 
-        logging.info("Root node is a Page, searching for a processable artboard/group...")
+        logger.info("Root node is a Page, searching for a processable artboard/group...")
         for layer in self.sketch_data.get("layers", []):
-            if layer.get("_class") in [constants.LAYER_ARTBOARD, constants.LAYER_GROUP] and layer.get("isVisible", True):
-                logging.info(f"Found starting point: '{layer.get('name')}' ({layer.get('_class')})")
+            if layer.get("_class") in [constants.LAYER_ARTBOARD, constants.LAYER_GROUP, constants.LAYER_PAGE] and layer.get("isVisible", True):
+                logger.info(f"Found starting point: '{layer.get('name')}' ({layer.get('_class')})")
                 return layer
         return None
 
@@ -143,7 +142,7 @@ class SketchConverter:
                 if token:
                     dsl_style["backgroundColor"] = token
                 else:
-                    logging.warning(f"Unknown background color: {hex_color} (Layer: '{layer_name}')")
+                    logger.warning(f"Unknown background color: {hex_color} (Layer: '{layer_name}')")
                     dsl_style["backgroundColor"] = hex_color
                     self.report["unknown_colors"].setdefault(hex_color, []).append(layer_name)
         
@@ -178,7 +177,7 @@ class SketchConverter:
                 if token:
                     dsl_style["textColor"] = token
                 else:
-                    logging.warning(f"Unknown text color: {hex_color} (Layer: '{layer_name}')")
+                    logger.warning(f"Unknown text color: {hex_color} (Layer: '{layer_name}')")
                     dsl_style["textColor"] = hex_color
                     self.report["unknown_textColors"].setdefault(hex_color, []).append(layer_name)
         # Font
@@ -190,7 +189,7 @@ class SketchConverter:
             if token:
                 dsl_style["font"] = token
             else:
-                logging.warning(f"Unknown font: '{font_key}' (Layer: '{layer_name}')")
+                logger.warning(f"Unknown font: '{font_key}' (Layer: '{layer_name}')")
                 self.report["unknown_fonts"].setdefault(font_key, []).append(layer_name)
 
     def _map_border_style(self, border, dsl_style, layer_name):
@@ -201,12 +200,16 @@ class SketchConverter:
             if token:
                 dsl_style["borderColor"] = token
             else:
-                logging.warning(f"Unknown border color: {hex_color} (Layer: '{layer_name}')")
+                logger.warning(f"Unknown border color: {hex_color} (Layer: '{layer_name}')")
                 dsl_style["borderColor"] = hex_color
                 self.report["unknown_borderColors"].setdefault(hex_color, []).append(layer_name)
 
     def _traverse_layer(self, layer, parent_layout_type=constants.LAYOUT_ABSOLUTE):
         """Recursively traverses the layer tree to build the DSL structure."""
+        # 实时进度
+        if self.progress_callback:
+            self.progress_callback()
+
         if not layer or not layer.get("isVisible", True):
             return None
 
@@ -215,30 +218,31 @@ class SketchConverter:
         node = {}
 
         # 1. Determine node type and content
-        if layer_class == constants.LAYER_SYMBOL_INSTANCE:
-            symbol_id = layer.get("symbolID")
-            semantic_name = self.symbol_map.get(symbol_id, layer.get("name"))
-            parsed_name = utils.parse_semantic_name(semantic_name)
-            node["type"] = parsed_name.get("type", constants.NODE_UNKNOWN_COMPONENT)
-            node["variant"] = parsed_name.get("variant")
-            if overrides := layer.get("overrideValues"):
-                for override in overrides:
-                    if "stringValue" in override and override["stringValue"]:
-                        node["content"] = {"text": override["stringValue"]}
-                        break
-        elif layer_class == constants.LAYER_TEXT:
-            node["type"] = constants.NODE_TEXT
-            node["content"] = {"text": layer.get("stringValue")}
-        elif layer_class in [constants.LAYER_GROUP, constants.LAYER_ARTBOARD]:
-            node["type"] = constants.NODE_GROUP
-        elif layer_class == constants.LAYER_RECTANGLE:
-            node["type"] = constants.NODE_RECTANGLE
-        elif layer_class == constants.LAYER_OVAL:
-            node["type"] = constants.NODE_OVAL
-        else:
-            logging.info(f"Ignoring layer type: {layer_class} (Name: '{layer.get('name')}')")
-            return None
-
+        # if layer_class == constants.LAYER_SYMBOL_INSTANCE:
+        #     symbol_id = layer.get("symbolID")
+        #     semantic_name = self.symbol_map.get(symbol_id, layer.get("name"))
+        #     parsed_name = utils.parse_semantic_name(semantic_name)
+        #     node["type"] = parsed_name.get("type", constants.NODE_UNKNOWN_COMPONENT)
+        #     node["variant"] = parsed_name.get("variant")
+        #     if overrides := layer.get("overrideValues"):
+        #         for override in overrides:
+        #             if "stringValue" in override and override["stringValue"]:
+        #                 node["content"] = {"text": override["stringValue"]}
+        #                 break
+        # elif layer_class == constants.LAYER_TEXT:
+        #     node["type"] = constants.NODE_TEXT
+        #     node["content"] = {"text": layer.get("stringValue")}
+        # elif layer_class in [constants.LAYER_GROUP, constants.LAYER_ARTBOARD]:
+        #     node["type"] = constants.NODE_GROUP
+        # elif layer_class == constants.LAYER_RECTANGLE:
+        #     node["type"] = constants.NODE_RECTANGLE
+        # elif layer_class == constants.LAYER_OVAL:
+        #     node["type"] = constants.NODE_OVAL
+        # else:
+        #     logger.info(f"Ignoring layer type: {layer_class} (Name: '{layer.get('name')}')")
+        #     return None
+        
+        node["type"] = layer_class
         node["name"] = layer.get("name")
 
         # 2. Map styles and dimensions
@@ -250,10 +254,9 @@ class SketchConverter:
         # 3. Handle layout and children
         layout = {}
         children_nodes = []
-        if node["type"] == constants.NODE_GROUP and layer.get("layers"):
+        if node["type"] == constants.LAYER_GROUP and layer.get("layers"):
             child_layers = layer["layers"]
             layout_analysis = self._analyze_layout_with_llm(child_layers) if self.llm_client else None
-
             if layout_analysis and "layout_groups" in layout_analysis:
                 # Advanced layout processing with LLM result
                 layout["type"] = constants.LAYOUT_ABSOLUTE
@@ -372,16 +375,16 @@ class SketchConverter:
                 if any(g < 0 for g in gaps): return {"type": constants.LAYOUT_ABSOLUTE}
                 return {"type": constants.LAYOUT_FLEX, "direction": constants.LAYOUT_DIR_COLUMN, "gap": round(sum(gaps) / len(gaps)) if gaps else 0}
 
-        logging.info("Rule-based analysis could not determine layout, falling back to absolute.")
+        logger.info("Rule-based analysis could not determine layout, falling back to absolute.")
         return {"type": constants.LAYOUT_ABSOLUTE}
 
     def _analyze_layout_with_llm(self, layers):
         """Analyzes layout using an LLM for complex, mixed layouts."""
         if not self.llm_client:
-            logging.warning("LLM client not available. Skipping LLM layout analysis.")
+            logger.warning("LLM client not available. Skipping LLM layout analysis.")
             return None
 
-        logging.info(f"Performing LLM layout analysis for {len(layers)} layers...")
+        logger.info(f"Performing LLM layout analysis for {len(layers)} layers...")
         simplified_layers = [{"name": l.get("name"), "class": l.get("_class"), "frame": l.get("frame")} for l in layers]
         
         # Original prompt, restored for compatibility with all models.
@@ -437,7 +440,7 @@ Input Layers:
             print(response)
             
             if response.usage:
-                logging.info(f"Token usage: {response.usage.total_tokens} total tokens.")
+                logger.info(f"Token usage: {response.usage.total_tokens} total tokens.")
                 usage = getattr(response, "usage", None)
                 if usage:
                     self.llm_usage["prompt_tokens"] += usage.prompt_tokens
@@ -446,37 +449,37 @@ Input Layers:
 
             # Defensive post-processing to remove markdown, restored from original script
             response_text = response.choices[0].message.content
-            logging.info(f"Raw LLM response: {response_text}")
+            logger.info(f"Raw LLM response: {response_text}")
             if "```json" in response_text:
                 response_text = response_text.split("```json")[1].split("```")[0].strip()
 
             layout_info = json.loads(response_text)
-            logging.info(f"LLM analysis successful: {layout_info}")
+            logger.info(f"LLM analysis successful: {layout_info}")
             return layout_info
         except Exception as e:
-            logging.error(f"LLM API call failed: {e}")
+            logger.error(f"LLM API call failed: {e}")
             return None
 
     def _write_dsl_output(self, dsl_output):
         """Writes the final DSL to the output file."""
-        logging.info(f"Writing DSL output to: {self.dsl_output_file}")
+        logger.info(f"Writing DSL output to: {self.dsl_output_file}")
         try:
             with open(self.dsl_output_file, "w", encoding="utf-8") as f:
                 json.dump(dsl_output, f, ensure_ascii=False, indent=4)
-            logging.info("DSL file successfully generated.")
+            logger.info("DSL file successfully generated.")
         except IOError as e:
-            logging.error(f"Failed to write DSL file: {e}")
+            logger.error(f"Failed to write DSL file: {e}")
 
     def _write_token_report(self):
         """Writes a report of all unknown tokens found during conversion."""
         if not any(self.report.values()):
-            logging.info("Design system check passed. No unknown tokens found.")
+            logger.info("Design system check passed. No unknown tokens found.")
             return
 
-        logging.warning(f"Detected unknown tokens. Generating report at: {self.report_output_file}")
+        logger.warning(f"Detected unknown tokens. Generating report at: {self.report_output_file}")
         try:
             with open(self.report_output_file, "w", encoding="utf-8") as f:
                 json.dump(self.report, f, ensure_ascii=False, indent=4)
-            logging.info("Token report successfully generated.")
+            logger.info("Token report successfully generated.")
         except IOError as e:
-            logging.error(f"Failed to write token report: {e}")
+            logger.error(f"Failed to write token report: {e}")

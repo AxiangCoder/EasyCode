@@ -22,7 +22,6 @@ from .permissions import (
 from .services import ConversionTaskService
 from .exceptions import ConverterException
 
-
 @extend_schema(tags=['设计令牌模块'])
 class DesignTokensViewSet(viewsets.ModelViewSet):
     """设计令牌管理视图集"""
@@ -156,6 +155,13 @@ class ConversionTaskViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(task)
         return Response(serializer.data)
+
+    def _count_input_nodes(self, obj):
+        if isinstance(obj, dict):
+            return (1 if "_class" in obj else 0) + sum(self._count_input_nodes(v) for v in obj.values())
+        if isinstance(obj, list):
+            return sum(self._count_input_nodes(x) for x in obj)
+        return 0
 
 
 @extend_schema(tags=['转换结果模块'])

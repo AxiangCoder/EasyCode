@@ -70,6 +70,26 @@ class ConversionTask(BaseModel):
         blank=True,
         help_text="完成时间"
     )
+    llm_usage = models.JSONField(
+        null=True,
+        blank=True,
+        help_text="LLM token 用量汇总"
+    )
+    input_nodes = models.IntegerField(
+        null=True,
+        blank=True,
+        help_text="输入的总节点数"
+    )
+    handled_nodes = models.IntegerField(
+        null=True,
+        blank=True,
+        help_text="已处理的节点数"
+    )
+    hidden_nodes = models.IntegerField(
+        null=True,
+        blank=True,
+        help_text="隐藏的的节点数"
+    )
 
     def __str__(self):
         return f"{self.name} - {self.status}"
@@ -100,7 +120,8 @@ class ConversionResult(BaseModel):
         help_text="令牌使用报告"
     )
     llm_usage = models.JSONField(
-        default=dict,
+        null=True,
+        blank=True,
         help_text="LLM token 用量汇总"
     )
 

@@ -5,6 +5,7 @@ from django.utils import timezone
 
 from .models import ConversionTask, ConversionResult
 from .services import ConversionTaskService
+import json
 
 logger = logging.getLogger(__name__)
 
@@ -35,25 +36,68 @@ def convert_design_file_task_sync(task_id, task_instance=None):
         # 创建服务实例
         service = ConversionTaskService()
 
+        # 进度
+        def count_nodes(node, count_hidden = False):
+            count = 0
+            """ if isinstance(node, dict):
+                is_visible = node.get("isVisible", False)
+                if (count_hidden and not is_visible) or (not count_hidden):
+                    count += 1
+                if 'layers' in node and isinstance(node.get("layers"), list):
+                    for child in node['layers']:
+                        count += count_nodes(child, count_hidden)
+            elif isinstance(node, list):
+                for item in node:
+                    count += count_nodes(item, count_hidden)
+            return count """
+            if isinstance (node, dict):
+                is_visible = node.get ('isVisible', False)
+                if not is_visible and count_hidden: 
+                    count += 1
+                if not count_hidden:
+                    count += 1
+                if isinstance(node.get("layers"), list):
+                    count += sum ([count_nodes(item, count_hidden) for item in node.get("layers")])
+                return count
+
+        try:
+            with task.input_file.open('r') as f:
+                input_file = json.loads(f.read ())
+                task.input_nodes = count_nodes(input_file, count_hidden = False)
+                task.hidden_nodes = count_nodes(input_file, count_hidden = True)
+                task.handled_nodes = 0
+                task.save(update_fields=["input_nodes", "hidden_nodes", "handled_nodes"])
+        except Exception as e:
+            raise (e)
+            # logger.error(f"Task {task_id}: Failed to calculate input_nodes. Error: {e}")
+
+        node_counter = [0]
+        last_reported_progress = [10]
+
+        def progress_callback ():
+            node_counter[0] += 1
+            current_progress = int((node_counter[0] + 10) / (task.input_nodes * 85))
+            if current_progress > last_reported_progress[0]:
+                last_reported_progress[0] = current_progress
+                ConversionTask.objects.filter (id = task_id).update (
+                    progress = min (current_progress, 100),
+                    hidden_nodes = node_counter[0],
+                )
+
         # 更新进度：开始处理（仅在异步模式下）
         if task_instance:
             task_instance.update_state(state='PROGRESS', meta={'progress': 10})
         logger.info(f"开始处理转换任务: {task_id}")
 
         # 执行转换
-        result = service.process_conversion_task(task)
-
-        # 更新进度：转换完成（仅在异步模式下）
-        if task_instance:
-            task_instance.update_state(state='PROGRESS', meta={'progress': 80})
+        result = service.process_conversion_task(task, progress_callback)
 
         # 保存转换结果
         conversion_result = ConversionResult.objects.create(
             task=task,
             dsl_output=result['dsl'],
             html_output=result['html'],
-            token_report=result.get('report', {}),
-            llm_usage=result.get('llm_usage', {})
+            token_report=result.get('report', {})
         )
 
         # 保存结果至文件

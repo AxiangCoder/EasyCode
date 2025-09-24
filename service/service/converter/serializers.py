@@ -41,11 +41,11 @@ class ConversionTaskSerializer(serializers.ModelSerializer):
             'id', 'name', 'input_file', 'input_file_size', 'design_tokens',
             'design_tokens_name', 'status', 'status_display', 'progress',
             'error_message', 'started_at', 'completed_at', 'creator_email',
-            'has_result', 'created_time', 'updated_time'
+            'has_result', 'input_nodes', 'handled_nodes', 'hidden_nodes','created_time', 'updated_time'
         ]
         read_only_fields = [
             'id', 'status', 'progress', 'error_message', 'started_at',
-            'completed_at', 'creator_email', 'has_result', 'created_time', 'updated_time'
+            'completed_at', 'creator_email', 'has_result', 'input_nodes', 'handled_nodes', 'hidden_nodes','created_time', 'updated_time'
         ]
 
     def get_input_file_size(self, obj):
@@ -86,7 +86,7 @@ class ConversionResultSerializer(serializers.ModelSerializer):
         read_only_fields = [
             'id', 'task', 'task_name', 'task_status', 'task_creator_email',
             'dsl_output', 'html_output', 'html_preview_url', 'token_report',
-            'llm_usage', 'created_time', 'updated_time'
+            'llm_usage','created_time', 'updated_time'
         ]
 
     def get_html_preview_url(self, obj):

@@ -1,0 +1,2117 @@
+{
+    "type": "Group",
+    "name": "25.7.1新增  核验中心-上传文件文件地址",
+    "style": {
+        "backgroundColor": "#EEF2F5",
+        "width": 1920,
+        "height": 1080
+    },
+    "layout": {
+        "type": "absolute",
+        "position": "absolute",
+        "top": -315,
+        "left": 8067
+    },
+    "children": [
+        {
+            "type": "Group",
+            "name": "Virtual Group - flex",
+            "style": {
+                "width": 1380,
+                "height": 694
+            },
+            "layout": {
+                "type": "flex",
+                "direction": "row",
+                "columns": 2,
+                "gap": 16,
+                "children_indices": [
+                    5,
+                    4
+                ],
+                "position": "absolute",
+                "top": 366,
+                "left": 270
+            },
+            "children": [
+                {
+                    "type": "Group",
+                    "name": "编组 5",
+                    "style": {
+                        "width": 220,
+                        "height": 694
+                    },
+                    "layout": {
+                        "type": "absolute"
+                    },
+                    "children": [
+                        {
+                            "type": "Group",
+                            "name": "Virtual Group - flex",
+                            "style": {
+                                "width": 219,
+                                "height": 127.9999999999999
+                            },
+                            "layout": {
+                                "type": "flex",
+                                "direction": "column",
+                                "columns": 1,
+                                "gap": 40,
+                                "children_indices": [
+                                    1,
+                                    2
+                                ],
+                                "position": "absolute",
+                                "top": 40.0000000000001,
+                                "left": 0
+                            },
+                            "children": [
+                                {
+                                    "type": "Group",
+                                    "name": "编组 4",
+                                    "style": {
+                                        "width": 219,
+                                        "height": 44
+                                    },
+                                    "layout": {
+                                        "type": "absolute"
+                                    },
+                                    "children": [
+                                        {
+                                            "type": "Rectangle",
+                                            "name": "矩形",
+                                            "style": {
+                                                "opacity": 0.08,
+                                                "backgroundColor": "#5335E5",
+                                                "width": 218,
+                                                "height": 44
+                                            },
+                                            "layout": {
+                                                "position": "absolute",
+                                                "top": 0,
+                                                "left": 1
+                                            },
+                                            "children": []
+                                        },
+                                        {
+                                            "type": "Rectangle",
+                                            "name": "矩形",
+                                            "style": {
+                                                "backgroundColor": "#5335E5",
+                                                "width": 4,
+                                                "height": 44
+                                            },
+                                            "layout": {
+                                                "position": "absolute",
+                                                "top": 0,
+                                                "left": 0
+                                            },
+                                            "children": []
+                                        },
+                                        {
+                                            "type": "Group",
+                                            "name": "核验中心（当前）",
+                                            "style": {
+                                                "width": 16,
+                                                "height": 16.0000000000001
+                                            },
+                                            "layout": {
+                                                "type": "absolute",
+                                                "position": "absolute",
+                                                "top": 13.9999999999999,
+                                                "left": 20
+                                            },
+                                            "children": [
+                                                {
+                                                    "type": "Rectangle",
+                                                    "name": "矩形",
+                                                    "style": {
+                                                        "opacity": 0,
+                                                        "backgroundColor": "#D7D7D7",
+                                                        "width": 16,
+                                                        "height": 16
+                                                    },
+                                                    "layout": {
+                                                        "position": "absolute",
+                                                        "top": 1.13686837721616e-13,
+                                                        "left": 0
+                                                    },
+                                                    "children": []
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "Group",
+                                            "name": "huabanbeifen3",
+                                            "style": {
+                                                "width": 8,
+                                                "height": 6
+                                            },
+                                            "layout": {
+                                                "position": "absolute",
+                                                "top": 22,
+                                                "left": 24
+                                            },
+                                            "children": []
+                                        },
+                                        {
+                                            "type": "Text",
+                                            "content": {
+                                                "text": null
+                                            },
+                                            "name": "核验中心",
+                                            "style": {
+                                                "textColor": "#5335E5",
+                                                "width": 72,
+                                                "height": 25
+                                            },
+                                            "layout": {
+                                                "position": "absolute",
+                                                "top": 10,
+                                                "left": 48
+                                            },
+                                            "children": []
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "Group",
+                                    "name": "编组",
+                                    "style": {
+                                        "width": 218,
+                                        "height": 44
+                                    },
+                                    "layout": {
+                                        "type": "absolute"
+                                    },
+                                    "children": [
+                                        {
+                                            "type": "Group",
+                                            "name": "编组 18",
+                                            "style": {
+                                                "width": 218,
+                                                "height": 44
+                                            },
+                                            "layout": {
+                                                "type": "absolute",
+                                                "position": "absolute",
+                                                "top": 0,
+                                                "left": 0
+                                            },
+                                            "children": [
+                                                {
+                                                    "type": "Group",
+                                                    "name": "Virtual Group - flex",
+                                                    "style": {
+                                                        "width": 144,
+                                                        "height": 25
+                                                    },
+                                                    "layout": {
+                                                        "type": "flex",
+                                                        "direction": "row",
+                                                        "columns": 2,
+                                                        "gap": 12,
+                                                        "children_indices": [
+                                                            2,
+                                                            1
+                                                        ],
+                                                        "position": "absolute",
+                                                        "top": 10,
+                                                        "left": 19
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "type": "Group",
+                                                            "name": "Hash交易查询（默认）",
+                                                            "style": {
+                                                                "width": 16,
+                                                                "height": 16
+                                                            },
+                                                            "layout": {
+                                                                "type": "absolute"
+                                                            },
+                                                            "children": [
+                                                                {
+                                                                    "type": "Rectangle",
+                                                                    "name": "矩形",
+                                                                    "style": {
+                                                                        "opacity": 0,
+                                                                        "backgroundColor": "#D7D7D7",
+                                                                        "width": 16,
+                                                                        "height": 16
+                                                                    },
+                                                                    "layout": {
+                                                                        "position": "absolute",
+                                                                        "top": 0,
+                                                                        "left": 0
+                                                                    },
+                                                                    "children": []
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "type": "Text",
+                                                            "content": {
+                                                                "text": null
+                                                            },
+                                                            "name": "Hash交易查询",
+                                                            "style": {
+                                                                "textColor": "#272727",
+                                                                "width": 116,
+                                                                "height": 25
+                                                            },
+                                                            "layout": {},
+                                                            "children": []
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "Rectangle",
+                                                    "name": "矩形",
+                                                    "style": {
+                                                        "opacity": 0,
+                                                        "backgroundColor": "#88C7FF",
+                                                        "width": 218,
+                                                        "height": 44
+                                                    },
+                                                    "layout": {
+                                                        "position": "absolute",
+                                                        "top": 0,
+                                                        "left": 0
+                                                    },
+                                                    "children": []
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Rectangle",
+                            "name": "矩形备份 3",
+                            "style": {
+                                "backgroundColor": "color-white",
+                                "borderWidth": "1px",
+                                "borderColor": "#E7E8F1",
+                                "borderRadius": "6px",
+                                "width": 220,
+                                "height": 694
+                            },
+                            "layout": {
+                                "position": "absolute",
+                                "top": 0,
+                                "left": 0
+                            },
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Group",
+                    "name": "编组 39",
+                    "style": {
+                        "width": 1144,
+                        "height": 694
+                    },
+                    "layout": {
+                        "type": "absolute"
+                    },
+                    "children": [
+                        {
+                            "type": "Rectangle",
+                            "name": "矩形备份 5",
+                            "style": {
+                                "backgroundColor": "color-white",
+                                "borderWidth": "1px",
+                                "borderColor": "#E7E8F1",
+                                "borderRadius": "6px",
+                                "width": 1144,
+                                "height": 694
+                            },
+                            "layout": {
+                                "position": "absolute",
+                                "top": 0,
+                                "left": 0
+                            },
+                            "children": []
+                        },
+                        {
+                            "type": "Group",
+                            "name": " Primary button",
+                            "style": {
+                                "width": 108,
+                                "height": 32
+                            },
+                            "layout": {
+                                "type": "absolute",
+                                "position": "absolute",
+                                "top": 20,
+                                "left": 1016
+                            },
+                            "children": [
+                                {
+                                    "type": "Group",
+                                    "name": "Virtual Group - flex",
+                                    "style": {
+                                        "width": 80,
+                                        "height": 22
+                                    },
+                                    "layout": {
+                                        "type": "flex",
+                                        "direction": "row",
+                                        "columns": 2,
+                                        "gap": 10,
+                                        "children_indices": [
+                                            1,
+                                            2
+                                        ],
+                                        "position": "absolute",
+                                        "top": 5,
+                                        "left": 14
+                                    },
+                                    "children": [
+                                        {
+                                            "type": "Text",
+                                            "content": {
+                                                "text": null
+                                            },
+                                            "name": "Text",
+                                            "style": {
+                                                "textColor": "#FFFFFF",
+                                                "font": "font-caption-default",
+                                                "width": 56,
+                                                "height": 22
+                                            },
+                                            "layout": {},
+                                            "children": []
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "Rectangle",
+                                    "name": "Rectangle 77",
+                                    "style": {
+                                        "backgroundColor": "#5335E5",
+                                        "borderRadius": "4px",
+                                        "width": 108,
+                                        "height": 32
+                                    },
+                                    "layout": {
+                                        "position": "absolute",
+                                        "top": 0,
+                                        "left": 0
+                                    },
+                                    "children": []
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Rectangle",
+                            "name": "矩形",
+                            "style": {
+                                "backgroundColor": "#E8E8E8",
+                                "borderRadius": "2px",
+                                "width": 1104,
+                                "height": 1
+                            },
+                            "layout": {
+                                "position": "absolute",
+                                "top": 60,
+                                "left": 20
+                            },
+                            "children": []
+                        },
+                        {
+                            "type": "Group",
+                            "name": "编组 3",
+                            "style": {
+                                "width": 836,
+                                "height": 516
+                            },
+                            "layout": {
+                                "type": "absolute",
+                                "position": "absolute",
+                                "top": 82.9999999999998,
+                                "left": 154
+                            },
+                            "children": [
+                                {
+                                    "type": "Group",
+                                    "name": "Virtual Group - flex",
+                                    "style": {
+                                        "width": 836,
+                                        "height": 36
+                                    },
+                                    "layout": {
+                                        "type": "flex",
+                                        "direction": "row",
+                                        "columns": 2,
+                                        "gap": 100,
+                                        "children_indices": [
+                                            0,
+                                            10
+                                        ],
+                                        "position": "absolute",
+                                        "top": 0,
+                                        "left": 0
+                                    },
+                                    "children": [
+                                        {
+                                            "type": "Group",
+                                            "name": "编组 2",
+                                            "style": {
+                                                "width": 354,
+                                                "height": 36
+                                            },
+                                            "layout": {
+                                                "type": "absolute"
+                                            },
+                                            "children": [
+                                                {
+                                                    "type": "Group",
+                                                    "name": "编组 9",
+                                                    "style": {
+                                                        "width": 354,
+                                                        "height": 36
+                                                    },
+                                                    "layout": {
+                                                        "type": "absolute",
+                                                        "position": "absolute",
+                                                        "top": 0,
+                                                        "left": 0
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "type": "Group",
+                                                            "name": "编组 7",
+                                                            "style": {
+                                                                "width": 64,
+                                                                "height": 20
+                                                            },
+                                                            "layout": {
+                                                                "type": "absolute",
+                                                                "position": "absolute",
+                                                                "top": 8,
+                                                                "left": 0
+                                                            },
+                                                            "children": [
+                                                                {
+                                                                    "type": "Text",
+                                                                    "content": {
+                                                                        "text": null
+                                                                    },
+                                                                    "name": "*数据编号",
+                                                                    "style": {
+                                                                        "textColor": "#FF5252",
+                                                                        "font": "font-caption-default",
+                                                                        "width": 64,
+                                                                        "height": 20
+                                                                    },
+                                                                    "layout": {
+                                                                        "position": "absolute",
+                                                                        "top": 0,
+                                                                        "left": 0
+                                                                    },
+                                                                    "children": []
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "type": "Group",
+                                                            "name": "搜索",
+                                                            "style": {
+                                                                "width": 280,
+                                                                "height": 36
+                                                            },
+                                                            "layout": {
+                                                                "type": "absolute",
+                                                                "position": "absolute",
+                                                                "top": 0,
+                                                                "left": 74
+                                                            },
+                                                            "children": [
+                                                                {
+                                                                    "type": "Rectangle",
+                                                                    "name": "Base",
+                                                                    "style": {
+                                                                        "backgroundColor": "color-white",
+                                                                        "borderWidth": "1px",
+                                                                        "borderColor": "#E7E8F1",
+                                                                        "borderRadius": "4px",
+                                                                        "width": 280,
+                                                                        "height": 36
+                                                                    },
+                                                                    "layout": {
+                                                                        "position": "absolute",
+                                                                        "top": 0,
+                                                                        "left": 0
+                                                                    },
+                                                                    "children": []
+                                                                },
+                                                                {
+                                                                    "type": "Text",
+                                                                    "content": {
+                                                                        "text": null
+                                                                    },
+                                                                    "name": "请输入数据编号",
+                                                                    "style": {
+                                                                        "backgroundColor": "#999999",
+                                                                        "textColor": "#1D1D1D",
+                                                                        "font": "font-caption-default",
+                                                                        "width": 98,
+                                                                        "height": 19
+                                                                    },
+                                                                    "layout": {
+                                                                        "position": "absolute",
+                                                                        "top": 9,
+                                                                        "left": 12
+                                                                    },
+                                                                    "children": []
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "Group",
+                                            "name": "编组 2备份",
+                                            "style": {
+                                                "width": 382,
+                                                "height": 36
+                                            },
+                                            "layout": {
+                                                "type": "absolute"
+                                            },
+                                            "children": [
+                                                {
+                                                    "type": "Group",
+                                                    "name": "编组 9",
+                                                    "style": {
+                                                        "width": 382,
+                                                        "height": 36
+                                                    },
+                                                    "layout": {
+                                                        "type": "absolute",
+                                                        "position": "absolute",
+                                                        "top": 0,
+                                                        "left": 0
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "type": "Group",
+                                                            "name": "Virtual Group - flex",
+                                                            "style": {
+                                                                "width": 382,
+                                                                "height": 36
+                                                            },
+                                                            "layout": {
+                                                                "type": "flex",
+                                                                "direction": "row",
+                                                                "columns": 2,
+                                                                "gap": 10,
+                                                                "children_indices": [
+                                                                    0,
+                                                                    1
+                                                                ],
+                                                                "position": "absolute",
+                                                                "top": 0,
+                                                                "left": 0
+                                                            },
+                                                            "children": [
+                                                                {
+                                                                    "type": "Group",
+                                                                    "name": "编组 7",
+                                                                    "style": {
+                                                                        "width": 92,
+                                                                        "height": 20
+                                                                    },
+                                                                    "layout": {
+                                                                        "type": "absolute"
+                                                                    },
+                                                                    "children": [
+                                                                        {
+                                                                            "type": "Text",
+                                                                            "content": {
+                                                                                "text": null
+                                                                            },
+                                                                            "name": "*数据所属单位",
+                                                                            "style": {
+                                                                                "textColor": "#FF5252",
+                                                                                "font": "font-caption-default",
+                                                                                "width": 92,
+                                                                                "height": 20
+                                                                            },
+                                                                            "layout": {
+                                                                                "position": "absolute",
+                                                                                "top": 0,
+                                                                                "left": 0
+                                                                            },
+                                                                            "children": []
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                {
+                                                                    "type": "Group",
+                                                                    "name": "搜索",
+                                                                    "style": {
+                                                                        "width": 280,
+                                                                        "height": 36
+                                                                    },
+                                                                    "layout": {
+                                                                        "type": "absolute"
+                                                                    },
+                                                                    "children": [
+                                                                        {
+                                                                            "type": "Group",
+                                                                            "name": "Virtual Group - flex",
+                                                                            "style": {
+                                                                                "width": 280,
+                                                                                "height": 36
+                                                                            },
+                                                                            "layout": {
+                                                                                "type": "flex",
+                                                                                "direction": "column",
+                                                                                "columns": 1,
+                                                                                "gap": 0,
+                                                                                "children_indices": [
+                                                                                    0,
+                                                                                    1
+                                                                                ],
+                                                                                "position": "absolute",
+                                                                                "top": 0,
+                                                                                "left": 0
+                                                                            },
+                                                                            "children": [
+                                                                                {
+                                                                                    "type": "Rectangle",
+                                                                                    "name": "Base",
+                                                                                    "style": {
+                                                                                        "backgroundColor": "color-white",
+                                                                                        "borderWidth": "1px",
+                                                                                        "borderColor": "#E7E8F1",
+                                                                                        "borderRadius": "4px",
+                                                                                        "width": 280,
+                                                                                        "height": 36
+                                                                                    },
+                                                                                    "layout": {},
+                                                                                    "children": []
+                                                                                },
+                                                                                {
+                                                                                    "type": "Text",
+                                                                                    "content": {
+                                                                                        "text": null
+                                                                                    },
+                                                                                    "name": "请输入",
+                                                                                    "style": {
+                                                                                        "backgroundColor": "#999999",
+                                                                                        "textColor": "#1D1D1D",
+                                                                                        "font": "font-caption-default",
+                                                                                        "width": 42,
+                                                                                        "height": 19
+                                                                                    },
+                                                                                    "layout": {},
+                                                                                    "children": []
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "Group",
+                                    "name": "Virtual Group - grid",
+                                    "style": {
+                                        "width": 756,
+                                        "height": 148
+                                    },
+                                    "layout": {
+                                        "type": "grid",
+                                        "direction": "row",
+                                        "columns": 2,
+                                        "gap": 88,
+                                        "children_indices": [
+                                            3,
+                                            4,
+                                            5,
+                                            6,
+                                            7,
+                                            9
+                                        ],
+                                        "position": "absolute",
+                                        "top": 206,
+                                        "left": 40
+                                    },
+                                    "children": [
+                                        {
+                                            "type": "Group",
+                                            "name": "编组 2备份 3",
+                                            "style": {
+                                                "width": 334,
+                                                "height": 36
+                                            },
+                                            "layout": {
+                                                "type": "absolute"
+                                            },
+                                            "children": [
+                                                {
+                                                    "type": "Group",
+                                                    "name": "编组 9",
+                                                    "style": {
+                                                        "width": 334,
+                                                        "height": 36
+                                                    },
+                                                    "layout": {
+                                                        "type": "absolute",
+                                                        "position": "absolute",
+                                                        "top": 0,
+                                                        "left": 0
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "type": "Group",
+                                                            "name": "编组 7",
+                                                            "style": {
+                                                                "width": 56,
+                                                                "height": 20
+                                                            },
+                                                            "layout": {
+                                                                "type": "absolute",
+                                                                "position": "absolute",
+                                                                "top": 8,
+                                                                "left": 0
+                                                            },
+                                                            "children": [
+                                                                {
+                                                                    "type": "Text",
+                                                                    "content": {
+                                                                        "text": null
+                                                                    },
+                                                                    "name": "告警来源",
+                                                                    "style": {
+                                                                        "textColor": "#333333",
+                                                                        "font": "font-caption-default",
+                                                                        "width": 56,
+                                                                        "height": 20
+                                                                    },
+                                                                    "layout": {
+                                                                        "position": "absolute",
+                                                                        "top": 0,
+                                                                        "left": 0
+                                                                    },
+                                                                    "children": []
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "type": "Group",
+                                                            "name": "搜索",
+                                                            "style": {
+                                                                "width": 268,
+                                                                "height": 36
+                                                            },
+                                                            "layout": {
+                                                                "type": "absolute",
+                                                                "position": "absolute",
+                                                                "top": 0,
+                                                                "left": 66
+                                                            },
+                                                            "children": [
+                                                                {
+                                                                    "type": "Rectangle",
+                                                                    "name": "Base",
+                                                                    "style": {
+                                                                        "backgroundColor": "color-white",
+                                                                        "borderWidth": "1px",
+                                                                        "borderColor": "#E7E8F1",
+                                                                        "borderRadius": "4px",
+                                                                        "width": 268,
+                                                                        "height": 36
+                                                                    },
+                                                                    "layout": {
+                                                                        "position": "absolute",
+                                                                        "top": 0,
+                                                                        "left": 0
+                                                                    },
+                                                                    "children": []
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "Group",
+                                            "name": "编组 2备份 4",
+                                            "style": {
+                                                "width": 334,
+                                                "height": 36
+                                            },
+                                            "layout": {
+                                                "type": "absolute"
+                                            },
+                                            "children": [
+                                                {
+                                                    "type": "Group",
+                                                    "name": "编组 9",
+                                                    "style": {
+                                                        "width": 334,
+                                                        "height": 36
+                                                    },
+                                                    "layout": {
+                                                        "type": "absolute",
+                                                        "position": "absolute",
+                                                        "top": 0,
+                                                        "left": 0
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "type": "Group",
+                                                            "name": "编组 7",
+                                                            "style": {
+                                                                "width": 56,
+                                                                "height": 20
+                                                            },
+                                                            "layout": {
+                                                                "type": "absolute",
+                                                                "position": "absolute",
+                                                                "top": 8,
+                                                                "left": 0
+                                                            },
+                                                            "children": [
+                                                                {
+                                                                    "type": "Text",
+                                                                    "content": {
+                                                                        "text": null
+                                                                    },
+                                                                    "name": "事件类型",
+                                                                    "style": {
+                                                                        "textColor": "#333333",
+                                                                        "font": "font-caption-default",
+                                                                        "width": 56,
+                                                                        "height": 20
+                                                                    },
+                                                                    "layout": {
+                                                                        "position": "absolute",
+                                                                        "top": 0,
+                                                                        "left": 0
+                                                                    },
+                                                                    "children": []
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "type": "Group",
+                                                            "name": "搜索",
+                                                            "style": {
+                                                                "width": 268,
+                                                                "height": 36
+                                                            },
+                                                            "layout": {
+                                                                "type": "absolute",
+                                                                "position": "absolute",
+                                                                "top": 0,
+                                                                "left": 66
+                                                            },
+                                                            "children": [
+                                                                {
+                                                                    "type": "Rectangle",
+                                                                    "name": "Base",
+                                                                    "style": {
+                                                                        "backgroundColor": "color-white",
+                                                                        "borderWidth": "1px",
+                                                                        "borderColor": "#E7E8F1",
+                                                                        "borderRadius": "4px",
+                                                                        "width": 268,
+                                                                        "height": 36
+                                                                    },
+                                                                    "layout": {
+                                                                        "position": "absolute",
+                                                                        "top": 0,
+                                                                        "left": 0
+                                                                    },
+                                                                    "children": []
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "Group",
+                                            "name": "编组 2备份 3",
+                                            "style": {
+                                                "width": 334,
+                                                "height": 36
+                                            },
+                                            "layout": {
+                                                "type": "absolute"
+                                            },
+                                            "children": [
+                                                {
+                                                    "type": "Group",
+                                                    "name": "编组 9",
+                                                    "style": {
+                                                        "width": 334,
+                                                        "height": 36
+                                                    },
+                                                    "layout": {
+                                                        "type": "absolute",
+                                                        "position": "absolute",
+                                                        "top": 0,
+                                                        "left": 0
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "type": "Group",
+                                                            "name": "编组 7",
+                                                            "style": {
+                                                                "width": 56,
+                                                                "height": 20
+                                                            },
+                                                            "layout": {
+                                                                "type": "absolute",
+                                                                "position": "absolute",
+                                                                "top": 8,
+                                                                "left": 0
+                                                            },
+                                                            "children": [
+                                                                {
+                                                                    "type": "Text",
+                                                                    "content": {
+                                                                        "text": null
+                                                                    },
+                                                                    "name": "风险等级",
+                                                                    "style": {
+                                                                        "textColor": "#333333",
+                                                                        "font": "font-caption-default",
+                                                                        "width": 56,
+                                                                        "height": 20
+                                                                    },
+                                                                    "layout": {
+                                                                        "position": "absolute",
+                                                                        "top": 0,
+                                                                        "left": 0
+                                                                    },
+                                                                    "children": []
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "type": "Group",
+                                                            "name": "搜索",
+                                                            "style": {
+                                                                "width": 268,
+                                                                "height": 36
+                                                            },
+                                                            "layout": {
+                                                                "type": "absolute",
+                                                                "position": "absolute",
+                                                                "top": 0,
+                                                                "left": 66
+                                                            },
+                                                            "children": [
+                                                                {
+                                                                    "type": "Rectangle",
+                                                                    "name": "Base",
+                                                                    "style": {
+                                                                        "backgroundColor": "color-white",
+                                                                        "borderWidth": "1px",
+                                                                        "borderColor": "#E7E8F1",
+                                                                        "borderRadius": "4px",
+                                                                        "width": 268,
+                                                                        "height": 36
+                                                                    },
+                                                                    "layout": {
+                                                                        "position": "absolute",
+                                                                        "top": 0,
+                                                                        "left": 0
+                                                                    },
+                                                                    "children": []
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "Group",
+                                            "name": "编组 2备份 4",
+                                            "style": {
+                                                "width": 334,
+                                                "height": 36
+                                            },
+                                            "layout": {
+                                                "type": "absolute"
+                                            },
+                                            "children": [
+                                                {
+                                                    "type": "Group",
+                                                    "name": "编组 9",
+                                                    "style": {
+                                                        "width": 334,
+                                                        "height": 36
+                                                    },
+                                                    "layout": {
+                                                        "type": "absolute",
+                                                        "position": "absolute",
+                                                        "top": 0,
+                                                        "left": 0
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "type": "Group",
+                                                            "name": "编组 7",
+                                                            "style": {
+                                                                "width": 56,
+                                                                "height": 20
+                                                            },
+                                                            "layout": {
+                                                                "type": "absolute",
+                                                                "position": "absolute",
+                                                                "top": 8,
+                                                                "left": 0
+                                                            },
+                                                            "children": [
+                                                                {
+                                                                    "type": "Text",
+                                                                    "content": {
+                                                                        "text": null
+                                                                    },
+                                                                    "name": "告警位置",
+                                                                    "style": {
+                                                                        "textColor": "#333333",
+                                                                        "font": "font-caption-default",
+                                                                        "width": 56,
+                                                                        "height": 20
+                                                                    },
+                                                                    "layout": {
+                                                                        "position": "absolute",
+                                                                        "top": 0,
+                                                                        "left": 0
+                                                                    },
+                                                                    "children": []
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "type": "Group",
+                                                            "name": "搜索",
+                                                            "style": {
+                                                                "width": 268,
+                                                                "height": 36
+                                                            },
+                                                            "layout": {
+                                                                "type": "absolute",
+                                                                "position": "absolute",
+                                                                "top": 0,
+                                                                "left": 66
+                                                            },
+                                                            "children": []
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "Group",
+                                            "name": "编组 2备份 3",
+                                            "style": {
+                                                "width": 334,
+                                                "height": 36
+                                            },
+                                            "layout": {
+                                                "type": "absolute"
+                                            },
+                                            "children": [
+                                                {
+                                                    "type": "Group",
+                                                    "name": "编组 9",
+                                                    "style": {
+                                                        "width": 334,
+                                                        "height": 36
+                                                    },
+                                                    "layout": {
+                                                        "type": "absolute",
+                                                        "position": "absolute",
+                                                        "top": 0,
+                                                        "left": 0
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "type": "Group",
+                                                            "name": "编组 7",
+                                                            "style": {
+                                                                "width": 56,
+                                                                "height": 20
+                                                            },
+                                                            "layout": {
+                                                                "type": "absolute",
+                                                                "position": "absolute",
+                                                                "top": 8,
+                                                                "left": 0
+                                                            },
+                                                            "children": [
+                                                                {
+                                                                    "type": "Text",
+                                                                    "content": {
+                                                                        "text": null
+                                                                    },
+                                                                    "name": "告警内容",
+                                                                    "style": {
+                                                                        "textColor": "#333333",
+                                                                        "font": "font-caption-default",
+                                                                        "width": 56,
+                                                                        "height": 20
+                                                                    },
+                                                                    "layout": {
+                                                                        "position": "absolute",
+                                                                        "top": 0,
+                                                                        "left": 0
+                                                                    },
+                                                                    "children": []
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "type": "Group",
+                                                            "name": "搜索",
+                                                            "style": {
+                                                                "width": 268,
+                                                                "height": 36
+                                                            },
+                                                            "layout": {
+                                                                "type": "absolute",
+                                                                "position": "absolute",
+                                                                "top": 0,
+                                                                "left": 66
+                                                            },
+                                                            "children": [
+                                                                {
+                                                                    "type": "Rectangle",
+                                                                    "name": "Base",
+                                                                    "style": {
+                                                                        "backgroundColor": "color-white",
+                                                                        "borderWidth": "1px",
+                                                                        "borderColor": "#E7E8F1",
+                                                                        "borderRadius": "4px",
+                                                                        "width": 268,
+                                                                        "height": 36
+                                                                    },
+                                                                    "layout": {
+                                                                        "position": "absolute",
+                                                                        "top": 0,
+                                                                        "left": 0
+                                                                    },
+                                                                    "children": []
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "Group",
+                                            "name": "编组 2备份 4",
+                                            "style": {
+                                                "width": 334,
+                                                "height": 36
+                                            },
+                                            "layout": {
+                                                "type": "absolute"
+                                            },
+                                            "children": [
+                                                {
+                                                    "type": "Group",
+                                                    "name": "编组 9",
+                                                    "style": {
+                                                        "width": 334,
+                                                        "height": 36
+                                                    },
+                                                    "layout": {
+                                                        "type": "absolute",
+                                                        "position": "absolute",
+                                                        "top": 0,
+                                                        "left": 0
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "type": "Group",
+                                                            "name": "编组 7",
+                                                            "style": {
+                                                                "width": 56,
+                                                                "height": 20
+                                                            },
+                                                            "layout": {
+                                                                "type": "absolute",
+                                                                "position": "absolute",
+                                                                "top": 8,
+                                                                "left": 0
+                                                            },
+                                                            "children": [
+                                                                {
+                                                                    "type": "Text",
+                                                                    "content": {
+                                                                        "text": null
+                                                                    },
+                                                                    "name": "告警时间",
+                                                                    "style": {
+                                                                        "textColor": "#333333",
+                                                                        "font": "font-caption-default",
+                                                                        "width": 56,
+                                                                        "height": 20
+                                                                    },
+                                                                    "layout": {
+                                                                        "position": "absolute",
+                                                                        "top": 0,
+                                                                        "left": 0
+                                                                    },
+                                                                    "children": []
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "type": "Group",
+                                                            "name": "搜索",
+                                                            "style": {
+                                                                "width": 268,
+                                                                "height": 36
+                                                            },
+                                                            "layout": {
+                                                                "type": "absolute",
+                                                                "position": "absolute",
+                                                                "top": 0,
+                                                                "left": 66
+                                                            },
+                                                            "children": [
+                                                                {
+                                                                    "type": "Group",
+                                                                    "name": "Virtual Group - flex",
+                                                                    "style": {
+                                                                        "width": 268,
+                                                                        "height": 36
+                                                                    },
+                                                                    "layout": {
+                                                                        "type": "flex",
+                                                                        "direction": "column",
+                                                                        "columns": 1,
+                                                                        "gap": 0,
+                                                                        "children_indices": [
+                                                                            0,
+                                                                            1
+                                                                        ],
+                                                                        "position": "absolute",
+                                                                        "top": 0,
+                                                                        "left": 0
+                                                                    },
+                                                                    "children": [
+                                                                        {
+                                                                            "type": "Rectangle",
+                                                                            "name": "Base",
+                                                                            "style": {
+                                                                                "backgroundColor": "color-white",
+                                                                                "borderWidth": "1px",
+                                                                                "borderColor": "#E7E8F1",
+                                                                                "borderRadius": "4px",
+                                                                                "width": 268,
+                                                                                "height": 36
+                                                                            },
+                                                                            "layout": {},
+                                                                            "children": []
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "Group",
+                                    "name": "编组 2备份 2",
+                                    "style": {
+                                        "width": 836,
+                                        "height": 102
+                                    },
+                                    "layout": {
+                                        "type": "absolute",
+                                        "position": "absolute",
+                                        "top": 60,
+                                        "left": 0
+                                    },
+                                    "children": [
+                                        {
+                                            "type": "Group",
+                                            "name": "编组 9",
+                                            "style": {
+                                                "width": 836,
+                                                "height": 102
+                                            },
+                                            "layout": {
+                                                "type": "absolute",
+                                                "position": "absolute",
+                                                "top": 0,
+                                                "left": 0
+                                            },
+                                            "children": [
+                                                {
+                                                    "type": "Group",
+                                                    "name": "Virtual Group - flex",
+                                                    "style": {
+                                                        "width": 836,
+                                                        "height": 102
+                                                    },
+                                                    "layout": {
+                                                        "type": "flex",
+                                                        "direction": "column",
+                                                        "columns": 1,
+                                                        "gap": 7,
+                                                        "children_indices": [
+                                                            0,
+                                                            1
+                                                        ],
+                                                        "position": "absolute",
+                                                        "top": 0,
+                                                        "left": 0
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "type": "Group",
+                                                            "name": "编组 7",
+                                                            "style": {
+                                                                "width": 78,
+                                                                "height": 20
+                                                            },
+                                                            "layout": {
+                                                                "type": "absolute"
+                                                            },
+                                                            "children": [
+                                                                {
+                                                                    "type": "Text",
+                                                                    "content": {
+                                                                        "text": null
+                                                                    },
+                                                                    "name": "*核验信息：",
+                                                                    "style": {
+                                                                        "textColor": "#FF5252",
+                                                                        "font": "font-caption-default",
+                                                                        "width": 78,
+                                                                        "height": 20
+                                                                    },
+                                                                    "layout": {
+                                                                        "position": "absolute",
+                                                                        "top": 0,
+                                                                        "left": 0
+                                                                    },
+                                                                    "children": []
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "type": "Group",
+                                                            "name": "搜索",
+                                                            "style": {
+                                                                "width": 836,
+                                                                "height": 75
+                                                            },
+                                                            "layout": {
+                                                                "type": "absolute"
+                                                            },
+                                                            "children": [
+                                                                {
+                                                                    "type": "Rectangle",
+                                                                    "name": "Base",
+                                                                    "style": {
+                                                                        "backgroundColor": "#F7F7F7",
+                                                                        "borderWidth": "1px",
+                                                                        "borderColor": "#E7E8F1",
+                                                                        "borderRadius": "4px",
+                                                                        "width": 836,
+                                                                        "height": 75
+                                                                    },
+                                                                    "layout": {
+                                                                        "position": "absolute",
+                                                                        "top": 0,
+                                                                        "left": 0
+                                                                    },
+                                                                    "children": []
+                                                                },
+                                                                {
+                                                                    "type": "Text",
+                                                                    "content": {
+                                                                        "text": null
+                                                                    },
+                                                                    "name": "1、请按要求对要核验的数据进行填写后上传",
+                                                                    "style": {
+                                                                        "backgroundColor": "#7E7E7E",
+                                                                        "textColor": "#1D1D1D",
+                                                                        "font": "font-caption-default",
+                                                                        "width": 812,
+                                                                        "height": 57
+                                                                    },
+                                                                    "layout": {
+                                                                        "position": "absolute",
+                                                                        "top": 9,
+                                                                        "left": 12
+                                                                    },
+                                                                    "children": []
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "Rectangle",
+                                    "name": "Base备份",
+                                    "style": {
+                                        "backgroundColor": "color-white",
+                                        "borderWidth": "1px",
+                                        "borderColor": "#E7E8F1",
+                                        "borderRadius": "4px",
+                                        "width": 836,
+                                        "height": 330
+                                    },
+                                    "layout": {
+                                        "position": "absolute",
+                                        "top": 186,
+                                        "left": 0
+                                    },
+                                    "children": []
+                                },
+                                {
+                                    "type": "Group",
+                                    "name": "编组 2备份 5",
+                                    "style": {
+                                        "width": 756,
+                                        "height": 108
+                                    },
+                                    "layout": {
+                                        "type": "absolute",
+                                        "position": "absolute",
+                                        "top": 374,
+                                        "left": 40
+                                    },
+                                    "children": [
+                                        {
+                                            "type": "Group",
+                                            "name": "编组 9",
+                                            "style": {
+                                                "width": 756,
+                                                "height": 108
+                                            },
+                                            "layout": {
+                                                "type": "absolute",
+                                                "position": "absolute",
+                                                "top": 0,
+                                                "left": 0
+                                            },
+                                            "children": [
+                                                {
+                                                    "type": "Group",
+                                                    "name": "编组 7",
+                                                    "style": {
+                                                        "width": 56,
+                                                        "height": 20
+                                                    },
+                                                    "layout": {
+                                                        "type": "absolute",
+                                                        "position": "absolute",
+                                                        "top": 7.99999999999983,
+                                                        "left": 0
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "type": "Text",
+                                                            "content": {
+                                                                "text": null
+                                                            },
+                                                            "name": "存证照片",
+                                                            "style": {
+                                                                "textColor": "#333333",
+                                                                "font": "font-caption-default",
+                                                                "width": 56,
+                                                                "height": 20
+                                                            },
+                                                            "layout": {
+                                                                "position": "absolute",
+                                                                "top": 0,
+                                                                "left": 0
+                                                            },
+                                                            "children": []
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "Group",
+                                                    "name": "搜索",
+                                                    "style": {
+                                                        "width": 690,
+                                                        "height": 108
+                                                    },
+                                                    "layout": {
+                                                        "type": "absolute",
+                                                        "position": "absolute",
+                                                        "top": 0,
+                                                        "left": 66
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "type": "Rectangle",
+                                                            "name": "Base",
+                                                            "style": {
+                                                                "backgroundColor": "color-white",
+                                                                "borderWidth": "1px",
+                                                                "borderColor": "#E7E8F1",
+                                                                "borderRadius": "4px",
+                                                                "width": 690,
+                                                                "height": 74
+                                                            },
+                                                            "layout": {
+                                                                "position": "absolute",
+                                                                "top": 33.9999999999998,
+                                                                "left": 0
+                                                            },
+                                                            "children": []
+                                                        },
+                                                        {
+                                                            "type": "Text",
+                                                            "content": {
+                                                                "text": null
+                                                            },
+                                                            "name": "请输入文件地址",
+                                                            "style": {
+                                                                "textColor": "#999999",
+                                                                "font": "font-caption-default",
+                                                                "width": 98,
+                                                                "height": 20
+                                                            },
+                                                            "layout": {
+                                                                "position": "absolute",
+                                                                "top": 42.9999999999998,
+                                                                "left": 12
+                                                            },
+                                                            "children": []
+                                                        },
+                                                        {
+                                                            "type": "Rectangle",
+                                                            "name": "Base",
+                                                            "style": {
+                                                                "backgroundColor": "color-white",
+                                                                "borderWidth": "1px",
+                                                                "borderColor": "#5335E5",
+                                                                "borderRadius": "4px",
+                                                                "width": 108,
+                                                                "height": 24
+                                                            },
+                                                            "layout": {
+                                                                "position": "absolute",
+                                                                "top": 0,
+                                                                "left": 0
+                                                            },
+                                                            "children": []
+                                                        },
+                                                        {
+                                                            "type": "Text",
+                                                            "content": {
+                                                                "text": null
+                                                            },
+                                                            "name": "上传文件",
+                                                            "style": {
+                                                                "textColor": "#5335E5",
+                                                                "font": "font-caption-default",
+                                                                "width": 56,
+                                                                "height": 20
+                                                            },
+                                                            "layout": {
+                                                                "position": "absolute",
+                                                                "top": 2,
+                                                                "left": 25
+                                                            },
+                                                            "children": []
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Group",
+                            "name": "编组 36",
+                            "style": {
+                                "width": 64,
+                                "height": 22
+                            },
+                            "layout": {
+                                "type": "absolute",
+                                "position": "absolute",
+                                "top": 25,
+                                "left": 20
+                            },
+                            "children": [
+                                {
+                                    "type": "Text",
+                                    "content": {
+                                        "text": null
+                                    },
+                                    "name": "核验中心",
+                                    "style": {
+                                        "textColor": "#333333",
+                                        "width": 64,
+                                        "height": 22
+                                    },
+                                    "layout": {
+                                        "position": "absolute",
+                                        "top": 0,
+                                        "left": 0
+                                    },
+                                    "children": []
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Rectangle",
+            "name": "矩形",
+            "style": {
+                "backgroundColor": "#F9F9FC",
+                "width": 1920,
+                "height": 1080
+            },
+            "layout": {
+                "position": "absolute",
+                "top": 0,
+                "left": 0
+            },
+            "children": []
+        },
+        {
+            "type": "Group",
+            "name": "搜索",
+            "style": {
+                "width": 270,
+                "height": 32
+            },
+            "layout": {
+                "position": "absolute",
+                "top": 419,
+                "left": 1156
+            },
+            "children": []
+        },
+        {
+            "type": "Group",
+            "name": "当前位置",
+            "style": {
+                "width": 164,
+                "height": 14
+            },
+            "layout": {
+                "type": "absolute",
+                "position": "absolute",
+                "top": 80,
+                "left": 270
+            },
+            "children": [
+                {
+                    "type": "Group",
+                    "name": "Virtual Group - flex",
+                    "style": {
+                        "width": 164,
+                        "height": 14
+                    },
+                    "layout": {
+                        "type": "flex",
+                        "direction": "row",
+                        "columns": 2,
+                        "gap": 10,
+                        "children_indices": [
+                            0,
+                            1
+                        ],
+                        "position": "absolute",
+                        "top": 0,
+                        "left": 0
+                    },
+                    "children": [
+                        {
+                            "type": "Text",
+                            "content": {
+                                "text": null
+                            },
+                            "name": "当前位置： 核验中心",
+                            "style": {
+                                "textColor": "#999999",
+                                "font": "font-caption-default",
+                                "width": 140,
+                                "height": 14
+                            },
+                            "layout": {},
+                            "children": []
+                        },
+                        {
+                            "type": "Group",
+                            "name": "当前位置",
+                            "style": {
+                                "width": 14,
+                                "height": 14
+                            },
+                            "layout": {
+                                "type": "absolute"
+                            },
+                            "children": [
+                                {
+                                    "type": "Group",
+                                    "name": "Virtual Group - flex",
+                                    "style": {
+                                        "width": 14,
+                                        "height": 14
+                                    },
+                                    "layout": {
+                                        "type": "flex",
+                                        "direction": "row",
+                                        "columns": 2,
+                                        "gap": 0,
+                                        "children_indices": [
+                                            0,
+                                            1
+                                        ],
+                                        "position": "absolute",
+                                        "top": 0,
+                                        "left": 0
+                                    },
+                                    "children": [
+                                        {
+                                            "type": "Rectangle",
+                                            "name": "矩形",
+                                            "style": {
+                                                "opacity": 0,
+                                                "backgroundColor": "#BEBEBE",
+                                                "width": 14,
+                                                "height": 14
+                                            },
+                                            "layout": {},
+                                            "children": []
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Group",
+            "name": "头",
+            "style": {
+                "width": 1920,
+                "height": 64
+            },
+            "layout": {
+                "type": "absolute",
+                "position": "absolute",
+                "top": 0,
+                "left": 0
+            },
+            "children": [
+                {
+                    "type": "Group",
+                    "name": "Pic",
+                    "style": {
+                        "width": 28,
+                        "height": 28
+                    },
+                    "layout": {
+                        "type": "absolute",
+                        "position": "absolute",
+                        "top": 18,
+                        "left": 1597
+                    },
+                    "children": [
+                        {
+                            "type": "Oval",
+                            "name": "蒙版",
+                            "style": {
+                                "backgroundColor": "#D7D7D7",
+                                "width": 28,
+                                "height": 28
+                            },
+                            "layout": {
+                                "position": "absolute",
+                                "top": 0,
+                                "left": 0
+                            },
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Group",
+                    "name": "logo",
+                    "style": {
+                        "width": 372,
+                        "height": 34
+                    },
+                    "layout": {
+                        "type": "absolute",
+                        "position": "absolute",
+                        "top": 15,
+                        "left": 270
+                    },
+                    "children": [
+                        {
+                            "type": "Group",
+                            "name": "Virtual Group - flex",
+                            "style": {
+                                "width": 320,
+                                "height": 24
+                            },
+                            "layout": {
+                                "type": "flex",
+                                "direction": "row",
+                                "columns": 2,
+                                "gap": 9,
+                                "children_indices": [
+                                    0,
+                                    2
+                                ],
+                                "position": "absolute",
+                                "top": 5,
+                                "left": 52
+                            },
+                            "children": [
+                                {
+                                    "type": "Text",
+                                    "content": {
+                                        "text": null
+                                    },
+                                    "name": "—区块链核验平台",
+                                    "style": {
+                                        "textColor": "#FFFFFF",
+                                        "width": 206,
+                                        "height": 24
+                                    },
+                                    "layout": {},
+                                    "children": []
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Group",
+            "name": "编组 6",
+            "style": {
+                "width": 336,
+                "height": 40
+            },
+            "layout": {
+                "type": "absolute",
+                "position": "absolute",
+                "top": 988,
+                "left": 910
+            },
+            "children": [
+                {
+                    "type": "Rectangle",
+                    "name": "矩形",
+                    "style": {
+                        "backgroundColor": "#5335E5",
+                        "borderRadius": "8px",
+                        "width": 336,
+                        "height": 40
+                    },
+                    "layout": {
+                        "position": "absolute",
+                        "top": 0,
+                        "left": 0
+                    },
+                    "children": []
+                },
+                {
+                    "type": "Text",
+                    "content": {
+                        "text": null
+                    },
+                    "name": "开始核验",
+                    "style": {
+                        "textColor": "#FFFFFF",
+                        "font": "font-body-default",
+                        "width": 64,
+                        "height": 22
+                    },
+                    "layout": {
+                        "position": "absolute",
+                        "top": 9,
+                        "left": 136
+                    },
+                    "children": []
+                }
+            ]
+        },
+        {
+            "type": "Group",
+            "name": "编组 36备份",
+            "style": {
+                "width": 80,
+                "height": 32
+            },
+            "layout": {
+                "type": "absolute",
+                "position": "absolute",
+                "top": 224,
+                "left": 1400
+            },
+            "children": [
+                {
+                    "type": "Rectangle",
+                    "name": "Rectangle 28",
+                    "style": {
+                        "backgroundColor": "#3B5FE6",
+                        "borderWidth": "1px",
+                        "borderColor": "#3B5FE6",
+                        "borderRadius": "4px",
+                        "width": 80,
+                        "height": 32
+                    },
+                    "layout": {
+                        "position": "absolute",
+                        "top": 0,
+                        "left": 0
+                    },
+                    "children": []
+                },
+                {
+                    "type": "Text",
+                    "content": {
+                        "text": null
+                    },
+                    "name": "导 入",
+                    "style": {
+                        "textColor": "#3B5FE6",
+                        "font": "font-caption-default",
+                        "width": 33,
+                        "height": 20
+                    },
+                    "layout": {
+                        "position": "absolute",
+                        "top": 6,
+                        "left": 24
+                    },
+                    "children": []
+                }
+            ]
+        },
+        {
+            "type": "Group",
+            "name": "编组",
+            "style": {
+                "width": 1380,
+                "height": 240
+            },
+            "layout": {
+                "type": "absolute",
+                "position": "absolute",
+                "top": 110,
+                "left": 270
+            },
+            "children": [
+                {
+                    "type": "Group",
+                    "name": "Virtual Group - flex",
+                    "style": {
+                        "width": 341,
+                        "height": 96
+                    },
+                    "layout": {
+                        "type": "flex",
+                        "direction": "column",
+                        "columns": 1,
+                        "gap": 20,
+                        "children_indices": [
+                            2,
+                            3
+                        ],
+                        "position": "absolute",
+                        "top": 63,
+                        "left": 147
+                    },
+                    "children": [
+                        {
+                            "type": "Text",
+                            "content": {
+                                "text": null
+                            },
+                            "name": "区块链核验平台",
+                            "style": {
+                                "textColor": "#FFFFFF",
+                                "width": 341,
+                                "height": 48
+                            },
+                            "layout": {},
+                            "children": []
+                        },
+                        {
+                            "type": "Text",
+                            "content": {
+                                "text": null
+                            },
+                            "name": "高效 / 便捷 / 安全",
+                            "style": {
+                                "textColor": "#FFFFFF",
+                                "width": 187,
+                                "height": 28
+                            },
+                            "layout": {},
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "type": "Rectangle",
+                    "name": "蒙版",
+                    "style": {
+                        "backgroundColor": "color-white",
+                        "borderRadius": "6px",
+                        "width": 1380,
+                        "height": 240
+                    },
+                    "layout": {
+                        "position": "absolute",
+                        "top": 0,
+                        "left": 0
+                    },
+                    "children": []
+                }
+            ]
+        }
+    ]
+}

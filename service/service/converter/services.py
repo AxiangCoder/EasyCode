@@ -27,7 +27,8 @@ class DesignConverterService:
         self,
         input_file_path: str,
         tokens_file_path: Optional[str] = None,
-        output_dir: Optional[str] = None
+        output_dir: Optional[str] = None,
+        progress_callback: Optional[callable] = None
     ) -> Dict[str, Any]:
         """
         转换设计文件
@@ -52,7 +53,8 @@ class DesignConverterService:
                 input_file=input_file_path,
                 tokens_file=tokens_file_path or converter_config.DEFAULT_TOKENS_INPUT,
                 dsl_output_file=str(self._get_output_path(output_dir, 'dsl_output.json')),
-                report_output_file=str(self._get_output_path(output_dir, 'token_report.json'))
+                report_output_file=str(self._get_output_path(output_dir, 'token_report.json')),
+                progress_callback = progress_callback
             )
 
             # 执行转换
@@ -70,7 +72,7 @@ class DesignConverterService:
                 'dsl': dsl_output,
                 'html': html_output,
                 'report': token_report,
-                'llm_usage': converter.llm_usage
+                'llm_usage': converter.llm_usage,
             }
 
         except Exception as e:
@@ -170,7 +172,7 @@ class ConversionTaskService:
     def __init__(self):
         self.converter_service = DesignConverterService()
 
-    def process_conversion_task(self, task) -> Dict[str, Any]:
+    def process_conversion_task(self, task, progress_callback: Optional[callable] = None) -> Dict[str, Any]:
         """
         处理转换任务
 
@@ -189,13 +191,15 @@ class ConversionTaskService:
             # 执行转换
             result = self.converter_service.convert_design_file(
                 input_file_path=task.input_file.path,
-                tokens_file_path=task.design_tokens.file.path if task.design_tokens else None
+                tokens_file_path=task.design_tokens.file.path if task.design_tokens else None,
+                progress_callback=progress_callback
             )
 
             # 更新任务状态
             task.status = 'completed'
             task.progress = 100
             task.completed_at = timezone.now()
+            task.llm_usage = result.get('llm_usage', None)
             task.save()
 
             return result
@@ -216,4 +220,7 @@ class ConversionTaskService:
             'error_message': task.error_message,
             'started_at': task.started_at,
             'completed_at': task.completed_at,
+            'input_nodes': task.input_nodes,
+            'handled_nodes': task.handled_nodes,
+            'hidden_nodes': task.hidden_nodes,
         }
