@@ -218,31 +218,30 @@ class SketchConverter:
         node = {}
 
         # 1. Determine node type and content
-        # if layer_class == constants.LAYER_SYMBOL_INSTANCE:
-        #     symbol_id = layer.get("symbolID")
-        #     semantic_name = self.symbol_map.get(symbol_id, layer.get("name"))
-        #     parsed_name = utils.parse_semantic_name(semantic_name)
-        #     node["type"] = parsed_name.get("type", constants.NODE_UNKNOWN_COMPONENT)
-        #     node["variant"] = parsed_name.get("variant")
-        #     if overrides := layer.get("overrideValues"):
-        #         for override in overrides:
-        #             if "stringValue" in override and override["stringValue"]:
-        #                 node["content"] = {"text": override["stringValue"]}
-        #                 break
-        # elif layer_class == constants.LAYER_TEXT:
-        #     node["type"] = constants.NODE_TEXT
-        #     node["content"] = {"text": layer.get("stringValue")}
-        # elif layer_class in [constants.LAYER_GROUP, constants.LAYER_ARTBOARD]:
-        #     node["type"] = constants.NODE_GROUP
-        # elif layer_class == constants.LAYER_RECTANGLE:
-        #     node["type"] = constants.NODE_RECTANGLE
-        # elif layer_class == constants.LAYER_OVAL:
-        #     node["type"] = constants.NODE_OVAL
-        # else:
-        #     logger.info(f"Ignoring layer type: {layer_class} (Name: '{layer.get('name')}')")
-        #     return None
+        if layer_class == constants.LAYER_SYMBOL_INSTANCE:
+            symbol_id = layer.get("symbolID")
+            semantic_name = self.symbol_map.get(symbol_id, layer.get("name"))
+            parsed_name = utils.parse_semantic_name(semantic_name)
+            node["type"] = parsed_name.get("type", constants.NODE_UNKNOWN_COMPONENT)
+            node["variant"] = parsed_name.get("variant")
+            if overrides := layer.get("overrideValues"):
+                for override in overrides:
+                    if "stringValue" in override and override["stringValue"]:
+                        node["content"] = {"text": override["stringValue"]}
+                        break
+        elif layer_class == constants.LAYER_TEXT:
+            node["type"] = constants.NODE_TEXT
+            node["content"] = {"text": layer.get("stringValue")}
+        elif layer_class in [constants.LAYER_GROUP, constants.LAYER_ARTBOARD]:
+            node["type"] = constants.NODE_GROUP
+        elif layer_class == constants.LAYER_RECTANGLE:
+            node["type"] = constants.NODE_RECTANGLE
+        elif layer_class == constants.LAYER_OVAL:
+            node["type"] = constants.NODE_OVAL
+        else:
+            logger.info(f"Ignoring layer type: {layer_class} (Name: '{layer.get('name')}')")
+            return None
         
-        node["type"] = layer_class
         node["name"] = layer.get("name")
         node["do_objectID"] = layer.get("do_objectID")
 
@@ -255,7 +254,7 @@ class SketchConverter:
         # 3. Handle layout and children
         layout = {}
         children_nodes = []
-        if node["type"] == constants.LAYER_GROUP and layer.get("layers"):
+        if node["type"] in [constants.NODE_GROUP, constants.NODE_ARTBOARD, constants.NODE_PAGE] and layer.get("layers"):
             child_layers = layer["layers"]
             layout_analysis = self._analyze_layout_with_llm(child_layers) if self.llm_client else None
             if layout_analysis and "layout_groups" in layout_analysis:

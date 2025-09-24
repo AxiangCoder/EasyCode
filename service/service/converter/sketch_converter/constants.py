@@ -10,10 +10,14 @@ LAYER_RECTANGLE = "rectangle"
 LAYER_OVAL = "oval"
 
 # DSL Node Types
-NODE_GROUP = "Group"
-NODE_TEXT = "Text"
-NODE_RECTANGLE = "Rectangle"
-NODE_OVAL = "Oval"
+NODE_PAGE = "page"
+NODE_ARTBOARD = "div"
+NODE_GROUP = "div"
+NODE_SYMBOL_MASTER = "symbolMaster"
+NODE_SYMBOL_INSTANCE = "symbolInstance"
+NODE_TEXT = "text"
+NODE_RECTANGLE = "div"
+NODE_OVAL = "div"
 NODE_UNKNOWN_COMPONENT = "UnknownComponent"
 
 # Layout Types
