@@ -92,22 +92,26 @@ def convert_design_file_task_sync(task_id, task_instance=None):
             task.save(update_fields=['status', 'error_message'])
             return # 失败后中止任务
 
-        node_counter = [0]
-        last_reported_progress = [10]
 
         def progress_callback ():
-            node_counter[0] += 1
+            """ node_counter[0] += 1
             current_progress = int((node_counter[0] + 10) / (task.input_nodes * 85))
             if current_progress > last_reported_progress[0]:
                 last_reported_progress[0] = current_progress
                 ConversionTask.objects.filter (id = task_id).update (
                     progress = min (current_progress, 100),
                     hidden_nodes = node_counter[0],
-                )
+                ) """
+            task.handled_nodes += 1
+            progress = ((task.handled_nodes + task.handled_nodes) // task.input_nodes) * 90 + 5
+            task.progress = progress
+            if task_instance:
+                task_instance.update_state(state='PROGRESS', meta={'progress': progress})
+            task.save (update_fields=["progress", "handled_nodes"])
 
         # 更新进度：开始处理（仅在异步模式下）
         if task_instance:
-            task_instance.update_state(state='PROGRESS', meta={'progress': 10})
+            task_instance.update_state(state='PROGRESS', meta={'progress': 5})
         logger.info(f"开始处理转换任务: {task_id}")
 
         # 执行转换
