@@ -37,39 +37,60 @@ def convert_design_file_task_sync(task_id, task_instance=None):
         service = ConversionTaskService()
 
         # 进度
-        def count_nodes(node, count_hidden = False):
-            count = 0
-            """ if isinstance(node, dict):
-                is_visible = node.get("isVisible", False)
-                if (count_hidden and not is_visible) or (not count_hidden):
-                    count += 1
-                if 'layers' in node and isinstance(node.get("layers"), list):
-                    for child in node['layers']:
-                        count += count_nodes(child, count_hidden)
-            elif isinstance(node, list):
-                for item in node:
-                    count += count_nodes(item, count_hidden)
-            return count """
-            if isinstance (node, dict):
-                is_visible = node.get ('isVisible', False)
-                if not is_visible and count_hidden: 
-                    count += 1
-                if not count_hidden:
-                    count += 1
-                if isinstance(node.get("layers"), list):
-                    count += sum ([count_nodes(item, count_hidden) for item in node.get("layers")])
-                return count
+        def count_nodes(node, mode='all'):
+            """
+            递归计算节点数。
+            :param node: 当前节点（字典或列表）。
+            :param mode: 'all' 或 'hidden'。
+                         'all' 模式下，计算所有节点。
+                         'hidden' 模式下，只计算不可见的节点。
+            """
+            # 如果当前节点是列表，则累加列表中每个元素的计算结果
+            if isinstance(node, list):
+                return sum(count_nodes(item, mode) for item in node)
+
+            # 如果当前节点不是字典，它不能成为一个有效的图层节点，返回0
+            if not isinstance(node, dict):
+                return 0
+
+            # --- 核心逻辑 ---
+            # 1. 获取可见性，注意：默认值必须是 True
+            is_visible = node.get("isVisible", True)
+
+            # 2. 根据模式，判断当前这个节点是否应该被计数
+            count_this_node = 0
+            if mode == 'all':
+                count_this_node = 1
+            elif mode == 'hidden' and not is_visible:
+                count_this_node = 1
+            
+            # 3. 递归地计算所有子节点的数量
+            children_count = 0
+            if 'layers' in node and isinstance(node.get('layers'), list):
+                children_count = count_nodes(node['layers'], mode)
+            
+            # 4. 返回当前节点计数 + 子节点计数
+            return count_this_node + children_count
 
         try:
             with task.input_file.open('r') as f:
-                input_file = json.loads(f.read ())
-                task.input_nodes = count_nodes(input_file, count_hidden = False)
-                task.hidden_nodes = count_nodes(input_file, count_hidden = True)
-                task.handled_nodes = 0
-                task.save(update_fields=["input_nodes", "hidden_nodes", "handled_nodes"])
+                file_content = f.read()
+                if not file_content:
+                    raise json.JSONDecodeError("Empty file content", file_content, 0)
+                input_data = json.loads(file_content)
+
+            # 使用新的 mode 参数来调用
+            task.input_nodes = count_nodes(input_data, mode='all')
+            task.hidden_nodes = count_nodes(input_data, mode='hidden')
+            task.handled_nodes = 0
+            task.save(update_fields=["input_nodes", "hidden_nodes", "handled_nodes"])
         except Exception as e:
-            raise (e)
-            # logger.error(f"Task {task_id}: Failed to calculate input_nodes. Error: {e}")
+            # 保持良好的日志记录习惯
+            logger.error(f"Task {task_id}: Failed to calculate initial node counts. Error: {e}", exc_info=True)
+            task.status = 'failed'
+            task.error_message = "无法解析输入文件或计算节点总数。"
+            task.save(update_fields=['status', 'error_message'])
+            return # 失败后中止任务
 
         node_counter = [0]
         last_reported_progress = [10]
