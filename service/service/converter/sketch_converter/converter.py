@@ -200,10 +200,6 @@ class SketchConverter:
 
     def _traverse_layer(self, layer, parent_layout_type=constants.LAYOUT_ABSOLUTE):
         """Recursively traverses the layer tree to build the DSL structure."""
-        # 实时进度
-        if self.progress_callback:
-            self.progress_callback()
-
         if not layer or not layer.get("isVisible", True):
             return None
 
@@ -259,12 +255,20 @@ class SketchConverter:
         style["height"] = frame.get("height")
         node["style"] = style
 
+        # 实时进度
+        if self.progress_callback:
+            self.progress_callback()
+
+        if utils.is_export(layer):
+            node["exportOptions"] = layer.get("exportOptions")
+            return node
+
         # 3. Handle layout and children
         layout = {}
         children_nodes = []
         if layer.get("layers") and len(layer.get("layers")) > 0:
             child_layers = layer["layers"]
-            layout_analysis = self._analyze_layout_with_llm(child_layers) if self.llm_client else None
+            layout_analysis = self._analyze_layout_with_llm(child_layers, layer.get("do_objectID")) if self.llm_client else None
             if layout_analysis and "layout_groups" in layout_analysis:
                 # Advanced layout processing with LLM result
                 layout["type"] = constants.LAYOUT_ABSOLUTE
@@ -386,7 +390,7 @@ class SketchConverter:
         logger.info("Rule-based analysis could not determine layout, falling back to absolute.")
         return {"type": constants.LAYOUT_ABSOLUTE}
 
-    def _analyze_layout_with_llm(self, layers):
+    def _analyze_layout_with_llm(self, layers, do_objectID):
         """Analyzes layout using an LLM for complex, mixed layouts."""
         if not self.llm_client:
             logger.warning("LLM client not available. Skipping LLM layout analysis.")
@@ -445,7 +449,8 @@ Input Layers:
                 temperature=0.1,
                 # response_format={"type": "json_object"}, # Removed for compatibility
             )
-            print(response)
+            # print(response)
+            logger.info(f"LLM response: {json.dumps(response, ensure_ascii=False, indent=4)}")
             
             if response.usage:
                 logger.info(f"Token usage: {response.usage.total_tokens} total tokens.")
@@ -465,7 +470,7 @@ Input Layers:
             logger.info(f"LLM analysis successful: {layout_info}")
             return layout_info
         except Exception as e:
-            logger.error(f"LLM API call failed: {e}")
+            logger.error(f"LLM API call failed: {do_objectID}:{e}")
             return None
 
     def _write_dsl_output(self, dsl_output):

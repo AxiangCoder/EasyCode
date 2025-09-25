@@ -15,19 +15,19 @@ DEFAULT_DSL_OUTPUT = os.path.join(MEDIA_ROOT, "sketches", "dsl_output_refactored
 DEFAULT_REPORT_OUTPUT = os.path.join(MEDIA_ROOT, "sketches", "token_report_refactored.json")
 
 # --- LLM Configuration ---
-# ENABLE_LLM_FALLBACK = True
+ENABLE_LLM_FALLBACK = True
 
 # --- API Key Configuration ---
 # Best practice: Load API Key from an environment variable.
 # You can set it in your terminal: export SILICONFLOW_API_KEY="your_key_here"
-# LLM_API_KEY = os.environ.get("SILICONFLOW_API_KEY", "sk-ddwxtevjbtcuqswmcarbtykkrmlwdydiqqejgqakjayzbyga")  # Default to the last used key from original script
+LLM_API_KEY = os.environ.get("SILICONFLOW_API_KEY", "sk-ddwxtevjbtcuqswmcarbtykkrmlwdydiqqejgqakjayzbyga")  # Default to the last used key from original script
 # Original commented-out keys for reference:
 # LLM_API_KEY = "AIzaSyC0kAwn91TtXRfnJnTC-qEE9dZNG0vPgS8"  # Google
 # LLM_API_KEY = "lm-studio"  # LM Studio
 
 # --- Base URL Configuration ---
 # The endpoint for the API call.
-# LLM_BASE_URL = "https://api.siliconflow.cn/v1"  # SiliconFlow (last used)
+LLM_BASE_URL = "https://api.siliconflow.cn/v1"  # SiliconFlow (last used)
 
 # Original commented-out URLs for reference (from original script's OpenAI client):
 # LLM_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/openai/"
@@ -35,7 +35,7 @@ DEFAULT_REPORT_OUTPUT = os.path.join(MEDIA_ROOT, "sketches", "token_report_refac
 
 # --- Model Name Configuration ---
 # The specific model to be used.
-# LLM_MODEL_NAME = "Qwen/Qwen2.5-Coder-7B-Instruct"  # SiliconFlow (last used model from original script)
+LLM_MODEL_NAME = "Qwen/Qwen2.5-Coder-7B-Instruct"  # SiliconFlow (last used model from original script)
 # Original commented-out models for reference:
 # LLM_MODEL_NAME = "gemini-2.5-flash"
 # LLM_MODEL_NAME = "openai/gpt-oss-20b"

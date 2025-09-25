@@ -7,6 +7,7 @@ from django.db.models import F
 from .models import ConversionTask, ConversionResult
 from .services import ConversionTaskService
 import json
+from .sketch_converter.utils import sum_nodes
 
 logger = logging.getLogger(__name__)
 
@@ -37,42 +38,6 @@ def convert_design_file_task_sync(task_id, task_instance=None):
         # 创建服务实例
         service = ConversionTaskService()
 
-        # 进度
-        def count_nodes(node, mode="all"):
-            """
-            递归计算节点数。
-            :param node: 当前节点（字典或列表）。
-            :param mode: "all" 或 "hidden"。
-                         "all" 模式下，计算所有节点。
-                         "hidden" 模式下，只计算不可见的节点。
-            """
-            # 如果当前节点是列表，则累加列表中每个元素的计算结果
-            if isinstance(node, list):
-                return sum(count_nodes(item, mode) for item in node)
-
-            # 如果当前节点不是字典，它不能成为一个有效的图层节点，返回0
-            if not isinstance(node, dict):
-                return 0
-
-            # --- 核心逻辑 ---
-            # 1. 获取可见性，注意：默认值必须是 True
-            is_visible = node.get("isVisible", True)
-
-            # 2. 根据模式，判断当前这个节点是否应该被计数
-            count_this_node = 0
-            if mode == "all":
-                count_this_node = 1
-            elif mode == "hidden" and not is_visible:
-                count_this_node = 1
-            
-            # 3. 递归地计算所有子节点的数量
-            children_count = 0
-            if "layers" in node and isinstance(node.get("layers"), list):
-                children_count = count_nodes(node["layers"], mode)
-            
-            # 4. 返回当前节点计数 + 子节点计数
-            return count_this_node + children_count
-
         try:
             with task.input_file.open("r") as f:
                 file_content = f.read()
@@ -81,8 +46,8 @@ def convert_design_file_task_sync(task_id, task_instance=None):
                 input_data = json.loads(file_content)
 
             # 使用新的 mode 参数来调用
-            task.input_nodes = count_nodes(input_data, mode="all")
-            task.hidden_nodes = count_nodes(input_data, mode="hidden")
+            task.input_nodes = sum_nodes(input_data, mode="all")
+            task.hidden_nodes = sum_nodes(input_data, mode="hidden")
             task.handled_nodes = 0
             task.save(update_fields=["input_nodes", "hidden_nodes", "handled_nodes"])
         except Exception as e:
