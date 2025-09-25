@@ -10,6 +10,19 @@ class ConverterException(Exception):
         super().__init__(message)
 
 
+
+class LLMServiceError(ConverterException):
+    """大模型异常"""
+    def __init__(self, message: str, service_name: Optional[str] = None):
+        super().__init__(
+            code="LLM_SERVICE_ERROR",
+            message=message,
+            details={"service_name": service_name}
+        )
+
+
+
+
 class FileProcessingError(ConverterException):
     """文件处理异常"""
     def __init__(self, message: str, file_path: Optional[str] = None):

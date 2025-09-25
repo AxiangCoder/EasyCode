@@ -27,6 +27,7 @@ NODE_SHAPE_GROUP = "shapeGroup"
 NODE_BITMAP = "bitmap"
 NODE_TRIANGLE = "triangle"
 NODE_UNKNOWN_COMPONENT = "UnknownComponent"
+NODE_IMAGE = "img"
 
 # Layout Types
 LAYOUT_ABSOLUTE = "absolute"

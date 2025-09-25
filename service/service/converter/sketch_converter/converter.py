@@ -6,6 +6,8 @@ from openai import OpenAI
 
 from . import config, constants, utils
 
+from ..service.llm_service import LLMClient
+
 # Setup logging - use Django's logging configuration
 logger = logging.getLogger(__name__)
 
@@ -17,7 +19,14 @@ class SketchConverter:
     parsing layers, mapping styles to tokens, and generating output files.
     """
 
-    def __init__(self, input_file, tokens_file, dsl_output_file, report_output_file, progress_callback):
+    def __init__(
+        self,
+        input_file,
+        tokens_file,
+        dsl_output_file,
+        report_output_file,
+        progress_callback,
+    ):
         """
         Initializes the converter with configuration.
         """
@@ -30,25 +39,18 @@ class SketchConverter:
         self.token_maps = {}
         self.symbol_map = {}
         self.report = defaultdict(dict)
-        self.llm_client = None
+        self.llm_service = None
+        self.llm_usage = {
+            "prompt_tokens": 0,
+            "completion_tokens": 0,
+            "total_tokens": 0,
+        }
         self.progress_callback = progress_callback
-        if getattr(config, "ENABLE_LLM_FALLBACK", False)  and getattr(config, "LLM_API_KEY", None):
-            try:
-                self.llm_client = OpenAI(
-                    api_key=config.LLM_API_KEY,
-                    base_url=config.LLM_BASE_URL,
-                )
-                logger.info("OpenAI client initialized successfully.")
-                self.llm_usage = {
-                    "prompt_tokens": 0,
-                    "completion_tokens": 0,
-                    "total_tokens": 0,
-                }
-            except Exception as e:
-                logger.error(f"Failed to initialize OpenAI client: {e}")
-                self.llm_client = None
-        else:
-            logger.warning("LLM fallback is disabled or API key is not configured.")
+        try:
+            self.llm_service = LLMClient(api_key=config.LLM_API_KEY, base_url=config.LLM_BASE_URL)
+        except Exception as e:
+            logger.error(f"Failed to initialize LLM client: {e}")
+            self.llm_service = None
 
     def run(self):
         """
@@ -61,7 +63,9 @@ class SketchConverter:
         self._preprocess_symbols()
         target_layer = self._find_main_artboard()
         if not target_layer:
-            logger.error("No suitable artboard or group found to process in the Sketch file.")
+            logger.error(
+                "No suitable artboard or group found to process in the Sketch file."
+            )
             return
 
         logger.info("Starting conversion...")
@@ -69,6 +73,8 @@ class SketchConverter:
         self._write_dsl_output(dsl_output)
         self._write_token_report()
         logger.info("Conversion process completed.")
+        if self.llm_service:
+            self.llm_usage = self.llm_service.usage
         return dsl_output  # 添加返回值
 
     def _load_sketch_data(self):
@@ -89,10 +95,14 @@ class SketchConverter:
                 self.token_maps = json.load(f)
                 logger.info(f"Successfully loaded design tokens: {self.tokens_file}")
         except FileNotFoundError:
-            logger.warning(f"Design tokens file not found: {self.tokens_file}. Proceeding without tokens.")
+            logger.warning(
+                f"Design tokens file not found: {self.tokens_file}. Proceeding without tokens."
+            )
             self.token_maps = {}
         except json.JSONDecodeError:
-            logger.warning(f"Invalid JSON in tokens file: {self.tokens_file}. Proceeding without tokens.")
+            logger.warning(
+                f"Invalid JSON in tokens file: {self.tokens_file}. Proceeding without tokens."
+            )
             self.token_maps = {}
 
     def _preprocess_symbols(self):
@@ -102,7 +112,10 @@ class SketchConverter:
             if "layers" not in page:
                 continue
             for artboard in page.get("layers", []):
-                if artboard.get("_class") in [constants.LAYER_ARTBOARD, constants.LAYER_SYMBOL_MASTER]:
+                if artboard.get("_class") in [
+                    constants.LAYER_ARTBOARD,
+                    constants.LAYER_SYMBOL_MASTER,
+                ]:
                     for item in artboard.get("layers", []):
                         if item.get("_class") == constants.LAYER_SYMBOL_MASTER:
                             self.symbol_map[item.get("symbolID")] = item.get("name")
@@ -110,8 +123,14 @@ class SketchConverter:
 
     def _find_main_artboard(self):
         """Finds the first visible artboard or group to process, especially if the root is a page."""
-        if self.sketch_data.get("_class") in [constants.LAYER_PAGE, constants.LAYER_ARTBOARD, constants.LAYER_GROUP]:
-            logger.info(f"Found starting point: '{self.sketch_data.get('name')}' ({self.sketch_data.get('_class')})")
+        if self.sketch_data.get("_class") in [
+            constants.LAYER_PAGE,
+            constants.LAYER_ARTBOARD,
+            constants.LAYER_GROUP,
+        ]:
+            logger.info(
+                f"Found starting point: '{self.sketch_data.get('name')}' ({self.sketch_data.get('_class')})"
+            )
             return self.sketch_data
 
     def _map_styles_to_tokens(self, layer):
@@ -136,16 +155,24 @@ class SketchConverter:
                 if token:
                     dsl_style["backgroundColor"] = token
                 else:
-                    logger.warning(f"Unknown background color: {hex_color} (Layer: '{layer_name}')")
+                    logger.warning(
+                        f"Unknown background color: {hex_color} (Layer: '{layer_name}')"
+                    )
                     dsl_style["backgroundColor"] = hex_color
-                    self.report["unknown_colors"].setdefault(hex_color, []).append(layer_name)
-        
+                    self.report["unknown_colors"].setdefault(hex_color, []).append(
+                        layer_name
+                    )
+
         # Text Style
         if text_style := style.get("textStyle"):
             self._map_text_style(text_style, dsl_style, layer_name)
 
         # Borders
-        if (borders := style.get("borders")) and borders and borders[0].get("isEnabled"):
+        if (
+            (borders := style.get("borders"))
+            and borders
+            and borders[0].get("isEnabled")
+        ):
             self._map_border_style(borders[0], dsl_style, layer_name)
 
         # Corner Radius
@@ -155,7 +182,11 @@ class SketchConverter:
             dsl_style["borderRadius"] = token if token else f"{radius_key}px"
 
         # Shadows
-        if (shadows := style.get("shadows")) and shadows and shadows[0].get("isEnabled"):
+        if (
+            (shadows := style.get("shadows"))
+            and shadows
+            and shadows[0].get("isEnabled")
+        ):
             dsl_style["shadow"] = "default"  # Simplified, can be tokenized
 
         return dsl_style
@@ -171,11 +202,17 @@ class SketchConverter:
                 if token:
                     dsl_style["textColor"] = token
                 else:
-                    logger.warning(f"Unknown text color: {hex_color} (Layer: '{layer_name}')")
+                    logger.warning(
+                        f"Unknown text color: {hex_color} (Layer: '{layer_name}')"
+                    )
                     dsl_style["textColor"] = hex_color
-                    self.report["unknown_textColors"].setdefault(hex_color, []).append(layer_name)
+                    self.report["unknown_textColors"].setdefault(hex_color, []).append(
+                        layer_name
+                    )
         # Font
-        font_attrs = attrs.get("MSAttributedStringFontAttribute", {}).get("attributes", {})
+        font_attrs = attrs.get("MSAttributedStringFontAttribute", {}).get(
+            "attributes", {}
+        )
         font_name, font_size = font_attrs.get("name"), font_attrs.get("size")
         if font_name and font_size:
             font_key = f"{font_name}-{int(font_size)}"
@@ -194,9 +231,13 @@ class SketchConverter:
             if token:
                 dsl_style["borderColor"] = token
             else:
-                logger.warning(f"Unknown border color: {hex_color} (Layer: '{layer_name}')")
+                logger.warning(
+                    f"Unknown border color: {hex_color} (Layer: '{layer_name}')"
+                )
                 dsl_style["borderColor"] = hex_color
-                self.report["unknown_borderColors"].setdefault(hex_color, []).append(layer_name)
+                self.report["unknown_borderColors"].setdefault(hex_color, []).append(
+                    layer_name
+                )
 
     def _traverse_layer(self, layer, parent_layout_type=constants.LAYOUT_ABSOLUTE):
         """Recursively traverses the layer tree to build the DSL structure."""
@@ -241,11 +282,13 @@ class SketchConverter:
         elif layer_class == constants.LAYER_TRIANGLE:
             node["type"] = constants.NODE_TRIANGLE
         else:
-            logger.info(f"Ignoring layer type: {layer_class} (Name: '{layer.get('name')}')")
+            logger.info(
+                f"Ignoring layer type: {layer_class} (Name: '{layer.get('name')}')"
+            )
             # return None
             node["type"] = constants.NODE_UNKNOWN_COMPONENT
             node["class"] = layer_class
-        
+
         node["name"] = layer.get("name")
         node["do_objectID"] = layer.get("do_objectID")
 
@@ -261,6 +304,7 @@ class SketchConverter:
 
         if utils.is_export(layer):
             node["exportOptions"] = layer.get("exportOptions")
+            node["type"] = constants.NODE_IMAGE
             return node
 
         # 3. Handle layout and children
@@ -268,17 +312,25 @@ class SketchConverter:
         children_nodes = []
         if layer.get("layers") and len(layer.get("layers")) > 0:
             child_layers = layer["layers"]
-            layout_analysis = self._analyze_layout_with_llm(child_layers, layer.get("do_objectID")) if self.llm_client else None
+            layout_analysis = (
+                self._analyze_layout_with_llm(child_layers, layer.get("do_objectID"))
+                if self.llm_service
+                else None
+            )
             if layout_analysis and "layout_groups" in layout_analysis:
                 # Advanced layout processing with LLM result
                 layout["type"] = constants.LAYOUT_ABSOLUTE
-                children_nodes = self._process_llm_layout_analysis(layout_analysis, child_layers)
+                children_nodes = self._process_llm_layout_analysis(
+                    layout_analysis, child_layers
+                )
             else:
                 # Fallback to rule-based analysis
                 layout_info = self._analyze_layout_with_rules(child_layers)
                 layout.update(layout_info)
                 for child in child_layers:
-                    if child_node := self._traverse_layer(child, parent_layout_type=layout.get("type")):
+                    if child_node := self._traverse_layer(
+                        child, parent_layout_type=layout.get("type")
+                    ):
                         children_nodes.append(child_node)
 
         if parent_layout_type == constants.LAYOUT_ABSOLUTE:
@@ -289,7 +341,7 @@ class SketchConverter:
         node["layout"] = layout
         node["children"] = children_nodes
         return node
-    
+
     def _process_llm_layout_analysis(self, layout_analysis, all_child_layers):
         """Creates virtual groups and processes outliers based on LLM analysis."""
         children_nodes = []
@@ -298,7 +350,11 @@ class SketchConverter:
 
         # Create virtual groups for flex/grid layouts
         for group_info in layout_analysis.get("layout_groups", []):
-            group_indices = [idx for idx in group_info.get("children_indices", []) if idx < num_children]
+            group_indices = [
+                idx
+                for idx in group_info.get("children_indices", [])
+                if idx < num_children
+            ]
             if not group_indices:
                 continue
 
@@ -311,21 +367,21 @@ class SketchConverter:
             max_y = max(l["frame"]["y"] + l["frame"]["height"] for l in group_layers)
 
             virtual_group_layout = group_info.copy()
-            virtual_group_layout.update({
-                "position": constants.LAYOUT_ABSOLUTE,
-                "top": min_y,
-                "left": min_x
-            })
+            virtual_group_layout.update(
+                {"position": constants.LAYOUT_ABSOLUTE, "top": min_y, "left": min_x}
+            )
 
             virtual_group_children = []
             for child_layer in group_layers:
                 # Adjust child frame relative to the new virtual group
                 adjusted_layer = child_layer.copy()
-                adjusted_layer['frame'] = adjusted_layer['frame'].copy()
-                adjusted_layer['frame']['x'] -= min_x
-                adjusted_layer['frame']['y'] -= min_y
-                
-                if child_node := self._traverse_layer(adjusted_layer, parent_layout_type=group_info.get("type")):
+                adjusted_layer["frame"] = adjusted_layer["frame"].copy()
+                adjusted_layer["frame"]["x"] -= min_x
+                adjusted_layer["frame"]["y"] -= min_y
+
+                if child_node := self._traverse_layer(
+                    adjusted_layer, parent_layout_type=group_info.get("type")
+                ):
                     virtual_group_children.append(child_node)
 
             virtual_group = {
@@ -338,22 +394,29 @@ class SketchConverter:
             children_nodes.append(virtual_group)
 
         # Process outlier layers
-        outlier_indices = [idx for idx in layout_analysis.get("outlier_indices", []) if idx < num_children]
+        outlier_indices = [
+            idx
+            for idx in layout_analysis.get("outlier_indices", [])
+            if idx < num_children
+        ]
         for outlier_index in outlier_indices:
             if outlier_index in processed_indices:
                 continue
-            if child_node := self._traverse_layer(all_child_layers[outlier_index], parent_layout_type=constants.LAYOUT_ABSOLUTE):
+            if child_node := self._traverse_layer(
+                all_child_layers[outlier_index],
+                parent_layout_type=constants.LAYOUT_ABSOLUTE,
+            ):
                 children_nodes.append(child_node)
-        
+
         return children_nodes
 
     def _analyze_layout_with_rules(self, layers):
         """Analyzes layout based on geometric rules."""
         if not layers or len(layers) < 2:
             return {"type": constants.LAYOUT_ABSOLUTE}
-        
+
         layers.sort(key=lambda l: (l["frame"]["y"], l["frame"]["x"]))
-        
+
         # Row grouping
         rows = defaultdict(list)
         for layer in layers:
@@ -374,33 +437,56 @@ class SketchConverter:
 
         # Flex row
         if num_rows == 1 and items_per_row[0] > 1:
-            gaps = [layers[i+1]["frame"]["x"] - (layers[i]["frame"]["x"] + layers[i]["frame"]["width"]) for i in range(len(layers) - 1)]
-            if any(g < 0 for g in gaps): return {"type": constants.LAYOUT_ABSOLUTE}
-            return {"type": constants.LAYOUT_FLEX, "direction": constants.LAYOUT_DIR_ROW, "gap": round(sum(gaps) / len(gaps)) if gaps else 0}
+            gaps = [
+                layers[i + 1]["frame"]["x"]
+                - (layers[i]["frame"]["x"] + layers[i]["frame"]["width"])
+                for i in range(len(layers) - 1)
+            ]
+            if any(g < 0 for g in gaps):
+                return {"type": constants.LAYOUT_ABSOLUTE}
+            return {
+                "type": constants.LAYOUT_FLEX,
+                "direction": constants.LAYOUT_DIR_ROW,
+                "gap": round(sum(gaps) / len(gaps)) if gaps else 0,
+            }
 
         # Flex column
         if items_per_row and all(c == 1 for c in items_per_row) and num_rows > 1:
             x_coords = [l["frame"]["x"] for l in layers]
             x_std_dev = statistics.stdev(x_coords) if len(x_coords) > 1 else 0
             if x_std_dev <= config.LAYOUT_X_THRESHOLD:
-                gaps = [layers[i+1]["frame"]["y"] - (layers[i]["frame"]["y"] + layers[i]["frame"]["height"]) for i in range(len(layers) - 1)]
-                if any(g < 0 for g in gaps): return {"type": constants.LAYOUT_ABSOLUTE}
-                return {"type": constants.LAYOUT_FLEX, "direction": constants.LAYOUT_DIR_COLUMN, "gap": round(sum(gaps) / len(gaps)) if gaps else 0}
+                gaps = [
+                    layers[i + 1]["frame"]["y"]
+                    - (layers[i]["frame"]["y"] + layers[i]["frame"]["height"])
+                    for i in range(len(layers) - 1)
+                ]
+                if any(g < 0 for g in gaps):
+                    return {"type": constants.LAYOUT_ABSOLUTE}
+                return {
+                    "type": constants.LAYOUT_FLEX,
+                    "direction": constants.LAYOUT_DIR_COLUMN,
+                    "gap": round(sum(gaps) / len(gaps)) if gaps else 0,
+                }
 
-        logger.info("Rule-based analysis could not determine layout, falling back to absolute.")
+        logger.info(
+            "Rule-based analysis could not determine layout, falling back to absolute."
+        )
         return {"type": constants.LAYOUT_ABSOLUTE}
 
     def _analyze_layout_with_llm(self, layers, do_objectID):
         """Analyzes layout using an LLM for complex, mixed layouts."""
-        if not self.llm_client:
+        if not self.llm_service:
             logger.warning("LLM client not available. Skipping LLM layout analysis.")
             return None
 
         logger.info(f"Performing LLM layout analysis for {len(layers)} layers...")
-        simplified_layers = [{"name": l.get("name"), "class": l.get("_class"), "frame": l.get("frame")} for l in layers]
-        
+        simplified_layers = [
+            {"name": l.get("name"), "class": l.get("_class"), "frame": l.get("frame")}
+            for l in layers
+        ]
+
         # Original prompt, restored for compatibility with all models.
-        prompt = f'''
+        prompt = f"""
 You are an expert UI layout analyst. Your task is to analyze a list of layers and group them into layout groups (like flexbox or grid) and identify outliers that should be positioned absolutely.
 
 **INSTRUCTIONS:**
@@ -438,33 +524,32 @@ Input Layers:
 ```json
 {json.dumps(simplified_layers, indent=2)}
 ```
-'''
+"""
         try:
-            response = self.llm_client.chat.completions.create(
+            response = self.llm_service.chat(
                 model=config.LLM_MODEL_NAME,
                 messages=[
-                    {"role": "system", "content": "You are an expert assistant that analyzes UI layouts. Your only output must be a single, raw JSON object, without any markdown formatting (like ```json), comments, or explanations."},
+                    {
+                        "role": "system",
+                        "content": "You are an expert assistant that analyzes UI layouts. Your only output must be a single, raw JSON object, without any markdown formatting (like ```json), comments, or explanations.",
+                    },
                     {"role": "user", "content": prompt},
                 ],
                 temperature=0.1,
                 # response_format={"type": "json_object"}, # Removed for compatibility
             )
             # print(response)
-            logger.info(f"LLM response: {json.dumps(response, ensure_ascii=False, indent=4)}")
-            
-            if response.usage:
-                logger.info(f"Token usage: {response.usage.total_tokens} total tokens.")
-                usage = getattr(response, "usage", None)
-                if usage:
-                    self.llm_usage["prompt_tokens"] += usage.prompt_tokens
-                    self.llm_usage["completion_tokens"] += usage.completion_tokens
-                    self.llm_usage["total_tokens"] += usage.total_tokens
+            logger.info(
+                f"LLM response: {json.dumps(response, ensure_ascii=False, indent=4)}"
+            )
 
             # Defensive post-processing to remove markdown, restored from original script
             response_text = response.choices[0].message.content
             logger.info(f"Raw LLM response: {response_text}")
             if "```json" in response_text:
-                response_text = response_text.split("```json")[1].split("```")[0].strip()
+                response_text = (
+                    response_text.split("```json")[1].split("```")[0].strip()
+                )
 
             layout_info = json.loads(response_text)
             logger.info(f"LLM analysis successful: {layout_info}")
@@ -489,7 +574,9 @@ Input Layers:
             logger.info("Design system check passed. No unknown tokens found.")
             return
 
-        logger.warning(f"Detected unknown tokens. Generating report at: {self.report_output_file}")
+        logger.warning(
+            f"Detected unknown tokens. Generating report at: {self.report_output_file}"
+        )
         try:
             with open(self.report_output_file, "w", encoding="utf-8") as f:
                 json.dump(self.report, f, ensure_ascii=False, indent=4)
