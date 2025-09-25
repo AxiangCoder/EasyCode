@@ -19,8 +19,7 @@ from .permissions import (
     CanConvertDesign, CanManageDesignTokens,
     CanViewConversionResults, IsOwnerOrReadOnly
 )
-from .services import ConversionTaskService
-from .exceptions import ConverterException
+from .service import ConversionTaskService
 
 @extend_schema(tags=['设计令牌模块'])
 class DesignTokensViewSet(viewsets.ModelViewSet):

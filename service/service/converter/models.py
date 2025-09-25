@@ -114,15 +114,18 @@ class ConversionResult(BaseModel):
         help_text="DSL输出结果"
     )
     html_output = models.TextField(
-        blank=True,
+        null=True,        # 允许数据库存储 NULL
+        blank=True, 
         help_text="HTML预览输出"
     )
     token_report = models.JSONField(
+        null=True,        # 允许数据库存储 NULL
+        blank=True, 
         default=dict,
         help_text="令牌使用报告"
     )
     llm_usage = models.JSONField(
-        null=True,
+        null=True,        # 允许数据库存储 NULL
         blank=True,
         help_text="LLM token 用量汇总"
     )

@@ -5,7 +5,7 @@ from django.utils import timezone
 from django.db.models import F
 
 from .models import ConversionTask, ConversionResult
-from .services import ConversionTaskService
+from .service import ConversionTaskService
 import json
 from .sketch_converter.utils import sum_nodes
 
@@ -103,8 +103,8 @@ def convert_design_file_task_sync(task_id, task_instance=None):
         )
 
         # 保存结果至文件
-        conversion_result.save_html_to_file()
-        # conversion_result.save_dsl_to_file()
+        # conversion_result.save_html_to_file()
+        conversion_result.save_dsl_to_file()
         # conversion_result.save_token_report_to_file()
 
         # 更新进度：保存完成（仅在异步模式下）
