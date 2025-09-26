@@ -157,6 +157,7 @@ SPECTACULAR_SETTINGS = {
 AUTH_USER_MODEL = 'users.User'
 
 MEDIA_ROOT = Path(BASE_DIR, 'media')
+DEFAULT_TOKENS_INPUT = Path(BASE_DIR, 'design_tokens.json')
 
 # Celery配置
 CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL', 'redis://localhost:6379/0')  # Redis作为消息代理

@@ -12,6 +12,8 @@ from ..exceptions import (
     UnsupportedFileFormatError,
 )
 
+from django.conf import settings
+
 logger = logging.getLogger(__name__)
 
 class DesignConverterService:
@@ -50,7 +52,7 @@ class DesignConverterService:
             # 创建转换器并执行转换
             converter = SketchConverter(
                 input_file=input_file_path,
-                tokens_file=tokens_file_path or converter_config.DEFAULT_TOKENS_INPUT,
+                tokens_file=tokens_file_path or settings.DEFAULT_TOKENS_INPUT,
                 dsl_output_file=str(
                     self._get_output_path(output_dir, "dsl_output.json")
                 ),
