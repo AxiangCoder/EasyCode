@@ -1,0 +1,2731 @@
+{
+    "type": "page",
+    "name": "新增区块链平台",
+    "do_objectID": "0C46BA71-DAE4-4953-B743-9287F90A179D",
+    "style": {
+        "width": 0,
+        "height": 0
+    },
+    "layout": {
+        "type": "flex",
+        "direction": "row",
+        "gap": 233,
+        "position": "absolute",
+        "top": 0,
+        "left": 0
+    },
+    "children": [
+        {
+            "type": "div",
+            "name": "门户网站-演示系统登录",
+            "do_objectID": "4656FBD6-2075-4243-9370-34078746AE2A",
+            "style": {
+                "backgroundColor": "color-white",
+                "width": 1920,
+                "height": 1080
+            },
+            "layout": {
+                "type": "absolute"
+            },
+            "children": [
+                {
+                    "type": "img",
+                    "name": "插画",
+                    "do_objectID": "00EC9CCE-E2FF-456F-BC96-C5AE0E768603",
+                    "style": {
+                        "width": 1920,
+                        "height": 1080
+                    },
+                    "exportOptions": {
+                        "_class": "exportOptions",
+                        "includedLayerIds": [],
+                        "layerOptions": 0,
+                        "shouldTrim": false,
+                        "exportFormats": [
+                            {
+                                "_class": "exportFormat",
+                                "absoluteSize": 0,
+                                "fileFormat": "png",
+                                "name": "@1x",
+                                "namingScheme": 0,
+                                "scale": 1,
+                                "visibleScaleType": 0
+                            },
+                            {
+                                "_class": "exportFormat",
+                                "absoluteSize": 0,
+                                "fileFormat": "svg",
+                                "name": "@1x",
+                                "namingScheme": 0,
+                                "scale": 1,
+                                "visibleScaleType": 0
+                            }
+                        ]
+                    }
+                },
+                {
+                    "type": "img",
+                    "name": "logo",
+                    "do_objectID": "FDF43F6A-E03E-41E1-98BD-C990591BCC3D",
+                    "style": {
+                        "width": 372,
+                        "height": 34
+                    },
+                    "exportOptions": {
+                        "_class": "exportOptions",
+                        "includedLayerIds": [],
+                        "layerOptions": 0,
+                        "shouldTrim": false,
+                        "exportFormats": [
+                            {
+                                "_class": "exportFormat",
+                                "absoluteSize": 0,
+                                "fileFormat": "png",
+                                "name": "",
+                                "namingScheme": 0,
+                                "scale": 1,
+                                "visibleScaleType": 0
+                            },
+                            {
+                                "_class": "exportFormat",
+                                "absoluteSize": 0,
+                                "fileFormat": "svg",
+                                "name": "@2x",
+                                "namingScheme": 0,
+                                "scale": 2,
+                                "visibleScaleType": 0
+                            }
+                        ]
+                    }
+                },
+                {
+                    "type": "div",
+                    "name": "编组 4",
+                    "do_objectID": "18FF75A9-B1FE-4917-BF10-882BFE30C130",
+                    "style": {
+                        "width": 418,
+                        "height": 521
+                    },
+                    "layout": {
+                        "type": "absolute",
+                        "position": "absolute",
+                        "top": 270,
+                        "left": 1235
+                    },
+                    "children": [
+                        {
+                            "type": "img",
+                            "name": "矩形",
+                            "do_objectID": "5D935F1B-31C0-4A54-91D2-9DB99355587F",
+                            "style": {
+                                "backgroundColor": "color-white",
+                                "borderRadius": "16px",
+                                "shadow": "default",
+                                "width": 418,
+                                "height": 521
+                            },
+                            "exportOptions": {
+                                "_class": "exportOptions",
+                                "includedLayerIds": [],
+                                "layerOptions": 0,
+                                "shouldTrim": false,
+                                "exportFormats": [
+                                    {
+                                        "_class": "exportFormat",
+                                        "absoluteSize": 0,
+                                        "fileFormat": "png",
+                                        "name": "@1x",
+                                        "namingScheme": 0,
+                                        "scale": 1,
+                                        "visibleScaleType": 0
+                                    },
+                                    {
+                                        "_class": "exportFormat",
+                                        "absoluteSize": 0,
+                                        "fileFormat": "svg",
+                                        "name": "@1x",
+                                        "namingScheme": 0,
+                                        "scale": 1,
+                                        "visibleScaleType": 0
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "type": "div",
+                            "name": "编组 8",
+                            "do_objectID": "6B1901D5-8701-4B0D-AFDE-2170B713A939",
+                            "style": {
+                                "width": 336,
+                                "height": 394.243295019157
+                            },
+                            "layout": {
+                                "type": "flex",
+                                "direction": "column",
+                                "gap": 59,
+                                "position": "absolute",
+                                "top": 63.8773946360153,
+                                "left": 41
+                            },
+                            "children": [
+                                {
+                                    "type": "text",
+                                    "content": {
+                                        "text": null
+                                    },
+                                    "name": "账号密码登录",
+                                    "do_objectID": "07BF9EDE-6B90-4E66-87A4-B58A840BFD26",
+                                    "style": {
+                                        "textColor": "#1D1D1D",
+                                        "width": 144,
+                                        "height": 22
+                                    },
+                                    "layout": {},
+                                    "children": []
+                                },
+                                {
+                                    "type": "div",
+                                    "name": "编组 8",
+                                    "do_objectID": "250D1A8E-F622-476A-80BD-B47C9AF8544F",
+                                    "style": {
+                                        "width": 336,
+                                        "height": 214.588122605364
+                                    },
+                                    "layout": {
+                                        "type": "flex",
+                                        "direction": "column",
+                                        "gap": 36
+                                    },
+                                    "children": [
+                                        {
+                                            "type": "div",
+                                            "name": "input",
+                                            "do_objectID": "E40393B0-F657-422C-BE07-23F4CD463D45",
+                                            "style": {
+                                                "width": 336,
+                                                "height": 44.9137931034483
+                                            },
+                                            "layout": {
+                                                "type": "absolute"
+                                            },
+                                            "children": [
+                                                {
+                                                    "type": "text",
+                                                    "content": {
+                                                        "text": null
+                                                    },
+                                                    "name": "账号",
+                                                    "do_objectID": "7A80F096-7F3A-4A37-8F52-4519D09700D2",
+                                                    "style": {
+                                                        "textColor": "#999999",
+                                                        "font": "font-caption-default",
+                                                        "width": 28,
+                                                        "height": 22
+                                                    },
+                                                    "layout": {
+                                                        "position": "absolute",
+                                                        "top": -0.0210727969348667,
+                                                        "left": 38
+                                                    },
+                                                    "children": []
+                                                },
+                                                {
+                                                    "type": "img",
+                                                    "name": "账号",
+                                                    "do_objectID": "8DAE8980-EF99-4CEF-8BE6-8C4539712076",
+                                                    "style": {
+                                                        "width": 18,
+                                                        "height": 17.9655172413793
+                                                    },
+                                                    "exportOptions": {
+                                                        "_class": "exportOptions",
+                                                        "includedLayerIds": [],
+                                                        "layerOptions": 0,
+                                                        "shouldTrim": false,
+                                                        "exportFormats": [
+                                                            {
+                                                                "_class": "exportFormat",
+                                                                "absoluteSize": 0,
+                                                                "fileFormat": "png",
+                                                                "name": "",
+                                                                "namingScheme": 0,
+                                                                "scale": 1,
+                                                                "visibleScaleType": 0
+                                                            },
+                                                            {
+                                                                "_class": "exportFormat",
+                                                                "absoluteSize": 0,
+                                                                "fileFormat": "svg",
+                                                                "name": "@2x",
+                                                                "namingScheme": 0,
+                                                                "scale": 2,
+                                                                "visibleScaleType": 0
+                                                            }
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "type": "div",
+                                                    "name": "矩形",
+                                                    "do_objectID": "0AB41416-8B93-4A97-B9FE-467B564B1B22",
+                                                    "style": {
+                                                        "backgroundColor": "#E8E8E8",
+                                                        "width": 336,
+                                                        "height": 0.998084291187738
+                                                    },
+                                                    "layout": {
+                                                        "position": "absolute",
+                                                        "top": 43.9157088122605,
+                                                        "left": 0
+                                                    },
+                                                    "children": []
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "div",
+                                            "name": "input",
+                                            "do_objectID": "716A3FFC-3BC1-4CBD-9ED3-385A95F5EC0D",
+                                            "style": {
+                                                "width": 336,
+                                                "height": 44.9137931034483
+                                            },
+                                            "layout": {
+                                                "type": "absolute"
+                                            },
+                                            "children": [
+                                                {
+                                                    "type": "div",
+                                                    "name": "编组 5",
+                                                    "do_objectID": "585C0879-2C70-4687-8477-1522B5DEB62D",
+                                                    "style": {
+                                                        "width": 336,
+                                                        "height": 44.9137931034483
+                                                    },
+                                                    "layout": {
+                                                        "type": "absolute",
+                                                        "position": "absolute",
+                                                        "top": 0,
+                                                        "left": 0
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "type": "text",
+                                                            "content": {
+                                                                "text": null
+                                                            },
+                                                            "name": "密码",
+                                                            "do_objectID": "B648C136-EA0A-4A7D-BA7C-E239641EE46D",
+                                                            "style": {
+                                                                "textColor": "#999999",
+                                                                "font": "font-caption-default",
+                                                                "width": 28,
+                                                                "height": 22
+                                                            },
+                                                            "layout": {
+                                                                "position": "absolute",
+                                                                "top": -0.0210727969348632,
+                                                                "left": 38
+                                                            },
+                                                            "children": []
+                                                        },
+                                                        {
+                                                            "type": "img",
+                                                            "name": "账号密码",
+                                                            "do_objectID": "6B166699-C66C-49BD-8E10-18D905BB8F09",
+                                                            "style": {
+                                                                "width": 18,
+                                                                "height": 17.9655172413793
+                                                            },
+                                                            "exportOptions": {
+                                                                "_class": "exportOptions",
+                                                                "includedLayerIds": [],
+                                                                "layerOptions": 0,
+                                                                "shouldTrim": false,
+                                                                "exportFormats": [
+                                                                    {
+                                                                        "_class": "exportFormat",
+                                                                        "absoluteSize": 0,
+                                                                        "fileFormat": "png",
+                                                                        "name": "",
+                                                                        "namingScheme": 0,
+                                                                        "scale": 1,
+                                                                        "visibleScaleType": 0
+                                                                    },
+                                                                    {
+                                                                        "_class": "exportFormat",
+                                                                        "absoluteSize": 0,
+                                                                        "fileFormat": "svg",
+                                                                        "name": "@2x",
+                                                                        "namingScheme": 0,
+                                                                        "scale": 2,
+                                                                        "visibleScaleType": 0
+                                                                    }
+                                                                ]
+                                                            }
+                                                        },
+                                                        {
+                                                            "type": "div",
+                                                            "name": "编组 3",
+                                                            "do_objectID": "49FAEA81-A088-4D2F-88AF-11EE4FD4CB0D",
+                                                            "style": {
+                                                                "width": 18,
+                                                                "height": 17.9655172413793
+                                                            },
+                                                            "layout": {
+                                                                "type": "absolute",
+                                                                "position": "absolute",
+                                                                "top": 1.99616858237548,
+                                                                "left": 318
+                                                            },
+                                                            "children": [
+                                                                {
+                                                                    "type": "div",
+                                                                    "name": "矩形",
+                                                                    "do_objectID": "66E4A711-D03C-4E98-A359-B4AF1DF48BC0",
+                                                                    "style": {
+                                                                        "opacity": 0,
+                                                                        "backgroundColor": "#D7D7D7",
+                                                                        "width": 18,
+                                                                        "height": 17.9655172413793
+                                                                    },
+                                                                    "layout": {
+                                                                        "position": "absolute",
+                                                                        "top": 0,
+                                                                        "left": 0
+                                                                    },
+                                                                    "children": []
+                                                                },
+                                                                {
+                                                                    "type": "shapeGroup",
+                                                                    "name": "形状",
+                                                                    "do_objectID": "90230E2C-C74F-484B-BF59-2394B6B029CC",
+                                                                    "style": {
+                                                                        "backgroundColor": "#7E7E7E",
+                                                                        "width": 16,
+                                                                        "height": 9.9808429118774
+                                                                    },
+                                                                    "layout": {
+                                                                        "type": "absolute",
+                                                                        "position": "absolute",
+                                                                        "top": 3.99233716475096,
+                                                                        "left": 1
+                                                                    },
+                                                                    "children": [
+                                                                        {
+                                                                            "type": "shapePath",
+                                                                            "name": "路径",
+                                                                            "do_objectID": "4B47039C-7199-4EAF-8AFC-DF8B4746B1E1",
+                                                                            "style": {
+                                                                                "width": 13.747421236263,
+                                                                                "height": 9.9808429118774
+                                                                            },
+                                                                            "layout": {
+                                                                                "position": "absolute",
+                                                                                "top": 0,
+                                                                                "left": 0
+                                                                            },
+                                                                            "children": []
+                                                                        },
+                                                                        {
+                                                                            "type": "shapePath",
+                                                                            "name": "路径",
+                                                                            "do_objectID": "9B553EF1-CDC9-4734-8488-ACC552275891",
+                                                                            "style": {
+                                                                                "width": 5.20831914615976,
+                                                                                "height": 4.87137874006833
+                                                                            },
+                                                                            "layout": {
+                                                                                "position": "absolute",
+                                                                                "top": 1.91682467137343,
+                                                                                "left": 4.79811648570421
+                                                                            },
+                                                                            "children": []
+                                                                        },
+                                                                        {
+                                                                            "type": "shapePath",
+                                                                            "name": "路径",
+                                                                            "do_objectID": "F3B7F275-94AA-4280-8A85-C9A2C144ABA8",
+                                                                            "style": {
+                                                                                "width": 9.76031782462187,
+                                                                                "height": 6.88898741335142
+                                                                            },
+                                                                            "layout": {
+                                                                                "position": "absolute",
+                                                                                "top": 2.4809743493262,
+                                                                                "left": 6.23968217537811
+                                                                            },
+                                                                            "children": []
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "type": "div",
+                                                            "name": "矩形",
+                                                            "do_objectID": "60B207FF-F381-42B3-B1A1-6B59C2C91B25",
+                                                            "style": {
+                                                                "backgroundColor": "#E8E8E8",
+                                                                "width": 336,
+                                                                "height": 0.998084291187738
+                                                            },
+                                                            "layout": {
+                                                                "position": "absolute",
+                                                                "top": 43.9157088122606,
+                                                                "left": 0
+                                                            },
+                                                            "children": []
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "div",
+                                            "name": "input",
+                                            "do_objectID": "51D99D83-D59C-4D09-A4E5-213DF86DAFDE",
+                                            "style": {
+                                                "width": 336,
+                                                "height": 51.9003831417625
+                                            },
+                                            "layout": {
+                                                "type": "absolute"
+                                            },
+                                            "children": [
+                                                {
+                                                    "type": "img",
+                                                    "name": "img",
+                                                    "do_objectID": "9F67CFDE-053A-4E44-A064-ED0B018C6EE8",
+                                                    "style": {
+                                                        "width": 96,
+                                                        "height": 35.9310344827586
+                                                    },
+                                                    "exportOptions": {
+                                                        "_class": "exportOptions",
+                                                        "includedLayerIds": [],
+                                                        "layerOptions": 0,
+                                                        "shouldTrim": false,
+                                                        "exportFormats": [
+                                                            {
+                                                                "_class": "exportFormat",
+                                                                "absoluteSize": 0,
+                                                                "fileFormat": "png",
+                                                                "name": "@1x",
+                                                                "namingScheme": 0,
+                                                                "scale": 0.5,
+                                                                "visibleScaleType": 0
+                                                            },
+                                                            {
+                                                                "_class": "exportFormat",
+                                                                "absoluteSize": 0,
+                                                                "fileFormat": "png",
+                                                                "name": "@2x",
+                                                                "namingScheme": 0,
+                                                                "scale": 1,
+                                                                "visibleScaleType": 0
+                                                            },
+                                                            {
+                                                                "_class": "exportFormat",
+                                                                "absoluteSize": 0,
+                                                                "fileFormat": "png",
+                                                                "name": "@3x",
+                                                                "namingScheme": 0,
+                                                                "scale": 1.5,
+                                                                "visibleScaleType": 0
+                                                            },
+                                                            {
+                                                                "_class": "exportFormat",
+                                                                "absoluteSize": 0,
+                                                                "fileFormat": "svg",
+                                                                "name": "@x",
+                                                                "namingScheme": 0,
+                                                                "scale": 1.5,
+                                                                "visibleScaleType": 0
+                                                            }
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "type": "text",
+                                                    "content": {
+                                                        "text": null
+                                                    },
+                                                    "name": "请输入验证码",
+                                                    "do_objectID": "9C28BB7D-BFEC-4A8E-A00C-3B2901D0F78C",
+                                                    "style": {
+                                                        "textColor": "#999999",
+                                                        "font": "font-caption-default",
+                                                        "width": 84,
+                                                        "height": 22
+                                                    },
+                                                    "layout": {
+                                                        "position": "absolute",
+                                                        "top": 6.96551724137931,
+                                                        "left": 38
+                                                    },
+                                                    "children": []
+                                                },
+                                                {
+                                                    "type": "img",
+                                                    "name": "图形验证码",
+                                                    "do_objectID": "BCB05EF3-EFAA-4FD9-B3F0-332C23D30156",
+                                                    "style": {
+                                                        "width": 18,
+                                                        "height": 17.9655172413793
+                                                    },
+                                                    "exportOptions": {
+                                                        "_class": "exportOptions",
+                                                        "includedLayerIds": [],
+                                                        "layerOptions": 0,
+                                                        "shouldTrim": false,
+                                                        "exportFormats": [
+                                                            {
+                                                                "_class": "exportFormat",
+                                                                "absoluteSize": 0,
+                                                                "fileFormat": "png",
+                                                                "name": "",
+                                                                "namingScheme": 0,
+                                                                "scale": 1,
+                                                                "visibleScaleType": 0
+                                                            },
+                                                            {
+                                                                "_class": "exportFormat",
+                                                                "absoluteSize": 0,
+                                                                "fileFormat": "svg",
+                                                                "name": "@2x",
+                                                                "namingScheme": 0,
+                                                                "scale": 2,
+                                                                "visibleScaleType": 0
+                                                            }
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "type": "div",
+                                                    "name": "矩形",
+                                                    "do_objectID": "0922EBE0-E283-419E-BA7A-9E4C12844BC3",
+                                                    "style": {
+                                                        "backgroundColor": "#E8E8E8",
+                                                        "width": 336,
+                                                        "height": 0.998084291187738
+                                                    },
+                                                    "layout": {
+                                                        "position": "absolute",
+                                                        "top": 50.9022988505747,
+                                                        "left": 0
+                                                    },
+                                                    "children": []
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "div",
+                                    "name": "button",
+                                    "do_objectID": "45DABCEE-388C-4BB4-86DD-F10F57497D3E",
+                                    "style": {
+                                        "width": 336,
+                                        "height": 39.9233716475096
+                                    },
+                                    "layout": {
+                                        "type": "absolute"
+                                    },
+                                    "children": [
+                                        {
+                                            "type": "div",
+                                            "name": "矩形",
+                                            "do_objectID": "433C4910-2BB3-4867-BAE3-9D7313F69832",
+                                            "style": {
+                                                "backgroundColor": "#5335E5",
+                                                "borderRadius": "8px",
+                                                "width": 336,
+                                                "height": 39.9233716475096
+                                            },
+                                            "layout": {
+                                                "position": "absolute",
+                                                "top": 0,
+                                                "left": 0
+                                            },
+                                            "children": []
+                                        },
+                                        {
+                                            "type": "text",
+                                            "content": {
+                                                "text": null
+                                            },
+                                            "name": "登录",
+                                            "do_objectID": "A1ED9650-10A7-486C-B799-17ABB6BE545A",
+                                            "style": {
+                                                "textColor": "#FFFFFF",
+                                                "font": "font-body-default",
+                                                "width": 32,
+                                                "height": 22
+                                            },
+                                            "layout": {
+                                                "position": "absolute",
+                                                "top": 8.96168582375478,
+                                                "left": 152
+                                            },
+                                            "children": []
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "div",
+            "name": "25.7.1新增  核验中心-上传文件文件地址",
+            "do_objectID": "65AB264B-B486-4EEF-BF21-F368EC0792B5",
+            "style": {
+                "backgroundColor": "#EEF2F5",
+                "width": 1920,
+                "height": 1080
+            },
+            "layout": {
+                "type": "absolute"
+            },
+            "children": [
+                {
+                    "type": "div",
+                    "name": "矩形",
+                    "do_objectID": "E503DDC9-563D-4B67-89B8-3344807D9253",
+                    "style": {
+                        "backgroundColor": "#F9F9FC",
+                        "width": 1920,
+                        "height": 1080
+                    },
+                    "layout": {
+                        "position": "absolute",
+                        "top": 0,
+                        "left": 0
+                    },
+                    "children": []
+                },
+                {
+                    "type": "div",
+                    "name": "头",
+                    "do_objectID": "3F2717F0-0500-4F7E-A1E4-88248783A4B2",
+                    "style": {
+                        "width": 1920,
+                        "height": 64
+                    },
+                    "layout": {
+                        "type": "absolute",
+                        "position": "absolute",
+                        "top": 0,
+                        "left": 0
+                    },
+                    "children": [
+                        {
+                            "type": "div",
+                            "name": "Base",
+                            "do_objectID": "C0069846-D29F-492D-8CE2-3DD3A65BFFFB",
+                            "style": {
+                                "backgroundColor": "#5335E5",
+                                "width": 1920,
+                                "height": 64
+                            },
+                            "layout": {
+                                "position": "absolute",
+                                "top": 0,
+                                "left": 0
+                            },
+                            "children": []
+                        },
+                        {
+                            "type": "img",
+                            "name": "logo",
+                            "do_objectID": "0DE3F0AB-B99F-4422-A9FB-CA7877DEA788",
+                            "style": {
+                                "width": 372,
+                                "height": 34
+                            },
+                            "exportOptions": {
+                                "_class": "exportOptions",
+                                "includedLayerIds": [],
+                                "layerOptions": 0,
+                                "shouldTrim": false,
+                                "exportFormats": [
+                                    {
+                                        "_class": "exportFormat",
+                                        "absoluteSize": 0,
+                                        "fileFormat": "png",
+                                        "name": "",
+                                        "namingScheme": 0,
+                                        "scale": 1,
+                                        "visibleScaleType": 0
+                                    },
+                                    {
+                                        "_class": "exportFormat",
+                                        "absoluteSize": 0,
+                                        "fileFormat": "svg",
+                                        "name": "@2x",
+                                        "namingScheme": 0,
+                                        "scale": 2,
+                                        "visibleScaleType": 0
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "type": "div",
+                            "name": "Pic",
+                            "do_objectID": "C1787DC5-93D2-4233-AF5A-B164031D4B94",
+                            "style": {
+                                "width": 28,
+                                "height": 28
+                            },
+                            "layout": {
+                                "type": "absolute",
+                                "position": "absolute",
+                                "top": 18,
+                                "left": 1597
+                            },
+                            "children": [
+                                {
+                                    "type": "div",
+                                    "name": "蒙版",
+                                    "do_objectID": "4F2A31A5-379F-40E6-A406-6CBA74694443",
+                                    "style": {
+                                        "backgroundColor": "#D7D7D7",
+                                        "width": 28,
+                                        "height": 28
+                                    },
+                                    "layout": {
+                                        "position": "absolute",
+                                        "top": 0,
+                                        "left": 0
+                                    },
+                                    "children": []
+                                },
+                                {
+                                    "type": "bitmap",
+                                    "name": "src=http---www.weimeitupian.com-wp-content-uploads-2019-05-15169340814374281.jpg&refer=http---www.weimeitupian.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg",
+                                    "do_objectID": "D5BD0609-9178-4F29-A3E6-DB29CBA80DED",
+                                    "style": {
+                                        "width": 28,
+                                        "height": 28
+                                    },
+                                    "layout": {
+                                        "position": "absolute",
+                                        "top": 0,
+                                        "left": 0
+                                    },
+                                    "children": []
+                                }
+                            ]
+                        },
+                        {
+                            "type": "triangle",
+                            "name": "三角形",
+                            "do_objectID": "49CBD9A4-33EE-4440-AD07-274975A54579",
+                            "style": {
+                                "backgroundColor": "color-white",
+                                "width": 12,
+                                "height": 8
+                            },
+                            "layout": {
+                                "position": "absolute",
+                                "top": 28,
+                                "left": 1638
+                            },
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "type": "div",
+                    "name": "当前位置",
+                    "do_objectID": "9711F7C1-F087-463F-B9B5-63ED02C9AF89",
+                    "style": {
+                        "width": 164,
+                        "height": 14
+                    },
+                    "layout": {
+                        "type": "flex",
+                        "direction": "row",
+                        "gap": 10,
+                        "position": "absolute",
+                        "top": 80,
+                        "left": 270
+                    },
+                    "children": [
+                        {
+                            "type": "img",
+                            "name": "当前位置",
+                            "do_objectID": "FD447FEF-4252-4D4C-9ACC-FA82F9EEAED4",
+                            "style": {
+                                "width": 14,
+                                "height": 14
+                            },
+                            "exportOptions": {
+                                "_class": "exportOptions",
+                                "includedLayerIds": [],
+                                "layerOptions": 0,
+                                "shouldTrim": false,
+                                "exportFormats": [
+                                    {
+                                        "_class": "exportFormat",
+                                        "absoluteSize": 0,
+                                        "fileFormat": "png",
+                                        "name": "",
+                                        "namingScheme": 0,
+                                        "scale": 1,
+                                        "visibleScaleType": 0
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "type": "text",
+                            "content": {
+                                "text": null
+                            },
+                            "name": "当前位置： 核验中心",
+                            "do_objectID": "1AF6FC12-5B31-4A0F-8ECA-2F13FA38147F",
+                            "style": {
+                                "textColor": "#999999",
+                                "font": "font-caption-default",
+                                "width": 140,
+                                "height": 14
+                            },
+                            "layout": {},
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "type": "div",
+                    "name": "编组",
+                    "do_objectID": "8457600F-548D-4B45-9888-BDD043C99AD9",
+                    "style": {
+                        "width": 1380,
+                        "height": 240
+                    },
+                    "layout": {
+                        "type": "absolute",
+                        "position": "absolute",
+                        "top": 110,
+                        "left": 270
+                    },
+                    "children": [
+                        {
+                            "type": "img",
+                            "name": "2 (6) + 编组 36备份蒙版",
+                            "do_objectID": "597A3938-4996-4EBA-B2D3-A854A6134F96",
+                            "style": {
+                                "width": 1380,
+                                "height": 240
+                            },
+                            "exportOptions": {
+                                "_class": "exportOptions",
+                                "includedLayerIds": [],
+                                "layerOptions": 0,
+                                "shouldTrim": false,
+                                "exportFormats": [
+                                    {
+                                        "_class": "exportFormat",
+                                        "absoluteSize": 0,
+                                        "fileFormat": "png",
+                                        "name": "",
+                                        "namingScheme": 0,
+                                        "scale": 1,
+                                        "visibleScaleType": 0
+                                    },
+                                    {
+                                        "_class": "exportFormat",
+                                        "absoluteSize": 0,
+                                        "fileFormat": "png",
+                                        "name": "@2x",
+                                        "namingScheme": 0,
+                                        "scale": 2,
+                                        "visibleScaleType": 0
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "type": "text",
+                            "content": {
+                                "text": null
+                            },
+                            "name": "区块链核验平台",
+                            "do_objectID": "24DC4FF2-6085-47FD-9CAE-04CB8B70B300",
+                            "style": {
+                                "textColor": "#FFFFFF",
+                                "width": 341,
+                                "height": 48
+                            },
+                            "layout": {
+                                "position": "absolute",
+                                "top": 63,
+                                "left": 147
+                            },
+                            "children": []
+                        },
+                        {
+                            "type": "text",
+                            "content": {
+                                "text": null
+                            },
+                            "name": "高效 / 便捷 / 安全",
+                            "do_objectID": "829605FD-60EA-4DD8-9D96-38DDAF5A2D03",
+                            "style": {
+                                "textColor": "#FFFFFF",
+                                "width": 187,
+                                "height": 28
+                            },
+                            "layout": {
+                                "position": "absolute",
+                                "top": 131,
+                                "left": 147
+                            },
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "type": "div",
+                    "name": "编组 5",
+                    "do_objectID": "84D78432-C0FE-4077-A4BB-E5D3C02087F7",
+                    "style": {
+                        "width": 220,
+                        "height": 694
+                    },
+                    "layout": {
+                        "type": "absolute",
+                        "position": "absolute",
+                        "top": 366,
+                        "left": 270
+                    },
+                    "children": [
+                        {
+                            "type": "div",
+                            "name": "矩形备份 3",
+                            "do_objectID": "DF966086-B224-4AB2-B562-DD1759E282CD",
+                            "style": {
+                                "backgroundColor": "color-white",
+                                "borderWidth": "1px",
+                                "borderColor": "#E7E8F1",
+                                "borderRadius": "6px",
+                                "width": 220,
+                                "height": 694
+                            },
+                            "layout": {
+                                "position": "absolute",
+                                "top": 0,
+                                "left": 0
+                            },
+                            "children": []
+                        },
+                        {
+                            "type": "div",
+                            "name": "编组 4",
+                            "do_objectID": "90EF7A61-BB5B-4819-98DE-0209E72CA346",
+                            "style": {
+                                "width": 219,
+                                "height": 44
+                            },
+                            "layout": {
+                                "type": "absolute",
+                                "position": "absolute",
+                                "top": 40.0000000000001,
+                                "left": 0
+                            },
+                            "children": [
+                                {
+                                    "type": "div",
+                                    "name": "矩形",
+                                    "do_objectID": "B571B37A-8C4D-44C4-93A1-F84631D7563D",
+                                    "style": {
+                                        "backgroundColor": "#5335E5",
+                                        "width": 4,
+                                        "height": 44
+                                    },
+                                    "layout": {
+                                        "position": "absolute",
+                                        "top": 0,
+                                        "left": 0
+                                    },
+                                    "children": []
+                                },
+                                {
+                                    "type": "div",
+                                    "name": "矩形",
+                                    "do_objectID": "B9047D5B-1BBA-425F-BA06-A55AC2564F76",
+                                    "style": {
+                                        "opacity": 0.08,
+                                        "backgroundColor": "#5335E5",
+                                        "width": 218,
+                                        "height": 44
+                                    },
+                                    "layout": {
+                                        "position": "absolute",
+                                        "top": 0,
+                                        "left": 1
+                                    },
+                                    "children": []
+                                },
+                                {
+                                    "type": "text",
+                                    "content": {
+                                        "text": null
+                                    },
+                                    "name": "核验中心",
+                                    "do_objectID": "3FE78744-06B6-4FEF-AFFB-231DDDFFF7A7",
+                                    "style": {
+                                        "textColor": "#5335E5",
+                                        "width": 72,
+                                        "height": 25
+                                    },
+                                    "layout": {
+                                        "position": "absolute",
+                                        "top": 10,
+                                        "left": 48
+                                    },
+                                    "children": []
+                                },
+                                {
+                                    "type": "img",
+                                    "name": "核验中心（当前）",
+                                    "do_objectID": "BEC0F855-9A15-4E1B-8538-7E6149759DF1",
+                                    "style": {
+                                        "width": 16,
+                                        "height": 16.0000000000001
+                                    },
+                                    "exportOptions": {
+                                        "_class": "exportOptions",
+                                        "includedLayerIds": [],
+                                        "layerOptions": 0,
+                                        "shouldTrim": false,
+                                        "exportFormats": [
+                                            {
+                                                "_class": "exportFormat",
+                                                "absoluteSize": 0,
+                                                "fileFormat": "png",
+                                                "name": "",
+                                                "namingScheme": 0,
+                                                "scale": 1,
+                                                "visibleScaleType": 0
+                                            },
+                                            {
+                                                "_class": "exportFormat",
+                                                "absoluteSize": 0,
+                                                "fileFormat": "png",
+                                                "name": "@2x",
+                                                "namingScheme": 0,
+                                                "scale": 2,
+                                                "visibleScaleType": 0
+                                            },
+                                            {
+                                                "_class": "exportFormat",
+                                                "absoluteSize": 0,
+                                                "fileFormat": "png",
+                                                "name": "@3x",
+                                                "namingScheme": 0,
+                                                "scale": 3,
+                                                "visibleScaleType": 0
+                                            },
+                                            {
+                                                "_class": "exportFormat",
+                                                "absoluteSize": 0,
+                                                "fileFormat": "svg",
+                                                "name": "@1.5x",
+                                                "namingScheme": 0,
+                                                "scale": 1.5,
+                                                "visibleScaleType": 0
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "type": "div",
+                                    "name": "huabanbeifen3",
+                                    "do_objectID": "3BB94896-F080-476F-BC48-51CC8BE36423",
+                                    "style": {
+                                        "width": 8,
+                                        "height": 6
+                                    },
+                                    "layout": {
+                                        "position": "absolute",
+                                        "top": 22,
+                                        "left": 24
+                                    },
+                                    "children": []
+                                }
+                            ]
+                        },
+                        {
+                            "type": "div",
+                            "name": "编组",
+                            "do_objectID": "5DC4CBA5-BF43-405C-9E98-04F2912D1485",
+                            "style": {
+                                "width": 218,
+                                "height": 44
+                            },
+                            "layout": {
+                                "type": "absolute",
+                                "position": "absolute",
+                                "top": 124,
+                                "left": 1
+                            },
+                            "children": [
+                                {
+                                    "type": "div",
+                                    "name": "编组 18",
+                                    "do_objectID": "B8752466-809A-46BC-A705-31DC9BBF0888",
+                                    "style": {
+                                        "width": 218,
+                                        "height": 44
+                                    },
+                                    "layout": {
+                                        "type": "absolute",
+                                        "position": "absolute",
+                                        "top": 0,
+                                        "left": 0
+                                    },
+                                    "children": [
+                                        {
+                                            "type": "div",
+                                            "name": "矩形",
+                                            "do_objectID": "8282C297-D33E-42E1-B7D0-8B41A60BEBFB",
+                                            "style": {
+                                                "opacity": 0,
+                                                "backgroundColor": "#88C7FF",
+                                                "width": 218,
+                                                "height": 44
+                                            },
+                                            "layout": {
+                                                "position": "absolute",
+                                                "top": 0,
+                                                "left": 0
+                                            },
+                                            "children": []
+                                        },
+                                        {
+                                            "type": "text",
+                                            "content": {
+                                                "text": null
+                                            },
+                                            "name": "Hash交易查询",
+                                            "do_objectID": "05D0FFFE-9C9B-4E92-B708-1335F6DCF803",
+                                            "style": {
+                                                "textColor": "#272727",
+                                                "width": 116,
+                                                "height": 25
+                                            },
+                                            "layout": {
+                                                "position": "absolute",
+                                                "top": 10,
+                                                "left": 47
+                                            },
+                                            "children": []
+                                        },
+                                        {
+                                            "type": "img",
+                                            "name": "Hash交易查询（默认）",
+                                            "do_objectID": "FD354003-866A-4A24-B668-15D7F3113C22",
+                                            "style": {
+                                                "width": 16,
+                                                "height": 16
+                                            },
+                                            "exportOptions": {
+                                                "_class": "exportOptions",
+                                                "includedLayerIds": [],
+                                                "layerOptions": 0,
+                                                "shouldTrim": false,
+                                                "exportFormats": [
+                                                    {
+                                                        "_class": "exportFormat",
+                                                        "absoluteSize": 0,
+                                                        "fileFormat": "png",
+                                                        "name": "",
+                                                        "namingScheme": 0,
+                                                        "scale": 1,
+                                                        "visibleScaleType": 0
+                                                    },
+                                                    {
+                                                        "_class": "exportFormat",
+                                                        "absoluteSize": 0,
+                                                        "fileFormat": "svg",
+                                                        "name": "@2x",
+                                                        "namingScheme": 0,
+                                                        "scale": 2,
+                                                        "visibleScaleType": 0
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "div",
+                    "name": "编组 39",
+                    "do_objectID": "EAACC9A5-E2BF-49DE-9517-1A60024C46A8",
+                    "style": {
+                        "width": 1144,
+                        "height": 694
+                    },
+                    "layout": {
+                        "type": "absolute",
+                        "position": "absolute",
+                        "top": 366,
+                        "left": 506
+                    },
+                    "children": [
+                        {
+                            "type": "div",
+                            "name": "矩形备份 5",
+                            "do_objectID": "F9E336B1-C072-424D-9692-123367004FD1",
+                            "style": {
+                                "backgroundColor": "color-white",
+                                "borderWidth": "1px",
+                                "borderColor": "#E7E8F1",
+                                "borderRadius": "6px",
+                                "width": 1144,
+                                "height": 694
+                            },
+                            "layout": {
+                                "position": "absolute",
+                                "top": 0,
+                                "left": 0
+                            },
+                            "children": []
+                        },
+                        {
+                            "type": "div",
+                            "name": " Primary button",
+                            "do_objectID": "2DF8AFC6-F225-49AC-AD8C-2C9739BE3452",
+                            "style": {
+                                "width": 108,
+                                "height": 32
+                            },
+                            "layout": {
+                                "type": "absolute",
+                                "position": "absolute",
+                                "top": 20,
+                                "left": 1016
+                            },
+                            "children": [
+                                {
+                                    "type": "div",
+                                    "name": "Rectangle 77",
+                                    "do_objectID": "02084E6D-4349-4FC3-B423-F7F9461729D6",
+                                    "style": {
+                                        "backgroundColor": "#5335E5",
+                                        "borderRadius": "4px",
+                                        "width": 108,
+                                        "height": 32
+                                    },
+                                    "layout": {
+                                        "position": "absolute",
+                                        "top": 0,
+                                        "left": 0
+                                    },
+                                    "children": []
+                                },
+                                {
+                                    "type": "text",
+                                    "content": {
+                                        "text": null
+                                    },
+                                    "name": "Text",
+                                    "do_objectID": "E2CB79D9-7EE0-4321-82E7-CA97C0333EC0",
+                                    "style": {
+                                        "textColor": "#FFFFFF",
+                                        "font": "font-caption-default",
+                                        "width": 56,
+                                        "height": 22
+                                    },
+                                    "layout": {
+                                        "position": "absolute",
+                                        "top": 5,
+                                        "left": 38
+                                    },
+                                    "children": []
+                                },
+                                {
+                                    "type": "img",
+                                    "name": "一键导入",
+                                    "do_objectID": "FF779E05-9F2D-43E3-82B2-1822B7AE8C6F",
+                                    "style": {
+                                        "backgroundColor": "color-white",
+                                        "width": 13.9999999999999,
+                                        "height": 14
+                                    },
+                                    "exportOptions": {
+                                        "_class": "exportOptions",
+                                        "includedLayerIds": [],
+                                        "layerOptions": 0,
+                                        "shouldTrim": false,
+                                        "exportFormats": [
+                                            {
+                                                "_class": "exportFormat",
+                                                "absoluteSize": 0,
+                                                "fileFormat": "png",
+                                                "name": "@1x",
+                                                "namingScheme": 0,
+                                                "scale": 1,
+                                                "visibleScaleType": 0
+                                            },
+                                            {
+                                                "_class": "exportFormat",
+                                                "absoluteSize": 0,
+                                                "fileFormat": "svg",
+                                                "name": "@1x",
+                                                "namingScheme": 0,
+                                                "scale": 1,
+                                                "visibleScaleType": 0
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "type": "div",
+                            "name": "编组 36",
+                            "do_objectID": "E335FE0A-8FCB-46B1-A245-F7E74F656AD8",
+                            "style": {
+                                "width": 64,
+                                "height": 22
+                            },
+                            "layout": {
+                                "type": "absolute",
+                                "position": "absolute",
+                                "top": 25,
+                                "left": 20
+                            },
+                            "children": [
+                                {
+                                    "type": "text",
+                                    "content": {
+                                        "text": null
+                                    },
+                                    "name": "核验中心",
+                                    "do_objectID": "0988CF71-5440-4429-8259-245AAE1FC087",
+                                    "style": {
+                                        "textColor": "#333333",
+                                        "width": 64,
+                                        "height": 22
+                                    },
+                                    "layout": {
+                                        "position": "absolute",
+                                        "top": 0,
+                                        "left": 0
+                                    },
+                                    "children": []
+                                }
+                            ]
+                        },
+                        {
+                            "type": "div",
+                            "name": "矩形",
+                            "do_objectID": "614A1996-253B-44DA-8985-096AB9F197E0",
+                            "style": {
+                                "backgroundColor": "#E8E8E8",
+                                "borderRadius": "2px",
+                                "width": 1104,
+                                "height": 1
+                            },
+                            "layout": {
+                                "position": "absolute",
+                                "top": 60,
+                                "left": 20
+                            },
+                            "children": []
+                        },
+                        {
+                            "type": "div",
+                            "name": "编组 3",
+                            "do_objectID": "F40D3C9A-DC53-4A95-A943-BAF7D04E54AA",
+                            "style": {
+                                "width": 836,
+                                "height": 516
+                            },
+                            "layout": {
+                                "type": "absolute",
+                                "position": "absolute",
+                                "top": 82.9999999999998,
+                                "left": 154
+                            },
+                            "children": [
+                                {
+                                    "type": "div",
+                                    "name": "编组 2",
+                                    "do_objectID": "57CE4F4B-5D4A-43AB-B040-B0F6BF8A4B06",
+                                    "style": {
+                                        "width": 354,
+                                        "height": 36
+                                    },
+                                    "layout": {
+                                        "type": "absolute",
+                                        "position": "absolute",
+                                        "top": 0,
+                                        "left": 0
+                                    },
+                                    "children": [
+                                        {
+                                            "type": "div",
+                                            "name": "编组 9",
+                                            "do_objectID": "C6D43966-B135-4C1E-A54F-75DA6250C77D",
+                                            "style": {
+                                                "width": 354,
+                                                "height": 36
+                                            },
+                                            "layout": {
+                                                "type": "absolute",
+                                                "position": "absolute",
+                                                "top": 0,
+                                                "left": 0
+                                            },
+                                            "children": [
+                                                {
+                                                    "type": "div",
+                                                    "name": "搜索",
+                                                    "do_objectID": "5C791463-5795-47A4-A0E8-29A65FA670D0",
+                                                    "style": {
+                                                        "width": 280,
+                                                        "height": 36
+                                                    },
+                                                    "layout": {
+                                                        "type": "absolute",
+                                                        "position": "absolute",
+                                                        "top": 0,
+                                                        "left": 74
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "type": "div",
+                                                            "name": "Base",
+                                                            "do_objectID": "D6E07589-D3B0-4049-B10B-EE465D731A43",
+                                                            "style": {
+                                                                "backgroundColor": "color-white",
+                                                                "borderWidth": "1px",
+                                                                "borderColor": "#E7E8F1",
+                                                                "borderRadius": "4px",
+                                                                "width": 280,
+                                                                "height": 36
+                                                            },
+                                                            "layout": {
+                                                                "position": "absolute",
+                                                                "top": 0,
+                                                                "left": 0
+                                                            },
+                                                            "children": []
+                                                        },
+                                                        {
+                                                            "type": "text",
+                                                            "content": {
+                                                                "text": null
+                                                            },
+                                                            "name": "请输入数据编号",
+                                                            "do_objectID": "3DFFCC99-2A09-4361-BB35-2DD595433F9A",
+                                                            "style": {
+                                                                "backgroundColor": "#999999",
+                                                                "textColor": "#1D1D1D",
+                                                                "font": "font-caption-default",
+                                                                "width": 98,
+                                                                "height": 19
+                                                            },
+                                                            "layout": {
+                                                                "position": "absolute",
+                                                                "top": 9,
+                                                                "left": 12
+                                                            },
+                                                            "children": []
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "div",
+                                                    "name": "编组 7",
+                                                    "do_objectID": "97923117-ECCB-434D-85FE-363A4E672955",
+                                                    "style": {
+                                                        "width": 64,
+                                                        "height": 20
+                                                    },
+                                                    "layout": {
+                                                        "type": "absolute",
+                                                        "position": "absolute",
+                                                        "top": 8,
+                                                        "left": 0
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "type": "text",
+                                                            "content": {
+                                                                "text": null
+                                                            },
+                                                            "name": "*数据编号",
+                                                            "do_objectID": "030705F7-5B60-47D2-94D5-1CA41F388BE8",
+                                                            "style": {
+                                                                "textColor": "#FF5252",
+                                                                "font": "font-caption-default",
+                                                                "width": 64,
+                                                                "height": 20
+                                                            },
+                                                            "layout": {
+                                                                "position": "absolute",
+                                                                "top": 0,
+                                                                "left": 0
+                                                            },
+                                                            "children": []
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "div",
+                                    "name": "编组 2备份",
+                                    "do_objectID": "65CA021C-AB11-4887-A90E-1765FA4D3A4B",
+                                    "style": {
+                                        "width": 382,
+                                        "height": 36
+                                    },
+                                    "layout": {
+                                        "type": "absolute",
+                                        "position": "absolute",
+                                        "top": 0,
+                                        "left": 454
+                                    },
+                                    "children": [
+                                        {
+                                            "type": "div",
+                                            "name": "编组 9",
+                                            "do_objectID": "6E2EF19C-F9EB-4CB8-AE34-25386416C9FB",
+                                            "style": {
+                                                "width": 382,
+                                                "height": 36
+                                            },
+                                            "layout": {
+                                                "type": "absolute",
+                                                "position": "absolute",
+                                                "top": 0,
+                                                "left": 0
+                                            },
+                                            "children": [
+                                                {
+                                                    "type": "div",
+                                                    "name": "搜索",
+                                                    "do_objectID": "335ED2E3-1685-4F8A-B0E6-408365DCBB97",
+                                                    "style": {
+                                                        "width": 280,
+                                                        "height": 36
+                                                    },
+                                                    "layout": {
+                                                        "type": "absolute",
+                                                        "position": "absolute",
+                                                        "top": 0,
+                                                        "left": 102
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "type": "div",
+                                                            "name": "Base",
+                                                            "do_objectID": "EB68BCC2-00F5-4141-89F4-C2723BF60E05",
+                                                            "style": {
+                                                                "backgroundColor": "color-white",
+                                                                "borderWidth": "1px",
+                                                                "borderColor": "#E7E8F1",
+                                                                "borderRadius": "4px",
+                                                                "width": 280,
+                                                                "height": 36
+                                                            },
+                                                            "layout": {
+                                                                "position": "absolute",
+                                                                "top": 0,
+                                                                "left": 0
+                                                            },
+                                                            "children": []
+                                                        },
+                                                        {
+                                                            "type": "text",
+                                                            "content": {
+                                                                "text": null
+                                                            },
+                                                            "name": "请输入",
+                                                            "do_objectID": "95B8FB18-E8BB-4604-973B-ABC9DE42EDE2",
+                                                            "style": {
+                                                                "backgroundColor": "#999999",
+                                                                "textColor": "#1D1D1D",
+                                                                "font": "font-caption-default",
+                                                                "width": 42,
+                                                                "height": 19
+                                                            },
+                                                            "layout": {
+                                                                "position": "absolute",
+                                                                "top": 9,
+                                                                "left": 12
+                                                            },
+                                                            "children": []
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "div",
+                                                    "name": "编组 7",
+                                                    "do_objectID": "4C031FDE-6F23-4759-93CA-6B8198938CF8",
+                                                    "style": {
+                                                        "width": 92,
+                                                        "height": 20
+                                                    },
+                                                    "layout": {
+                                                        "type": "absolute",
+                                                        "position": "absolute",
+                                                        "top": 8,
+                                                        "left": 0
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "type": "text",
+                                                            "content": {
+                                                                "text": null
+                                                            },
+                                                            "name": "*数据所属单位",
+                                                            "do_objectID": "5F57BBF9-CB78-4610-9768-AD8483F25D35",
+                                                            "style": {
+                                                                "textColor": "#FF5252",
+                                                                "font": "font-caption-default",
+                                                                "width": 92,
+                                                                "height": 20
+                                                            },
+                                                            "layout": {
+                                                                "position": "absolute",
+                                                                "top": 0,
+                                                                "left": 0
+                                                            },
+                                                            "children": []
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "div",
+                                    "name": "编组 2备份 2",
+                                    "do_objectID": "DBB8485C-FC28-435A-B22C-C49154FE26E3",
+                                    "style": {
+                                        "width": 836,
+                                        "height": 102
+                                    },
+                                    "layout": {
+                                        "type": "absolute",
+                                        "position": "absolute",
+                                        "top": 60,
+                                        "left": 0
+                                    },
+                                    "children": [
+                                        {
+                                            "type": "div",
+                                            "name": "编组 9",
+                                            "do_objectID": "40BAF5C2-9672-43F8-BF2F-E3DC6C55DA9C",
+                                            "style": {
+                                                "width": 836,
+                                                "height": 102
+                                            },
+                                            "layout": {
+                                                "type": "flex",
+                                                "direction": "column",
+                                                "gap": 7,
+                                                "position": "absolute",
+                                                "top": 0,
+                                                "left": 0
+                                            },
+                                            "children": [
+                                                {
+                                                    "type": "div",
+                                                    "name": "编组 7",
+                                                    "do_objectID": "7B7C748D-DB91-4746-A0D7-7A8AD01B72FA",
+                                                    "style": {
+                                                        "width": 78,
+                                                        "height": 20
+                                                    },
+                                                    "layout": {
+                                                        "type": "absolute"
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "type": "text",
+                                                            "content": {
+                                                                "text": null
+                                                            },
+                                                            "name": "*核验信息：",
+                                                            "do_objectID": "5680F586-2C31-44A1-9FC1-D0FBC937CE89",
+                                                            "style": {
+                                                                "textColor": "#FF5252",
+                                                                "font": "font-caption-default",
+                                                                "width": 78,
+                                                                "height": 20
+                                                            },
+                                                            "layout": {
+                                                                "position": "absolute",
+                                                                "top": 0,
+                                                                "left": 0
+                                                            },
+                                                            "children": []
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "div",
+                                                    "name": "搜索",
+                                                    "do_objectID": "7A2A3454-5409-4A9F-B066-922C7A3DCB94",
+                                                    "style": {
+                                                        "width": 836,
+                                                        "height": 75
+                                                    },
+                                                    "layout": {
+                                                        "type": "absolute"
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "type": "div",
+                                                            "name": "Base",
+                                                            "do_objectID": "A8C3EC78-15DC-4F3D-842B-FE6295F72113",
+                                                            "style": {
+                                                                "backgroundColor": "#F7F7F7",
+                                                                "borderWidth": "1px",
+                                                                "borderColor": "#E7E8F1",
+                                                                "borderRadius": "4px",
+                                                                "width": 836,
+                                                                "height": 75
+                                                            },
+                                                            "layout": {
+                                                                "position": "absolute",
+                                                                "top": 0,
+                                                                "left": 0
+                                                            },
+                                                            "children": []
+                                                        },
+                                                        {
+                                                            "type": "text",
+                                                            "content": {
+                                                                "text": null
+                                                            },
+                                                            "name": "1、请按要求对要核验的数据进行填写后上传",
+                                                            "do_objectID": "6BBBE3CF-3040-4412-BF48-C999A0D33D8E",
+                                                            "style": {
+                                                                "backgroundColor": "#7E7E7E",
+                                                                "textColor": "#1D1D1D",
+                                                                "font": "font-caption-default",
+                                                                "width": 812,
+                                                                "height": 57
+                                                            },
+                                                            "layout": {
+                                                                "position": "absolute",
+                                                                "top": 9,
+                                                                "left": 12
+                                                            },
+                                                            "children": []
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "div",
+                                    "name": "Base备份",
+                                    "do_objectID": "B7BE5F69-BB43-4F12-A87A-892E19F173C8",
+                                    "style": {
+                                        "backgroundColor": "color-white",
+                                        "borderWidth": "1px",
+                                        "borderColor": "#E7E8F1",
+                                        "borderRadius": "4px",
+                                        "width": 836,
+                                        "height": 330
+                                    },
+                                    "layout": {
+                                        "position": "absolute",
+                                        "top": 186,
+                                        "left": 0
+                                    },
+                                    "children": []
+                                },
+                                {
+                                    "type": "div",
+                                    "name": "编组 2备份 3",
+                                    "do_objectID": "5A3FE589-FC67-4ED5-A688-7D521F0323D3",
+                                    "style": {
+                                        "width": 334,
+                                        "height": 36
+                                    },
+                                    "layout": {
+                                        "type": "absolute",
+                                        "position": "absolute",
+                                        "top": 206,
+                                        "left": 40
+                                    },
+                                    "children": [
+                                        {
+                                            "type": "div",
+                                            "name": "编组 9",
+                                            "do_objectID": "7B4DCB5B-56F9-480A-BCA1-CB1A63635525",
+                                            "style": {
+                                                "width": 334,
+                                                "height": 36
+                                            },
+                                            "layout": {
+                                                "type": "absolute",
+                                                "position": "absolute",
+                                                "top": 0,
+                                                "left": 0
+                                            },
+                                            "children": [
+                                                {
+                                                    "type": "div",
+                                                    "name": "搜索",
+                                                    "do_objectID": "711F6D28-0C1D-4D48-A43B-52378B97938C",
+                                                    "style": {
+                                                        "width": 268,
+                                                        "height": 36
+                                                    },
+                                                    "layout": {
+                                                        "type": "absolute",
+                                                        "position": "absolute",
+                                                        "top": 0,
+                                                        "left": 66
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "type": "div",
+                                                            "name": "Base",
+                                                            "do_objectID": "73762F0A-D840-4A92-BDB9-50AF81601FBB",
+                                                            "style": {
+                                                                "backgroundColor": "color-white",
+                                                                "borderWidth": "1px",
+                                                                "borderColor": "#E7E8F1",
+                                                                "borderRadius": "4px",
+                                                                "width": 268,
+                                                                "height": 36
+                                                            },
+                                                            "layout": {
+                                                                "position": "absolute",
+                                                                "top": 0,
+                                                                "left": 0
+                                                            },
+                                                            "children": []
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "div",
+                                                    "name": "编组 7",
+                                                    "do_objectID": "9A64E497-C41E-4F4E-ACDE-C8F91243527D",
+                                                    "style": {
+                                                        "width": 56,
+                                                        "height": 20
+                                                    },
+                                                    "layout": {
+                                                        "type": "absolute",
+                                                        "position": "absolute",
+                                                        "top": 8,
+                                                        "left": 0
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "type": "text",
+                                                            "content": {
+                                                                "text": null
+                                                            },
+                                                            "name": "告警来源",
+                                                            "do_objectID": "490EE2DF-E307-401C-837C-6CD1657D897E",
+                                                            "style": {
+                                                                "textColor": "#333333",
+                                                                "font": "font-caption-default",
+                                                                "width": 56,
+                                                                "height": 20
+                                                            },
+                                                            "layout": {
+                                                                "position": "absolute",
+                                                                "top": 0,
+                                                                "left": 0
+                                                            },
+                                                            "children": []
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "div",
+                                    "name": "编组 2备份 4",
+                                    "do_objectID": "F70BC9E2-E7A9-422B-9659-04ECF4C47B3C",
+                                    "style": {
+                                        "width": 334,
+                                        "height": 36
+                                    },
+                                    "layout": {
+                                        "type": "absolute",
+                                        "position": "absolute",
+                                        "top": 206,
+                                        "left": 462
+                                    },
+                                    "children": [
+                                        {
+                                            "type": "div",
+                                            "name": "编组 9",
+                                            "do_objectID": "7602607D-56E0-4651-B721-332E1722A106",
+                                            "style": {
+                                                "width": 334,
+                                                "height": 36
+                                            },
+                                            "layout": {
+                                                "type": "absolute",
+                                                "position": "absolute",
+                                                "top": 0,
+                                                "left": 0
+                                            },
+                                            "children": [
+                                                {
+                                                    "type": "div",
+                                                    "name": "搜索",
+                                                    "do_objectID": "53AED26E-63AE-4924-A40F-CF4EE89D6F61",
+                                                    "style": {
+                                                        "width": 268,
+                                                        "height": 36
+                                                    },
+                                                    "layout": {
+                                                        "type": "absolute",
+                                                        "position": "absolute",
+                                                        "top": 0,
+                                                        "left": 66
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "type": "div",
+                                                            "name": "Base",
+                                                            "do_objectID": "A7413CF5-81A3-4A63-B60B-31E288A5AC77",
+                                                            "style": {
+                                                                "backgroundColor": "color-white",
+                                                                "borderWidth": "1px",
+                                                                "borderColor": "#E7E8F1",
+                                                                "borderRadius": "4px",
+                                                                "width": 268,
+                                                                "height": 36
+                                                            },
+                                                            "layout": {
+                                                                "position": "absolute",
+                                                                "top": 0,
+                                                                "left": 0
+                                                            },
+                                                            "children": []
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "div",
+                                                    "name": "编组 7",
+                                                    "do_objectID": "C96637ED-401F-4627-AF9C-F3F94F408699",
+                                                    "style": {
+                                                        "width": 56,
+                                                        "height": 20
+                                                    },
+                                                    "layout": {
+                                                        "type": "absolute",
+                                                        "position": "absolute",
+                                                        "top": 8,
+                                                        "left": 0
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "type": "text",
+                                                            "content": {
+                                                                "text": null
+                                                            },
+                                                            "name": "事件类型",
+                                                            "do_objectID": "2A0BC409-36BF-4687-B44C-FDEC6E116B06",
+                                                            "style": {
+                                                                "textColor": "#333333",
+                                                                "font": "font-caption-default",
+                                                                "width": 56,
+                                                                "height": 20
+                                                            },
+                                                            "layout": {
+                                                                "position": "absolute",
+                                                                "top": 0,
+                                                                "left": 0
+                                                            },
+                                                            "children": []
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "div",
+                                    "name": "编组 2备份 3",
+                                    "do_objectID": "3F22DC63-8ECA-4F3C-9D2C-DFA337CAC1C7",
+                                    "style": {
+                                        "width": 334,
+                                        "height": 36
+                                    },
+                                    "layout": {
+                                        "type": "absolute",
+                                        "position": "absolute",
+                                        "top": 262,
+                                        "left": 40
+                                    },
+                                    "children": [
+                                        {
+                                            "type": "div",
+                                            "name": "编组 9",
+                                            "do_objectID": "63D6D6DE-FEF2-4F39-A5B8-1D0C0C95A5E6",
+                                            "style": {
+                                                "width": 334,
+                                                "height": 36
+                                            },
+                                            "layout": {
+                                                "type": "absolute",
+                                                "position": "absolute",
+                                                "top": 0,
+                                                "left": 0
+                                            },
+                                            "children": [
+                                                {
+                                                    "type": "div",
+                                                    "name": "搜索",
+                                                    "do_objectID": "CBFD98FB-F205-402C-96BE-4F65811FA5CB",
+                                                    "style": {
+                                                        "width": 268,
+                                                        "height": 36
+                                                    },
+                                                    "layout": {
+                                                        "type": "absolute",
+                                                        "position": "absolute",
+                                                        "top": 0,
+                                                        "left": 66
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "type": "div",
+                                                            "name": "Base",
+                                                            "do_objectID": "A9EEBA68-13DF-4A16-9F2B-980A23551B7D",
+                                                            "style": {
+                                                                "backgroundColor": "color-white",
+                                                                "borderWidth": "1px",
+                                                                "borderColor": "#E7E8F1",
+                                                                "borderRadius": "4px",
+                                                                "width": 268,
+                                                                "height": 36
+                                                            },
+                                                            "layout": {
+                                                                "position": "absolute",
+                                                                "top": 0,
+                                                                "left": 0
+                                                            },
+                                                            "children": []
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "div",
+                                                    "name": "编组 7",
+                                                    "do_objectID": "387C8393-8110-4FF7-93D9-69243525DC05",
+                                                    "style": {
+                                                        "width": 56,
+                                                        "height": 20
+                                                    },
+                                                    "layout": {
+                                                        "type": "absolute",
+                                                        "position": "absolute",
+                                                        "top": 8,
+                                                        "left": 0
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "type": "text",
+                                                            "content": {
+                                                                "text": null
+                                                            },
+                                                            "name": "风险等级",
+                                                            "do_objectID": "B8DEE0EC-3A6A-4928-91D4-5DD15BE25515",
+                                                            "style": {
+                                                                "textColor": "#333333",
+                                                                "font": "font-caption-default",
+                                                                "width": 56,
+                                                                "height": 20
+                                                            },
+                                                            "layout": {
+                                                                "position": "absolute",
+                                                                "top": 0,
+                                                                "left": 0
+                                                            },
+                                                            "children": []
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "div",
+                                    "name": "编组 2备份 4",
+                                    "do_objectID": "DBAA627B-D064-476D-BDA0-04CB257CE8B5",
+                                    "style": {
+                                        "width": 334,
+                                        "height": 36
+                                    },
+                                    "layout": {
+                                        "type": "absolute",
+                                        "position": "absolute",
+                                        "top": 262,
+                                        "left": 462
+                                    },
+                                    "children": [
+                                        {
+                                            "type": "div",
+                                            "name": "编组 9",
+                                            "do_objectID": "084B24B0-0287-4D5E-B9D1-059895F2068A",
+                                            "style": {
+                                                "width": 334,
+                                                "height": 36
+                                            },
+                                            "layout": {
+                                                "type": "absolute",
+                                                "position": "absolute",
+                                                "top": 0,
+                                                "left": 0
+                                            },
+                                            "children": [
+                                                {
+                                                    "type": "div",
+                                                    "name": "搜索",
+                                                    "do_objectID": "DA2786F4-812E-43D5-B339-B5F6330B08A2",
+                                                    "style": {
+                                                        "width": 268,
+                                                        "height": 36
+                                                    },
+                                                    "layout": {
+                                                        "type": "absolute",
+                                                        "position": "absolute",
+                                                        "top": 0,
+                                                        "left": 66
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "type": "div",
+                                                            "name": "Base",
+                                                            "do_objectID": "AF7E7AE9-7AE0-4694-BCF4-BA3C381B744D",
+                                                            "style": {
+                                                                "backgroundColor": "color-white",
+                                                                "borderWidth": "1px",
+                                                                "borderColor": "#E7E8F1",
+                                                                "borderRadius": "4px",
+                                                                "width": 268,
+                                                                "height": 36
+                                                            },
+                                                            "layout": {
+                                                                "position": "absolute",
+                                                                "top": 0,
+                                                                "left": 0
+                                                            },
+                                                            "children": []
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "div",
+                                                    "name": "编组 7",
+                                                    "do_objectID": "A59CBAAD-0F14-4618-A25D-8F04BD19492D",
+                                                    "style": {
+                                                        "width": 56,
+                                                        "height": 20
+                                                    },
+                                                    "layout": {
+                                                        "type": "absolute",
+                                                        "position": "absolute",
+                                                        "top": 8,
+                                                        "left": 0
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "type": "text",
+                                                            "content": {
+                                                                "text": null
+                                                            },
+                                                            "name": "告警位置",
+                                                            "do_objectID": "BD44F1FF-74D1-4425-A363-35E73550EB44",
+                                                            "style": {
+                                                                "textColor": "#333333",
+                                                                "font": "font-caption-default",
+                                                                "width": 56,
+                                                                "height": 20
+                                                            },
+                                                            "layout": {
+                                                                "position": "absolute",
+                                                                "top": 0,
+                                                                "left": 0
+                                                            },
+                                                            "children": []
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "div",
+                                    "name": "编组 2备份 3",
+                                    "do_objectID": "18AAFFB4-F956-4458-9F0F-9290F34CAB87",
+                                    "style": {
+                                        "width": 334,
+                                        "height": 36
+                                    },
+                                    "layout": {
+                                        "type": "absolute",
+                                        "position": "absolute",
+                                        "top": 318,
+                                        "left": 40
+                                    },
+                                    "children": [
+                                        {
+                                            "type": "div",
+                                            "name": "编组 9",
+                                            "do_objectID": "AA58E4C2-B659-4D2B-95F5-1AAF92377FE6",
+                                            "style": {
+                                                "width": 334,
+                                                "height": 36
+                                            },
+                                            "layout": {
+                                                "type": "absolute",
+                                                "position": "absolute",
+                                                "top": 0,
+                                                "left": 0
+                                            },
+                                            "children": [
+                                                {
+                                                    "type": "div",
+                                                    "name": "搜索",
+                                                    "do_objectID": "A0A11F2C-09D9-43B5-A055-0E646C65D42B",
+                                                    "style": {
+                                                        "width": 268,
+                                                        "height": 36
+                                                    },
+                                                    "layout": {
+                                                        "type": "absolute",
+                                                        "position": "absolute",
+                                                        "top": 0,
+                                                        "left": 66
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "type": "div",
+                                                            "name": "Base",
+                                                            "do_objectID": "737B9BC7-5125-4C51-BA09-EA807B41426D",
+                                                            "style": {
+                                                                "backgroundColor": "color-white",
+                                                                "borderWidth": "1px",
+                                                                "borderColor": "#E7E8F1",
+                                                                "borderRadius": "4px",
+                                                                "width": 268,
+                                                                "height": 36
+                                                            },
+                                                            "layout": {
+                                                                "position": "absolute",
+                                                                "top": 0,
+                                                                "left": 0
+                                                            },
+                                                            "children": []
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "div",
+                                                    "name": "编组 7",
+                                                    "do_objectID": "1111465D-D6DB-41C0-AF74-491CE0480CB7",
+                                                    "style": {
+                                                        "width": 56,
+                                                        "height": 20
+                                                    },
+                                                    "layout": {
+                                                        "type": "absolute",
+                                                        "position": "absolute",
+                                                        "top": 8,
+                                                        "left": 0
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "type": "text",
+                                                            "content": {
+                                                                "text": null
+                                                            },
+                                                            "name": "告警内容",
+                                                            "do_objectID": "A8AE9548-B382-4BF6-B3BB-258FF7885763",
+                                                            "style": {
+                                                                "textColor": "#333333",
+                                                                "font": "font-caption-default",
+                                                                "width": 56,
+                                                                "height": 20
+                                                            },
+                                                            "layout": {
+                                                                "position": "absolute",
+                                                                "top": 0,
+                                                                "left": 0
+                                                            },
+                                                            "children": []
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "div",
+                                    "name": "编组 2备份 4",
+                                    "do_objectID": "A701E449-FE4E-45C0-BA53-F9CAC684AF94",
+                                    "style": {
+                                        "width": 334,
+                                        "height": 36
+                                    },
+                                    "layout": {
+                                        "type": "absolute",
+                                        "position": "absolute",
+                                        "top": 318,
+                                        "left": 462
+                                    },
+                                    "children": [
+                                        {
+                                            "type": "div",
+                                            "name": "编组 9",
+                                            "do_objectID": "3D38A3B1-2E76-4195-A848-D4FFFCA6F8F4",
+                                            "style": {
+                                                "width": 334,
+                                                "height": 36
+                                            },
+                                            "layout": {
+                                                "type": "absolute",
+                                                "position": "absolute",
+                                                "top": 0,
+                                                "left": 0
+                                            },
+                                            "children": [
+                                                {
+                                                    "type": "div",
+                                                    "name": "搜索",
+                                                    "do_objectID": "A9767228-3EA4-4EE6-8A6F-3CEE36B96577",
+                                                    "style": {
+                                                        "width": 268,
+                                                        "height": 36
+                                                    },
+                                                    "layout": {
+                                                        "type": "absolute",
+                                                        "position": "absolute",
+                                                        "top": 0,
+                                                        "left": 66
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "type": "div",
+                                                            "name": "Base",
+                                                            "do_objectID": "65EA56D4-CFD9-4CFA-BC50-DAAF8534B6A7",
+                                                            "style": {
+                                                                "backgroundColor": "color-white",
+                                                                "borderWidth": "1px",
+                                                                "borderColor": "#E7E8F1",
+                                                                "borderRadius": "4px",
+                                                                "width": 268,
+                                                                "height": 36
+                                                            },
+                                                            "layout": {
+                                                                "position": "absolute",
+                                                                "top": 0,
+                                                                "left": 0
+                                                            },
+                                                            "children": []
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "div",
+                                                    "name": "编组 7",
+                                                    "do_objectID": "DE5D7D9F-9B8A-46FA-AED3-4201231F23A1",
+                                                    "style": {
+                                                        "width": 56,
+                                                        "height": 20
+                                                    },
+                                                    "layout": {
+                                                        "type": "absolute",
+                                                        "position": "absolute",
+                                                        "top": 8,
+                                                        "left": 0
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "type": "text",
+                                                            "content": {
+                                                                "text": null
+                                                            },
+                                                            "name": "告警时间",
+                                                            "do_objectID": "5E7D278C-75CE-4E9A-B051-3628C4F7D16B",
+                                                            "style": {
+                                                                "textColor": "#333333",
+                                                                "font": "font-caption-default",
+                                                                "width": 56,
+                                                                "height": 20
+                                                            },
+                                                            "layout": {
+                                                                "position": "absolute",
+                                                                "top": 0,
+                                                                "left": 0
+                                                            },
+                                                            "children": []
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "div",
+                                    "name": "编组 2备份 5",
+                                    "do_objectID": "D8FA49C0-3C75-4700-B7B2-ED37DB46A208",
+                                    "style": {
+                                        "width": 756,
+                                        "height": 108
+                                    },
+                                    "layout": {
+                                        "type": "absolute",
+                                        "position": "absolute",
+                                        "top": 374,
+                                        "left": 40
+                                    },
+                                    "children": [
+                                        {
+                                            "type": "div",
+                                            "name": "编组 9",
+                                            "do_objectID": "35CACC3F-5D6F-4051-B5ED-A74FC9CCC70B",
+                                            "style": {
+                                                "width": 756,
+                                                "height": 108
+                                            },
+                                            "layout": {
+                                                "type": "absolute",
+                                                "position": "absolute",
+                                                "top": 0,
+                                                "left": 0
+                                            },
+                                            "children": [
+                                                {
+                                                    "type": "div",
+                                                    "name": "搜索",
+                                                    "do_objectID": "651091B6-F8D6-4AD0-B989-B59403E7B9E7",
+                                                    "style": {
+                                                        "width": 690,
+                                                        "height": 108
+                                                    },
+                                                    "layout": {
+                                                        "type": "grid",
+                                                        "columns": 2,
+                                                        "position": "absolute",
+                                                        "top": 0,
+                                                        "left": 66
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "type": "div",
+                                                            "name": "Base",
+                                                            "do_objectID": "B99C8C68-7EEE-45D8-8D74-C53C42BDF604",
+                                                            "style": {
+                                                                "backgroundColor": "color-white",
+                                                                "borderWidth": "1px",
+                                                                "borderColor": "#5335E5",
+                                                                "borderRadius": "4px",
+                                                                "width": 108,
+                                                                "height": 24
+                                                            },
+                                                            "layout": {},
+                                                            "children": []
+                                                        },
+                                                        {
+                                                            "type": "text",
+                                                            "content": {
+                                                                "text": null
+                                                            },
+                                                            "name": "上传文件",
+                                                            "do_objectID": "C4E80ACB-6305-4FFD-9633-47B50B9F5AAC",
+                                                            "style": {
+                                                                "textColor": "#5335E5",
+                                                                "font": "font-caption-default",
+                                                                "width": 56,
+                                                                "height": 20
+                                                            },
+                                                            "layout": {},
+                                                            "children": []
+                                                        },
+                                                        {
+                                                            "type": "div",
+                                                            "name": "Base",
+                                                            "do_objectID": "31CDF936-CABF-4420-A8E5-FDB89BB58BEB",
+                                                            "style": {
+                                                                "backgroundColor": "color-white",
+                                                                "borderWidth": "1px",
+                                                                "borderColor": "#E7E8F1",
+                                                                "borderRadius": "4px",
+                                                                "width": 690,
+                                                                "height": 74
+                                                            },
+                                                            "layout": {},
+                                                            "children": []
+                                                        },
+                                                        {
+                                                            "type": "text",
+                                                            "content": {
+                                                                "text": null
+                                                            },
+                                                            "name": "请输入文件地址",
+                                                            "do_objectID": "DEA9AEF5-E6C6-4B65-A004-488954B40189",
+                                                            "style": {
+                                                                "textColor": "#999999",
+                                                                "font": "font-caption-default",
+                                                                "width": 98,
+                                                                "height": 20
+                                                            },
+                                                            "layout": {},
+                                                            "children": []
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "div",
+                                                    "name": "编组 7",
+                                                    "do_objectID": "6C2690C0-367B-44D8-9F9D-986DFEA2A828",
+                                                    "style": {
+                                                        "width": 56,
+                                                        "height": 20
+                                                    },
+                                                    "layout": {
+                                                        "type": "absolute",
+                                                        "position": "absolute",
+                                                        "top": 7.99999999999983,
+                                                        "left": 0
+                                                    },
+                                                    "children": [
+                                                        {
+                                                            "type": "text",
+                                                            "content": {
+                                                                "text": null
+                                                            },
+                                                            "name": "存证照片",
+                                                            "do_objectID": "446FDA33-C37D-4777-A722-A23A72028F97",
+                                                            "style": {
+                                                                "textColor": "#333333",
+                                                                "font": "font-caption-default",
+                                                                "width": 56,
+                                                                "height": 20
+                                                            },
+                                                            "layout": {
+                                                                "position": "absolute",
+                                                                "top": 0,
+                                                                "left": 0
+                                                            },
+                                                            "children": []
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "div",
+                    "name": "搜索",
+                    "do_objectID": "FE464DE1-66B4-4C16-9E7A-2A874A3B3B74",
+                    "style": {
+                        "width": 270,
+                        "height": 32
+                    },
+                    "layout": {
+                        "position": "absolute",
+                        "top": 419,
+                        "left": 1156
+                    },
+                    "children": []
+                },
+                {
+                    "type": "div",
+                    "name": "编组 6",
+                    "do_objectID": "04508A1C-194C-4C0A-A614-A2881765BEDA",
+                    "style": {
+                        "width": 336,
+                        "height": 40
+                    },
+                    "layout": {
+                        "type": "absolute",
+                        "position": "absolute",
+                        "top": 988,
+                        "left": 910
+                    },
+                    "children": [
+                        {
+                            "type": "div",
+                            "name": "矩形",
+                            "do_objectID": "C0CAB869-A180-4D1F-ADD9-D8D61B324F1A",
+                            "style": {
+                                "backgroundColor": "#5335E5",
+                                "borderRadius": "8px",
+                                "width": 336,
+                                "height": 40
+                            },
+                            "layout": {
+                                "position": "absolute",
+                                "top": 0,
+                                "left": 0
+                            },
+                            "children": []
+                        },
+                        {
+                            "type": "text",
+                            "content": {
+                                "text": null
+                            },
+                            "name": "开始核验",
+                            "do_objectID": "EFB459F6-B875-44AD-B5EF-60E22DB97311",
+                            "style": {
+                                "textColor": "#FFFFFF",
+                                "font": "font-body-default",
+                                "width": 64,
+                                "height": 22
+                            },
+                            "layout": {
+                                "position": "absolute",
+                                "top": 9,
+                                "left": 136
+                            },
+                            "children": []
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

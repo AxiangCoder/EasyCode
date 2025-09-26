@@ -1,0 +1,122 @@
+{
+    "type": "page",
+    "name": "页面 1",
+    "do_objectID": "6B6771BA-E1C8-40F1-938C-19EDD4C50371",
+    "style": {
+        "width": 0,
+        "height": 0
+    },
+    "layout": {
+        "type": "absolute",
+        "position": "absolute",
+        "top": 0,
+        "left": 0
+    },
+    "children": [
+        {
+            "type": "div",
+            "name": "iPhone 17 Pro Max",
+            "do_objectID": "15F21E53-A4F1-4712-AACD-1B5D9D60862E",
+            "style": {
+                "backgroundColor": "color-white",
+                "width": 440,
+                "height": 956
+            },
+            "layout": {
+                "type": "absolute",
+                "position": "absolute",
+                "top": 67,
+                "left": 277
+            },
+            "children": [
+                {
+                    "type": "div",
+                    "name": "矩形",
+                    "do_objectID": "80E15FA9-187F-4CDE-BD27-662EA65174CC",
+                    "style": {
+                        "backgroundColor": "#D7D7D7",
+                        "width": 259,
+                        "height": 140
+                    },
+                    "layout": {
+                        "position": "absolute",
+                        "top": 71,
+                        "left": 90
+                    },
+                    "children": []
+                },
+                {
+                    "type": "text",
+                    "content": {
+                        "text": null
+                    },
+                    "name": "测试测试你好呀",
+                    "do_objectID": "64A30740-80D0-4433-912A-190C21477DD3",
+                    "style": {
+                        "textColor": "#000000",
+                        "width": 147,
+                        "height": 29
+                    },
+                    "layout": {
+                        "position": "absolute",
+                        "top": 127,
+                        "left": 146
+                    },
+                    "children": []
+                },
+                {
+                    "type": "img",
+                    "name": "画框",
+                    "do_objectID": "2C85A72F-70DA-490B-8C9B-8FCF40AB1D66",
+                    "style": {
+                        "backgroundColor": "#D6DEFC",
+                        "width": 331,
+                        "height": 537
+                    },
+                    "exportOptions": {
+                        "_class": "exportOptions",
+                        "includedLayerIds": [],
+                        "layerOptions": 0,
+                        "shouldTrim": false,
+                        "exportFormats": [
+                            {
+                                "_class": "exportFormat",
+                                "absoluteSize": 0,
+                                "fileFormat": "png",
+                                "name": "",
+                                "namingScheme": 0,
+                                "scale": 1,
+                                "visibleScaleType": 0
+                            },
+                            {
+                                "_class": "exportFormat",
+                                "absoluteSize": 0,
+                                "fileFormat": "png",
+                                "name": "@2x",
+                                "namingScheme": 0,
+                                "scale": 2,
+                                "visibleScaleType": 0
+                            }
+                        ]
+                    }
+                },
+                {
+                    "type": "div",
+                    "name": "椭圆形",
+                    "do_objectID": "400309E2-1FB2-40CA-A6FC-2E9761F80921",
+                    "style": {
+                        "backgroundColor": "#D7D7D7",
+                        "width": 55,
+                        "height": 55
+                    },
+                    "layout": {
+                        "position": "absolute",
+                        "top": 860,
+                        "left": 349
+                    },
+                    "children": []
+                }
+            ]
+        }
+    ]
+}
