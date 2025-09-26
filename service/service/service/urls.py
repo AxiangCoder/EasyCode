@@ -31,6 +31,5 @@ urlpatterns = [
     # path('api/', include('core.urls')),
     # path('api/', include('results.urls')),
     path('v1/', include('users.urls')),
-    path('v1/', include('sketch.urls')),
 
 ]

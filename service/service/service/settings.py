@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'core',
     'results',
     'drf_spectacular',
-    'sketch',
 ]
 
 MIDDLEWARE = [
