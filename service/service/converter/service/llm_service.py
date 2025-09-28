@@ -3,7 +3,7 @@ import logging
 # Setup logging - use Django's logging configuration
 logger = logging.getLogger(__name__)
 from ..exceptions import LLMServiceError
-from ..sketch_converter import config
+from ..parsers.sketch import config
 
 
 class LLMClient:

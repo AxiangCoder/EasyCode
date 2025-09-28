@@ -27,19 +27,18 @@
     *   `DesignConverterService`: 负责编排具体的转换步骤，包括文件验证、加载设计令牌、调用解析器以及保存最终结果。
     *   `LLMClient`: 一个独立的 LLM 服务客户端，封装了对大模型（如 OpenAI、SiliconFlow）的 API 调用、重试及 Token 用量统计逻辑，为上层提供稳定的 AI 能力。
 
-4.  **解析引擎层 (`sketch_converter/`)**
-    *   这是整个转换过程的“大脑”，负责深度解析设计文件。
-    *   `converter.py` (`SketchConverter`): 实现了核心的递归遍历算法 (`_traverse_layer`)，用于解析 Sketch JSON 的图层树。
-    *   `_map_styles_to_tokens`: 将图层的样式（颜色、字体等）与用户上传的 `DesignTokens` 进行映射。
-    *   `_analyze_layout_with_rules` / `_analyze_layout_with_llm`: 实现了一个混合布局分析策略。优先使用基于几何规则的快速算法识别 Flex/Grid 布局，失败时则调用 LLM 进行更高级、更智能的混合布局分析。
-    *   `config.py` & `constants.py`: 分别提供了引擎的配置（如 LLM API Key、模型名称）和常量定义，便于维护。
+4.  **解析器层 (Parser Layer) (`parsers/`)**
+    *   这是整个转换过程的“大脑”，采用可插拔的策略模式设计，为未来支持 Figma, Adobe XD 等多种设计源奠定了基础。
+    *   `parsers/base.py` (`BaseParser`): 定义了所有解析器必须遵循的抽象基类接口，包含 `count_nodes` (用于预计算节点总数) 和 `run` (执行转换) 两个核心方法。
+    *   `parsers/__init__.py` (`get_parser_class`): 解析器工厂，根据任务的 `source_type` 返回对应的解析器类，实现了动态加载。
+    *   `parsers/sketch/converter.py` (`SketchParser`): `BaseParser` 的具体实现，负责深度解析 Sketch JSON 的图层树。其内部保留了核心的递归遍历算法 (`_traverse_layer`)、样式令牌映射 (`_map_styles_to_tokens`) 以及基于规则和 LLM 的混合布局分析策略。
 
 ## 关键组件与功能 (Key Components and Functionality)
 
 *   **`models.py`**: 定义了三大核心数据模型：
     *   `DesignTokens`: 用于管理用户上传的设计令牌（Design Tokens）JSON 文件。
-    *   `ConversionTask`: 记录每一次转换任务的完整信息，是所有操作的中心。它跟踪任务状态、进度、输入文件、错误信息和各项统计数据（如节点数、LLM 用量）。
-    *   `ConversionResult`: 与 `ConversionTask` 一对一关联，存储成功的转换产物，包括最终的 `dsl_output`、`token_report` 等。
+    *   `ConversionTask`: 记录每一次转换任务的完整信息。它跟踪任务状态、进度、错误信息和统计数据。通过 `source_type` (如 `sketch`, `figma`) 和 `source_url`、`input_file` 字段，它现在可以灵活支持多种设计源。
+    *   `ConversionResult`: 与 `ConversionTask` 一对一关联，存储成功的转换产物，包括最终的 `dsl_output`、`html_output` 和 `token_report`。
 
 *   **API 端点 (`views.py`)**:
     *   `/api/v1/converter/tasks/`: 创建、查看、重试或取消转换任务。
@@ -67,7 +66,7 @@
 ## 使用流程 (API Flow)
 
 1.  **（可选）上传设计令牌**: `POST /tokens/` 来上传一份 `design_tokens.json` 文件。
-2.  **创建转换任务**: `POST /tasks/`，在表单中附带设计文件（如 Sketch JSON）和可选的设计令牌 ID。API 将立即返回一个任务详情，包含任务 ID。
+2.  **创建转换任务**: `POST /tasks/`，请求体中需包含 `source_type` 字段。当 `source_type` 为 `sketch` 时，附带设计文件 `input_file`；当为 `figma` 时，提供 `source_url`。API 将立即返回一个任务详情，包含任务 ID。
 3.  **轮询进度**: `GET /tasks/{id}/` 或 `GET /tasks/{id}/progress/` 来监控任务的 `status` 和 `progress` 字段。
 4.  **获取结果**: 任务状态变为 `completed` 后，通过 `GET /results/{id}/` 获取包含 DSL 产物的完整结果。
 5.  **下载产物**: 根据需要调用以下端点，下载不同的产物文件：

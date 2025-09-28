@@ -35,9 +35,25 @@ class ConversionTask(BaseModel):
     ]
 
     name = models.CharField(max_length=200, help_text="任务名称", null=True, blank=True,)
+    source_type = models.CharField(
+        max_length=20,
+        choices=[
+            ('sketch', 'Sketch'),
+            ('figma', 'Figma'),
+        ],
+        default='sketch',
+        help_text="设计源类型"
+    )
+    source_url = models.URLField(
+        blank=True,
+        null=True,
+        help_text="设计源URL (例如 Figma 链接)"
+    )
     input_file = models.FileField(
         upload_to='conversion_inputs/',
-        help_text="输入的设计文件"
+        help_text="输入的设计文件 (例如 Sketch 文件)",
+        blank=True,
+        null=True
     )
     design_tokens = models.ForeignKey(
         DesignTokens,

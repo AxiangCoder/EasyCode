@@ -39,7 +39,7 @@ class ConversionTaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = ConversionTask
         fields = [
-            'id', 'name', 'input_file', 'input_file_size', 'design_tokens',
+            'id', 'name', 'source_type', 'source_url', 'input_file', 'input_file_size', 'design_tokens',
             'design_tokens_name', 'status', 'status_display', 'progress',
             'error_message', 'started_at', 'completed_at', 'creator_email',
             'has_result', 'result_id', 'input_nodes', 'handled_nodes', 'hidden_nodes','created_time', 'updated_time'
@@ -65,6 +65,20 @@ class ConversionTaskSerializer(serializers.ModelSerializer):
         if hasattr(obj, 'result') and obj.result:
             return obj.result.id
         return None
+
+    def validate(self, data):
+        """验证输入源"""
+        source_type = data.get('source_type')
+        input_file = data.get('input_file')
+        source_url = data.get('source_url')
+
+        if source_type == 'sketch' and not input_file:
+            raise serializers.ValidationError("当源类型为 Sketch 时，必须提供 input_file。")
+
+        if source_type == 'figma' and not source_url:
+            raise serializers.ValidationError("当源类型为 Figma 时，必须提供 source_url。")
+
+        return data
 
     def create(self, validated_data):
         validated_data['creator'] = self.context['request'].user

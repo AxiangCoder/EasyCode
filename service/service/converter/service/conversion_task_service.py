@@ -30,11 +30,8 @@ class ConversionTaskService:
             task.save()
 
             # 执行转换
-            result = self.converter_service.convert_design_file(
-                input_file_path=task.input_file.path,
-                tokens_file_path=(
-                    task.design_tokens.file.path if task.design_tokens else None
-                ),
+            result = self.converter_service.convert_design(
+                task=task,
                 progress_callback=progress_callback,
             )
 
@@ -42,7 +39,7 @@ class ConversionTaskService:
             task.status = "completed"
             task.progress = 100
             task.completed_at = timezone.now()
-            task.llm_usage = result.get("llm_usage", None)
+            task.llm_usage = result.llm_usage
             task.save()
 
             return result
