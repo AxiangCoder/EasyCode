@@ -62,7 +62,7 @@ class FrontendRenderer:
             route_path = f"/{component_name}"
             imports.append(f"import {component_name} from './pages/{component_name}'")
             routes.append(
-                "        {\n            element: <{component_name} />,\n            path: '{route_path}',\n        },".replace("{component_name}", component_name)
+                f"        {{\n            element: <{component_name} />,\n            path: '{route_path}',\n        }},"
             )
         content = "\n".join([
             "import { createBrowserRouter } from 'react-router-dom'",
