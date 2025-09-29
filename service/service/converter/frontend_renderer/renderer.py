@@ -40,7 +40,7 @@ class FrontendRenderer:
 
     def _render_page_file(self, page: dict) -> FileArtifact:
         component_name = self._to_component_name(page.get("name") or "Page")
-        body = self._render_node(page)
+        body = self._render_node(page, is_root=True)
         content = "\n".join([
             "import { FC } from 'react'",
             "",
@@ -103,7 +103,7 @@ class FrontendRenderer:
         ])
         return FileArtifact(path=self.APP_FILE, content=content)
 
-    def _render_node(self, node: dict, depth: int = 0) -> str:
+    def _render_node(self, node: dict, depth: int = 0, is_root: bool = False) -> str:
         node_type = node.get("type")
         ind = "  " * depth
         if node_type == "text":
@@ -114,7 +114,21 @@ class FrontendRenderer:
         props = []
         if tag == "img":
             props.append("alt=\"\"")
-        style_dict = self._convert_styles(node)
+        
+        # 添加 data-converted-id 属性，突出转换来源
+        dsl_id = node.get("do_objectID") or node.get("name") or ""
+        if dsl_id:
+            props.append(f'data-converted-id="{self._escape_jsx(dsl_id)}"')
+        
+        # 页面级组件不分析定位信息
+        analyze_layout = not is_root
+        style_dict = self._convert_styles(node, analyze_layout=analyze_layout)
+        
+        # 为根元素添加宽高 100% 样式
+        if is_root:
+            style_dict["width"] = "100%"
+            style_dict["height"] = "100%"
+        
         if style_dict:
             props.append(f"style={{{{ {self._format_style(style_dict)} }}}}")
         if children:
@@ -122,18 +136,22 @@ class FrontendRenderer:
             return f"{ind}<{tag} {' '.join(props)}>\n{children_str}\n{ind}</{tag}>"
         return f"{ind}<{tag} {' '.join(props)} />" if props else f"{ind}<{tag} />"
 
-    def _convert_styles(self, node: dict) -> dict:
+    def _convert_styles(self, node: dict, analyze_layout: bool = True) -> dict:
         style = node.get("style") or {}
-        layout = node.get("layout") or {}
         result: dict[str, str | int | float] = {}
         for key, value in style.items():
             result[self._to_camel_case(key)] = value
-        position = layout.get("position")
-        if position:
-            result["position"] = position
-        for key in ("top", "left", "right", "bottom"):
-            if key in layout:
-                result[key] = layout[key]
+        
+        # 只有在需要分析定位时才处理 layout 信息
+        if analyze_layout:
+            layout = node.get("layout") or {}
+            position = layout.get("position")
+            if position:
+                result["position"] = position
+            for key in ("top", "left", "right", "bottom"):
+                if key in layout:
+                    result[key] = layout[key]
+        
         return result
 
     def _format_style(self, style: dict) -> str:
