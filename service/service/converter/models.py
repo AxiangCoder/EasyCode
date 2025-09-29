@@ -129,11 +129,6 @@ class ConversionResult(BaseModel):
         blank=True, 
         help_text="DSL输出结果"
     )
-    html_output = models.TextField(
-        null=True,        # 允许数据库存储 NULL
-        blank=True, 
-        help_text="HTML预览输出"
-    )
     token_report = models.JSONField(
         null=True,        # 允许数据库存储 NULL
         blank=True, 
@@ -145,6 +140,12 @@ class ConversionResult(BaseModel):
         blank=True,
         help_text="LLM token 用量汇总"
     )
+    project_download_path = models.CharField(
+        max_length=1024,
+        blank=True,
+        null=True,
+        help_text="生成的前端项目压缩包存储路径"
+    )
 
     def __str__(self):
         return f"Result for {self.task.name}"
@@ -152,16 +153,6 @@ class ConversionResult(BaseModel):
     class Meta:
         verbose_name = '转换结果'
         verbose_name_plural = '转换结果'
-
-    def save_html_to_file(self):
-        """将HTML输出保存到文件"""
-        if not self.html_output:
-            return None
-
-        file_path = f"conversion_outputs/{self.task.id}/preview.html"
-        default_storage.save(file_path, ContentFile(self.html_output.encode('utf-8')))
-        return file_path
-
     def save_dsl_to_file(self):
         """将DSL输出保存到文件"""
         if not self.dsl_output:

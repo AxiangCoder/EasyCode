@@ -2,12 +2,9 @@ import json
 import logging
 from typing import Dict, Any, Optional, Callable
 
-from django.core.files.base import ContentFile
-
 from ..models import ConversionTask, ConversionResult
 from .. import parsers
 from ..exceptions import ConversionError
-from ..utils import generate_html_from_dsl
 
 logger = logging.getLogger(__name__)
 
@@ -21,8 +18,7 @@ class DesignConverterService:
 
         1.  Pre-calculates node count.
         2.  Executes the appropriate parser.
-        3.  Generates an HTML preview.
-        4.  Saves all results to the database.
+        3.  Saves all results to the database.
 
         :param task: The ConversionTask instance to process.
         :param progress_callback: Optional callback for progress tracking.
@@ -45,15 +41,10 @@ class DesignConverterService:
             dsl_dict, metadata_dict = parser.run(progress_callback=progress_callback)
             logger.info(f"Task {task.id}: Conversion executed successfully.")
 
-            # 4. Generate HTML Preview
-            html_preview = generate_html_from_dsl(dsl_dict)
-            logger.info(f"Task {task.id}: HTML preview generated.")
-
-            # 5. Save Results
+            # 4. Save Results
             result = ConversionResult.objects.create(
                 task=task,
                 dsl_output=dsl_dict,
-                html_output=html_preview,
                 token_report=metadata_dict.get("token_report", {}),
                 llm_usage=metadata_dict.get("llm_usage", {}),
             )

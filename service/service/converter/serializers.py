@@ -95,26 +95,19 @@ class ConversionResultSerializer(serializers.ModelSerializer):
     task_name = serializers.CharField(source='task.name', read_only=True)
     task_status = serializers.CharField(source='task.status', read_only=True)
     task_creator_email = serializers.CharField(source='task.creator.email', read_only=True)
-    html_preview_url = serializers.SerializerMethodField()
 
     class Meta:
         model = ConversionResult
         fields = [
             'id', 'task', 'task_name', 'task_status', 'task_creator_email',
-            'dsl_output', 'html_output', 'html_preview_url', 'token_report',
-            'llm_usage', 'created_time', 'updated_time'
+            'dsl_output', 'token_report', 'llm_usage', 'project_download_path',
+            'created_time', 'updated_time'
         ]
         read_only_fields = [
             'id', 'task', 'task_name', 'task_status', 'task_creator_email',
-            'dsl_output', 'html_output', 'html_preview_url', 'token_report',
-            'llm_usage','created_time', 'updated_time'
+            'dsl_output', 'token_report', 'llm_usage', 'project_download_path',
+            'created_time', 'updated_time'
         ]
-
-    def get_html_preview_url(self, obj):
-        """获取HTML预览文件的URL"""
-        if obj.html_output:
-            return f"/media/conversion_outputs/{obj.task.id}/preview.html"
-        return None
 
 
 class ConversionTaskDetailSerializer(ConversionTaskSerializer):

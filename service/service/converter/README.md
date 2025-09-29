@@ -38,14 +38,13 @@
 *   **`models.py`**: 定义了三大核心数据模型：
     *   `DesignTokens`: 用于管理用户上传的设计令牌（Design Tokens）JSON 文件。
     *   `ConversionTask`: 记录每一次转换任务的完整信息。它跟踪任务状态、进度、错误信息和统计数据。通过 `source_type` (如 `sketch`, `figma`) 和 `source_url`、`input_file` 字段，它现在可以灵活支持多种设计源。
-    *   `ConversionResult`: 与 `ConversionTask` 一对一关联，存储成功的转换产物，包括最终的 `dsl_output`、`html_output` 和 `token_report`。
+*   `ConversionResult`: 与 `ConversionTask` 一对一关联，存储成功的转换产物，包括最终的 `dsl_output`、`token_report`、`llm_usage` 以及生成的前端项目压缩包路径 `project_download_path`。
 
 *   **API 端点 (`views.py`)**:
     *   `/api/v1/converter/tasks/`: 创建、查看、重试或取消转换任务。
     *   `/api/v1/converter/tasks/{id}/progress/`: 轮询获取指定任务的实时进度。
     *   `/api/v1/converter/results/{id}/`: 获取转换成功后的结果。
     *   `/api/v1/converter/results/{id}/download_dsl/`: 下载 DSL 产物文件。
-    *   `/api/v1/converter/results/{id}/download_html/`: 下载 HTML 预览文件。
     *   `/api/v1/converter/results/{id}/download_report/`: 下载令牌使用情况报告。
     *   `/api/v1/converter/tokens/`: 管理用户的设计令牌。
 

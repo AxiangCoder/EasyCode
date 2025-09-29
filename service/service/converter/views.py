@@ -193,29 +193,6 @@ class ConversionResultViewSet(viewsets.ReadOnlyModelViewSet):
         return response
 
     @action(detail=True, methods=['get'])
-    def download_html(self, request, pk=None):
-        """下载HTML预览文件"""
-        result = self.get_object()
-
-        if not result.html_output:
-            return Response(
-                {'error': 'HTML预览不存在'},
-                status=status.HTTP_404_NOT_FOUND
-            )
-
-        # 创建文件内容
-        file_content = ContentFile(result.html_output.encode('utf-8'))
-
-        # 返回文件响应
-        response = FileResponse(
-            file_content,
-            content_type='text/html',
-            as_attachment=True,
-            filename=f'{result.task.name}_preview.html'
-        )
-        return response
-
-    @action(detail=True, methods=['get'])
     def download_report(self, request, pk=None):
         """下载令牌报告文件"""
         result = self.get_object()

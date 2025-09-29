@@ -67,6 +67,9 @@ def convert_design_file_task(self, task_id: str):
         task.save(update_fields=['progress', 'status', 'completed_at'])
 
         logger.info(f"Conversion task {task_id} completed successfully.")
+
+        # Trigger frontend project generation asynchronously
+        generate_frontend_project_task.delay(str(task.result.id))
         return {
             "status": "completed",
             "result_id": str(task.result.id),
@@ -85,3 +88,16 @@ def convert_design_file_task(self, task_id: str):
         
         # Re-raise as a known exception type for Celery
         raise ConversionError(message=str(e), task_id=task_id)
+
+
+@app.task(bind=True)
+def generate_frontend_project_task(self, conversion_result_id: str):
+    """Placeholder task for generating the frontend project from a conversion result."""
+    logger.info(
+        "generate_frontend_project_task invoked for ConversionResult %s (placeholder implementation)",
+        conversion_result_id,
+    )
+    return {
+        "status": "pending",
+        "conversion_result_id": conversion_result_id,
+    }
