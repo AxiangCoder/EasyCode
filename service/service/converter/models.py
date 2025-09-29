@@ -164,12 +164,19 @@ class ConversionResult(BaseModel):
     class Meta:
         verbose_name = '转换结果'
         verbose_name_plural = '转换结果'
+
+    @property
+    def dsl_archive_path(self) -> str:
+        """返回 DSL 归档文件的默认相对路径。"""
+        return f"conversion_out/{self.task.id}/dsl.json"
+
     def save_dsl_to_file(self):
         """将DSL输出保存到文件"""
         if not self.dsl_output:
             return None
 
-        file_path = f"conversion_outputs/{self.task.id}/dsl_output.json"
+        file_path = self.dsl_archive_path
+        default_storage.delete(file_path)
         default_storage.save(file_path, ContentFile(json.dumps(self.dsl_output, ensure_ascii=False, indent=2)))
         return file_path
     

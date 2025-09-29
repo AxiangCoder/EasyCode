@@ -42,6 +42,20 @@ class ConversionTaskService:
                 task=task,
                 progress_callback=progress_callback,
             )
+
+            try:
+                archived_path = result.save_dsl_to_file()
+                if archived_path:
+                    logger.info("Task %s: DSL archived to %s", task.id, archived_path)
+            except Exception as archive_exc:  # pylint: disable=broad-except
+                logger.error(
+                    "Task %s: Failed to archive DSL output: %s",
+                    task.id,
+                    archive_exc,
+                    exc_info=True,
+                )
+                raise
+
             task_to_update = ConversionTask.objects.get(id=task.id)
 
             # 更新任务状态
