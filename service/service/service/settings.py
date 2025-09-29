@@ -171,6 +171,7 @@ CELERY_TASK_RESULT_PREFIX = 'projectA_celery:'# 为 Celery 任务结果添加键
 # Celery任务路由配置（可选，用于多队列）
 CELERY_TASK_ROUTES = {
     'converter.tasks.convert_design_file_task': {'queue': 'converter'},
+    'converter.tasks.generate_frontend_project_task': {'queue': 'converter'},
 }
 
 # Celery工作进程配置

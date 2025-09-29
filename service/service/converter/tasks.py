@@ -7,6 +7,7 @@ from django.db import transaction
 from .models import ConversionTask
 from .service import ConversionTaskService
 from .exceptions import TaskNotFoundError, ConversionError
+from .service.frontend_generation_service import FrontendGenerationService
 
 logger = logging.getLogger(__name__)
 
@@ -92,12 +93,17 @@ def convert_design_file_task(self, task_id: str):
 
 @app.task(bind=True)
 def generate_frontend_project_task(self, conversion_result_id: str):
-    """Placeholder task for generating the frontend project from a conversion result."""
-    logger.info(
-        "generate_frontend_project_task invoked for ConversionResult %s (placeholder implementation)",
-        conversion_result_id,
-    )
-    return {
-        "status": "pending",
-        "conversion_result_id": conversion_result_id,
-    }
+    """生成前端项目并更新 ConversionResult。"""
+    logger.info("generate_frontend_project_task 开始执行，result_id=%s", conversion_result_id)
+    service = FrontendGenerationService()
+    try:
+        result = service.generate_project(conversion_result_id)
+        logger.info("前端项目生成成功，download_path=%s", result.project_download_path)
+        return {
+            "status": "completed",
+            "conversion_result_id": conversion_result_id,
+            "download_path": result.project_download_path,
+        }
+    except Exception as exc:  # pylint: disable=broad-except
+        logger.exception("前端项目生成失败，result_id=%s", conversion_result_id)
+        raise exc
