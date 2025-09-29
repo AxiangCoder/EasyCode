@@ -295,28 +295,36 @@ class SketchParser(BaseParser):
         # 3. Handle layout and children
         layout = {}
         children_nodes = []
+        is_root_page = node.get("type") == constants.NODE_PAGE and parent_layout_type == constants.LAYOUT_ABSOLUTE
         if layer.get("layers") and len(layer.get("layers")) > 0:
             child_layers = layer["layers"]
-            layout_analysis = (
-                self._analyze_layout_with_llm(child_layers, layer.get("do_objectID"))
-                if self.llm_service
-                else None
-            )
-            if layout_analysis and "layout_groups" in layout_analysis:
-                layout["type"] = constants.LAYOUT_ABSOLUTE
-                children_nodes = self._process_llm_layout_analysis(
-                    layout_analysis, child_layers
-                )
-            else:
-                layout_info = self._analyze_layout_with_rules(child_layers)
-                layout.update(layout_info)
+            if is_root_page:
                 for child in child_layers:
                     if child_node := self._traverse_layer(
-                        child, parent_layout_type=layout.get("type")
+                        child, parent_layout_type=constants.LAYOUT_ABSOLUTE
                     ):
                         children_nodes.append(child_node)
+            else:
+                layout_analysis = (
+                    self._analyze_layout_with_llm(child_layers, layer.get("do_objectID"))
+                    if self.llm_service
+                    else None
+                )
+                if layout_analysis and "layout_groups" in layout_analysis:
+                    layout["type"] = constants.LAYOUT_ABSOLUTE
+                    children_nodes = self._process_llm_layout_analysis(
+                        layout_analysis, child_layers
+                    )
+                else:
+                    layout_info = self._analyze_layout_with_rules(child_layers)
+                    layout.update(layout_info)
+                    for child in child_layers:
+                        if child_node := self._traverse_layer(
+                            child, parent_layout_type=layout.get("type")
+                        ):
+                            children_nodes.append(child_node)
 
-        if parent_layout_type == constants.LAYOUT_ABSOLUTE:
+        if parent_layout_type == constants.LAYOUT_ABSOLUTE and not is_root_page:
             layout["position"] = constants.LAYOUT_ABSOLUTE
             layout["top"] = frame.get("y")
             layout["left"] = frame.get("x")

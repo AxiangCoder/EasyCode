@@ -33,9 +33,8 @@ class FrontendRenderer:
         return [*page_artifacts, router_artifact, app_artifact]
 
     def _extract_pages(self, dsl: dict) -> list[dict]:
-        root_children = dsl.get("children") or []
-        pages = [node for node in root_children if node.get("type") == "page"]
-        if not pages and dsl.get("type") == "page":
+        pages = dsl.get("children") or []
+        if not pages:
             pages = [dsl]
         return pages
 
