@@ -97,13 +97,11 @@ class ConversionTask(BaseModel):
         help_text="输入的总节点数"
     )
     handled_nodes = models.IntegerField(
-        null=True,
-        blank=True,
+        default=0,
         help_text="已处理的节点数"
     )
     hidden_nodes = models.IntegerField(
-        null=True,
-        blank=True,
+        default=0,
         help_text="隐藏的的节点数"
     )
 

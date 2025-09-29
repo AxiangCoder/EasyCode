@@ -2,6 +2,7 @@ import logging
 from typing import Dict, Any, Optional,Callable
 from django.utils import timezone
 from .design_converter_service import DesignConverterService
+from ..models import ConversionTask
 
 logger = logging.getLogger(__name__)
 
@@ -34,13 +35,14 @@ class ConversionTaskService:
                 task=task,
                 progress_callback=progress_callback,
             )
+            task_to_update = ConversionTask.objects.get(id=task.id)
 
             # 更新任务状态
-            task.status = "completed"
-            task.progress = 100
-            task.completed_at = timezone.now()
-            task.llm_usage = result.llm_usage
-            task.save()
+            task_to_update.status = "completed"
+            task_to_update.progress = 100
+            task_to_update.completed_at = timezone.now()
+            task_to_update.llm_usage = result.llm_usage
+            task_to_update.save()
 
             return result
 

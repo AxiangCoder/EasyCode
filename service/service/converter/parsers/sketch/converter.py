@@ -38,18 +38,35 @@ class SketchParser(BaseParser):
             self.llm_service = None
 
     @staticmethod
-    def count_nodes(source_data: dict) -> int:
+    def count_nodes(source_data: dict, mode: str = "all") -> int:
+        """Counts nodes in the Sketch data.
+
+        :param source_data: 已解析的 Sketch 数据。
+        :param mode: 'all' 统计所有节点；'hidden' 仅统计不可见节点。
         """
-        Counts the total number of processable nodes in the Sketch data.
-        """
+
+        if mode not in {"all", "hidden"}:
+            raise ValueError("mode 必须为 'all' 或 'hidden'")
+
         def _count_recursive(node):
-            if not isinstance(node, dict) or not node.get("isVisible", True):
+            if isinstance(node, list):
+                return sum(_count_recursive(item) for item in node)
+
+            if not isinstance(node, dict):
                 return 0
-            count = 1
-            if not utils.is_export(node):
-                for item in node.get("layers", []):
-                    count += _count_recursive(item)
-            return count
+
+            is_visible = node.get("isVisible", True)
+            count_this_node = 0
+            if mode == "all":
+                count_this_node = 1
+            elif mode == "hidden" and not is_visible:
+                count_this_node = 1
+
+            children_count = 0
+            if not utils.is_export(node) and isinstance(node.get("layers"), list):
+                children_count = _count_recursive(node.get("layers"))
+
+            return count_this_node + children_count
 
         return _count_recursive(source_data)
 

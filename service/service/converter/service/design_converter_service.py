@@ -32,8 +32,10 @@ class DesignConverterService:
 
             # 2. Pre-calculation and immediate update
             total_nodes = ParserClass.count_nodes(source_data)
+            hidden_nodes = ParserClass.count_nodes(source_data, mode="hidden")
             task.input_nodes = total_nodes
-            task.save(update_fields=['input_nodes'])
+            task.hidden_nodes = hidden_nodes
+            task.save(update_fields=['input_nodes', 'hidden_nodes'])
             logger.info(f"Task {task.id}: Pre-calculated input nodes: {total_nodes}")
 
             # 3. Execute Conversion

@@ -33,12 +33,12 @@ def convert_design_file_task(self, task_id: str):
                 task_to_update = ConversionTask.objects.select_for_update().get(id=task_id)
                 
                 # Increment handled nodes
-                task_to_update.handled_nodes = (task_to_update.handled_nodes or 0) + 1
+                task_to_update.handled_nodes = task_to_update.handled_nodes + 1
                 
                 # Calculate progress
                 if task_to_update.input_nodes and task_to_update.input_nodes > 0:
                     # Progress from 5% to 95%
-                    progress = 5 + int((task_to_update.handled_nodes / task_to_update.input_nodes) * 90)
+                    progress = 5 + int(((task_to_update.handled_nodes + task_to_update.hidden_nodes) / task_to_update.input_nodes) * 90)
                 else:
                     progress = 5 # Default progress if input_nodes is not set
                 
