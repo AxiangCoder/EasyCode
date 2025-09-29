@@ -125,10 +125,13 @@ class FrontendRenderer:
     def _format_style(self, style: dict) -> str:
         segments = []
         for key, value in style.items():
-            if isinstance(value, str):
-                segments.append(f"{key}: '{value}'")
+            formatted_value = value
+            if isinstance(value, (int, float)) and key not in {"opacity", "zIndex", "flex", "gap"}:
+                formatted_value = f"{value}px"
+            if isinstance(formatted_value, str):
+                segments.append(f"{key}: '{formatted_value}'")
             else:
-                segments.append(f"{key}: {value}")
+                segments.append(f"{key}: {formatted_value}")
         return ", ".join(segments)
 
     def _to_component_name(self, name: str) -> str:
