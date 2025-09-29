@@ -57,6 +57,7 @@ class FrontendRenderer:
     def _render_router_file(self, pages: list[dict]) -> FileArtifact:
         imports = []
         routes = []
+        first_route_path: str | None = None
         for index, page in enumerate(pages):
             component_name = self._to_component_name(page.get("name") or f"Page{index + 1}")
             route_path = f"/{component_name}"
@@ -64,11 +65,24 @@ class FrontendRenderer:
             routes.append(
                 f"        {{\n            element: <{component_name} />,\n            path: '{route_path}',\n        }},"
             )
+            if first_route_path is None:
+                first_route_path = route_path
+        redirect_entries = []
+        if first_route_path:
+            redirect_entries.append(
+                f"        {{\n            path: '/',\n            element: <Navigate to='{first_route_path}' replace />,\n        }},"
+            )
+        router_import = (
+            "import { createBrowserRouter, Navigate } from 'react-router-dom'"
+            if first_route_path
+            else "import { createBrowserRouter } from 'react-router-dom'"
+        )
         content = "\n".join([
-            "import { createBrowserRouter } from 'react-router-dom'",
+            router_import,
             *imports,
             "",
             "export const router = createBrowserRouter([",
+            *redirect_entries,
             *routes,
             "])",
             "",
@@ -102,7 +116,7 @@ class FrontendRenderer:
             props.append("alt=\"\"")
         style_dict = self._convert_styles(node)
         if style_dict:
-            props.append(f"style={{ {self._format_style(style_dict)} }}")
+            props.append(f"style={{{{ {self._format_style(style_dict)} }}}}")
         if children:
             children_str = "\n".join(self._render_node(child, depth + 1) for child in children)
             return f"{ind}<{tag} {' '.join(props)}>\n{children_str}\n{ind}</{tag}>"
