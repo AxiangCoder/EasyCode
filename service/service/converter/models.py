@@ -34,6 +34,13 @@ class ConversionTask(BaseModel):
         ('failed', '失败'),
     ]
 
+    PHASE_CHOICES = [
+        ('pending', '待开始'),
+        ('dsl_conversion', 'DSL 转换'),
+        ('frontend_generation', '前端生成'),
+        ('completed', '已完成'),
+    ]
+
     name = models.CharField(max_length=200, help_text="任务名称", null=True, blank=True,)
     source_type = models.CharField(
         max_length=20,
@@ -67,6 +74,12 @@ class ConversionTask(BaseModel):
         choices=STATUS_CHOICES,
         default='pending',
         help_text="任务状态"
+    )
+    phase = models.CharField(
+        max_length=32,
+        choices=PHASE_CHOICES,
+        default='pending',
+        help_text="任务所处阶段"
     )
     progress = models.IntegerField(
         default=0,

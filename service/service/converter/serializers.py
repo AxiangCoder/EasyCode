@@ -41,11 +41,11 @@ class ConversionTaskSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'name', 'source_type', 'source_url', 'input_file', 'input_file_size', 'design_tokens',
             'design_tokens_name', 'status', 'status_display', 'progress',
-            'error_message', 'started_at', 'completed_at', 'creator_email',
+            'phase', 'error_message', 'started_at', 'completed_at', 'creator_email',
             'has_result', 'result_id', 'input_nodes', 'handled_nodes', 'hidden_nodes', 'created_time', 'updated_time'
         ]
         read_only_fields = [
-            'id', 'status', 'progress', 'error_message', 'started_at',
+            'id', 'status', 'progress', 'phase', 'error_message', 'started_at',
             'completed_at', 'creator_email', 'has_result', 'result_id', 'input_nodes', 'handled_nodes', 'hidden_nodes', 'created_time', 'updated_time'
         ]
 

@@ -35,7 +35,9 @@ class DesignConverterService:
             hidden_nodes = ParserClass.count_nodes(source_data, mode="hidden")
             task.input_nodes = total_nodes
             task.hidden_nodes = hidden_nodes
-            task.save(update_fields=['input_nodes', 'hidden_nodes'])
+            task.phase = "dsl_conversion"
+            task.progress = max(task.progress, 5)
+            task.save(update_fields=['input_nodes', 'hidden_nodes', 'phase', 'progress'])
             logger.info(f"Task {task.id}: Pre-calculated input nodes: {total_nodes}")
 
             # 3. Execute Conversion

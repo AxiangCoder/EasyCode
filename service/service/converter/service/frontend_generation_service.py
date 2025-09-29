@@ -6,6 +6,7 @@ import logging
 import shutil
 import tempfile
 from pathlib import Path
+from typing import Callable, Optional
 
 from django.conf import settings
 from django.db import transaction
@@ -22,7 +23,11 @@ class FrontendGenerationService:
     TEMPLATE_DIR = Path(__file__).resolve().parent.parent / "project_templates" / "vite-react-ts-tailwind"
     OUTPUT_DIR = Path(getattr(settings, "MEDIA_ROOT", Path.cwd())) / "generated_projects"
 
-    def generate_project(self, result_id: str) -> ConversionResult:
+    def generate_project(
+        self,
+        result_id: str,
+        progress_callback: Optional[Callable[[int], None]] = None,
+    ) -> ConversionResult:
         conversion_result = ConversionResult.objects.select_related("task").get(id=result_id)
 
         if not conversion_result.dsl_output:
@@ -32,14 +37,24 @@ class FrontendGenerationService:
 
         artifacts = render_project(conversion_result.dsl_output)
 
+        if progress_callback:
+            progress_callback(80)
+
         with tempfile.TemporaryDirectory() as tmp_dir:
             tmp_path = Path(tmp_dir)
             shutil.copytree(self.TEMPLATE_DIR, tmp_path, dirs_exist_ok=True)
+            if progress_callback:
+                progress_callback(85)
             self._write_artifacts(tmp_path, artifacts)
+            if progress_callback:
+                progress_callback(90)
 
             self.OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
             archive_base = self.OUTPUT_DIR / f"project_{conversion_result.id}"
             archive_path = Path(shutil.make_archive(str(archive_base), "zip", tmp_path))
+
+        if progress_callback:
+            progress_callback(95)
 
         relative_archive_path = archive_path.relative_to(Path(settings.MEDIA_ROOT)) if settings.MEDIA_ROOT else archive_path
 

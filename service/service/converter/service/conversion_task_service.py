@@ -27,8 +27,15 @@ class ConversionTaskService:
         try:
             # 更新任务状态
             task.status = "processing"
+            task.phase = "dsl_conversion"
             task.started_at = timezone.now()
-            task.save()
+            task.progress = max(task.progress, 5)
+            task.save(update_fields=[
+                "status",
+                "phase",
+                "started_at",
+                "progress",
+            ])
 
             # 执行转换
             result = self.converter_service.convert_design(
@@ -38,19 +45,28 @@ class ConversionTaskService:
             task_to_update = ConversionTask.objects.get(id=task.id)
 
             # 更新任务状态
-            task_to_update.status = "completed"
-            task_to_update.progress = 100
-            task_to_update.completed_at = timezone.now()
-            task_to_update.llm_usage = result.llm_usage
-            task_to_update.save()
+            task_to_update.phase = "frontend_generation"
+            task_to_update.progress = 70
+            task_to_update.save(update_fields=[
+                "phase",
+                "progress",
+            ])
 
             return result
 
         except Exception as e:
             # 更新任务状态为失败
-            task.status = "failed"
-            task.error_message = str(e)
-            task.save()
+            task_to_update = ConversionTask.objects.get(id=task.id)
+            task_to_update.status = "failed"
+            task_to_update.phase = "dsl_conversion"
+            task_to_update.error_message = str(e)
+            task_to_update.completed_at = timezone.now()
+            task_to_update.save(update_fields=[
+                "status",
+                "phase",
+                "error_message",
+                "completed_at",
+            ])
             raise
 
     def get_task_progress(self, task) -> Dict[str, Any]:
@@ -59,6 +75,7 @@ class ConversionTaskService:
             "task_id": str(task.id),
             "status": task.status,
             "progress": task.progress,
+            "phase": task.phase,
             "error_message": task.error_message,
             "started_at": task.started_at,
             "completed_at": task.completed_at,

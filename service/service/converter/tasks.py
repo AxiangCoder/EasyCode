@@ -42,8 +42,9 @@ def convert_design_file_task(self, task_id: str):
                 else:
                     progress = 5 # Default progress if input_nodes is not set
                 
-                task_to_update.progress = min(progress, 95) # Cap at 95 until completion
-                task_to_update.save(update_fields=['handled_nodes', 'progress'])
+                task_to_update.progress = min(progress, 70)
+                task_to_update.phase = 'dsl_conversion'
+                task_to_update.save(update_fields=['handled_nodes', 'progress', 'phase'])
 
             # Update Celery task state
             self.update_state(state="PROGRESS", meta={"progress": task_to_update.progress})
@@ -60,14 +61,16 @@ def convert_design_file_task(self, task_id: str):
         # This service method now handles the entire process
         service.process_conversion_task(task, progress_callback)
 
-        # Final update
+        # Final update: switch to frontend stage
         task.refresh_from_db()
-        task.progress = 100
-        task.status = 'completed'
-        task.completed_at = timezone.now()
-        task.save(update_fields=['progress', 'status', 'completed_at'])
+        latest_task = ConversionTask.objects.get(id=task_id)
+        latest_task.phase = 'frontend_generation'
+        latest_task.progress = max(latest_task.progress, 70)
+        latest_task.save(update_fields=['phase', 'progress'])
 
-        logger.info(f"Conversion task {task_id} completed successfully.")
+        self.update_state(state="PROGRESS", meta={"progress": latest_task.progress})
+
+        logger.info(f"Conversion task {task_id} conversion phase completed.")
 
         # Trigger frontend project generation asynchronously
         generate_frontend_project_task.delay(str(task.result.id))
@@ -80,10 +83,12 @@ def convert_design_file_task(self, task_id: str):
     except Exception as e:
         logger.error(f"Conversion task {task_id} failed: {str(e)}", exc_info=True)
         try:
-            task.status = "failed"
-            task.error_message = str(e)
-            task.completed_at = timezone.now()
-            task.save(update_fields=['status', 'error_message', 'completed_at'])
+            failed_task = ConversionTask.objects.get(id=task_id)
+            failed_task.status = "failed"
+            failed_task.error_message = str(e)
+            failed_task.completed_at = timezone.now()
+            failed_task.phase = failed_task.phase or 'dsl_conversion'
+            failed_task.save(update_fields=['status', 'error_message', 'completed_at', 'phase'])
         except Exception as update_error:
             logger.error(f"Failed to update task status to 'failed' for task {task_id}: {update_error}")
         
@@ -97,7 +102,45 @@ def generate_frontend_project_task(self, conversion_result_id: str):
     logger.info("generate_frontend_project_task 开始执行，result_id=%s", conversion_result_id)
     service = FrontendGenerationService()
     try:
-        result = service.generate_project(conversion_result_id)
+        task_id = None
+        try:
+            task_id = str(ConversionTask.objects.get(result__id=conversion_result_id).id)
+        except ConversionTask.DoesNotExist:
+            logger.warning("ConversionTask for conversion_result_id=%s 不存在", conversion_result_id)
+
+        def progress_update(progress_value: int):
+            if not task_id:
+                return
+            try:
+                with transaction.atomic():
+                    task_to_update = ConversionTask.objects.select_for_update().get(id=task_id)
+                    task_to_update.progress = max(task_to_update.progress, progress_value)
+                    task_to_update.phase = 'frontend_generation'
+                    task_to_update.save(update_fields=['progress', 'phase'])
+                self.update_state(state="PROGRESS", meta={"progress": task_to_update.progress})
+            except ConversionTask.DoesNotExist:
+                logger.warning("任务 %s 在前端生成阶段不存在，可能已被删除", task_id)
+            except Exception as progress_exc:  # pylint: disable=broad-except
+                logger.error("更新任务 %s 前端生成进度失败: %s", task_id, progress_exc, exc_info=True)
+
+        if task_id:
+            progress_update(72)
+
+        result = service.generate_project(conversion_result_id, progress_callback=progress_update)
+
+        if task_id:
+            try:
+                with transaction.atomic():
+                    completed_task = ConversionTask.objects.select_for_update().get(id=task_id)
+                    completed_task.progress = 100
+                    completed_task.phase = 'completed'
+                    completed_task.status = 'completed'
+                    completed_task.completed_at = timezone.now()
+                    completed_task.save(update_fields=['progress', 'phase', 'status', 'completed_at'])
+                self.update_state(state="PROGRESS", meta={"progress": completed_task.progress})
+            except ConversionTask.DoesNotExist:
+                logger.warning("任务 %s 在最终阶段不存在，可能已被删除", task_id)
+
         logger.info("前端项目生成成功，download_path=%s", result.project_download_path)
         return {
             "status": "completed",
