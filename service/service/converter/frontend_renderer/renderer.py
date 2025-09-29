@@ -59,10 +59,10 @@ class FrontendRenderer:
         routes = []
         for index, page in enumerate(pages):
             component_name = self._to_component_name(page.get("name") or f"Page{index + 1}")
-            route_path = "/" if index == 0 else f"/{self._to_route_path(page.get('name'))}"
+            route_path = f"/{component_name}"
             imports.append(f"import {component_name} from './pages/{component_name}'")
             routes.append(
-                "        {\n            element: <{component_name} />,\n            path: '{route_path}',\n        }".replace("{component_name}", component_name)
+                "        {\n            element: <{component_name} />,\n            path: '{route_path}',\n        },".replace("{component_name}", component_name)
             )
         content = "\n".join([
             "import { createBrowserRouter } from 'react-router-dom'",
