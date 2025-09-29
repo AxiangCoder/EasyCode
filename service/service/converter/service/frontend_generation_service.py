@@ -21,7 +21,7 @@ class FrontendGenerationService:
     """负责将 DSL 渲染写入模板，并生成压缩包。"""
 
     TEMPLATE_DIR = Path(__file__).resolve().parent.parent / "project_templates" / "vite-react-ts-tailwind"
-    OUTPUT_DIR = Path(getattr(settings, "MEDIA_ROOT", Path.cwd())) / "generated_projects"
+    BASE_OUTPUT_DIR = Path(getattr(settings, "MEDIA_ROOT", Path.cwd())) / "conversion_out"
 
     def generate_project(
         self,
@@ -49,16 +49,24 @@ class FrontendGenerationService:
             if progress_callback:
                 progress_callback(90)
 
-            self.OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-            archive_base = self.OUTPUT_DIR / f"project_{conversion_result.id}"
+            task_output_dir = self.BASE_OUTPUT_DIR / str(conversion_result.task_id)
+            task_output_dir.mkdir(parents=True, exist_ok=True)
+            archive_base = task_output_dir / "code"
+            archive_zip_path = archive_base.with_suffix(".zip")
+            if archive_zip_path.exists():
+                archive_zip_path.unlink()
             archive_path = Path(shutil.make_archive(str(archive_base), "zip", tmp_path))
 
         if progress_callback:
             progress_callback(95)
 
-        relative_archive_path = archive_path.relative_to(Path(settings.MEDIA_ROOT)) if settings.MEDIA_ROOT else archive_path
+        relative_archive_path = Path("conversion_out") / str(conversion_result.task_id) / "code.zip"
 
-        logger.info("前端项目压缩包生成完成: %s", archive_path)
+        logger.info(
+            "前端项目压缩包生成完成: result_id=%s, path=%s",
+            result_id,
+            archive_path,
+        )
 
         with transaction.atomic():
             conversion_result.project_download_path = str(relative_archive_path)
