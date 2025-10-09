@@ -163,6 +163,7 @@ media/
 .DS_Store
 Thumbs.db
 
+# macOS
 .DS_Store
 
 sketches/
