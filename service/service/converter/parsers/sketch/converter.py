@@ -128,9 +128,6 @@ class SketchParser(BaseParser):
 
     def _map_styles_to_tokens(self, layer):
         """Maps layer styles to design tokens and reports unknown styles."""
-        if not self.tokens_data:
-            return {}
-
         dsl_style = {}
         style = layer.get("style", {})
         layer_name = layer.get("name", "Unnamed")
