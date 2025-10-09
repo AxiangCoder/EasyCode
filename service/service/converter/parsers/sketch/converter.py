@@ -223,6 +223,22 @@ class SketchParser(BaseParser):
                 dsl_style["borderColor"] = hex_color
                 self.report["unknown_borderColors"][hex_color].append(layer_name)
 
+    def _sort_layers(self, layers, layout_info):
+        """Sorts a list of layers by visual coordinates based on layout info."""
+        direction = layout_info.get("direction")
+        layout_type = layout_info.get("type")
+
+        # For rows and grids, the primary order is left-to-right, top-to-bottom.
+        if direction == constants.LAYOUT_DIR_ROW or layout_type == constants.LAYOUT_GRID:
+            layers.sort(key=lambda l: (l["frame"]["x"], l["frame"]["y"]))
+        # For columns, the primary order is top-to-bottom, left-to-right.
+        elif direction == constants.LAYOUT_DIR_COLUMN:
+            layers.sort(key=lambda l: (l["frame"]["y"], l["frame"]["x"]))
+        # Default fallback sort (e.g., if layout is unknown) is top-to-bottom.
+        else:
+            layers.sort(key=lambda l: (l["frame"]["y"], l["frame"]["x"]))
+        return layers
+
     def _traverse_layer(self, layer, parent_layout_type=constants.LAYOUT_ABSOLUTE):
         """Recursively traverses the layer tree to build the DSL structure."""
         if not layer or not layer.get("isVisible", True):
@@ -308,7 +324,6 @@ class SketchParser(BaseParser):
                     else None
                 )
 
-                # Check if LLM returned a single group with all children
                 is_simple_group = (
                     layout_analysis
                     and len(layout_analysis.get("layout_groups", [])) == 1
@@ -316,18 +331,22 @@ class SketchParser(BaseParser):
                 )
 
                 if is_simple_group:
-                    # Apply layout to parent instead of creating a virtual group
                     layout_info = layout_analysis["layout_groups"][0]
                     layout.update(layout_info)
+                    
+                    indices = layout_info.get("children_indices", [])
+                    layers_to_process = [child_layers[i] for i in indices if 0 <= i < len(child_layers)]
 
-                    # Reverted change for Bug-014: iterate over original list
-                    for child in child_layers:
+                    self._sort_layers(layers_to_process, layout_info)
+
+                    for child in layers_to_process:
                         if child_node := self._traverse_layer(
                             child, parent_layout_type=layout.get("type")
                         ):
                             children_nodes.append(child_node)
+
                 elif layout_analysis and "layout_groups" in layout_analysis:
-                    # Original logic for complex cases (multiple groups/outliers)
+                    # Complex case: virtual groups and outliers
                     layout["type"] = constants.LAYOUT_ABSOLUTE
                     children_nodes = self._process_llm_layout_analysis(
                         layout_analysis, child_layers
@@ -367,6 +386,9 @@ class SketchParser(BaseParser):
                 continue
 
             group_layers = [all_child_layers[j] for j in group_indices]
+            
+            self._sort_layers(group_layers, group_info)
+
             processed_indices.update(group_indices)
 
             min_x = min(l["frame"]["x"] for l in group_layers)
