@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 import statistics
 from collections import defaultdict
 from openai import OpenAI
@@ -497,6 +498,17 @@ class SketchParser(BaseParser):
         )
         return {"type": constants.LAYOUT_ABSOLUTE}
 
+    def _load_prompt(self, prompt_name: str) -> str:
+        """Loads a prompt from the prompts directory."""
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        prompt_path = os.path.join(current_dir, "prompts", f"{prompt_name}.md")
+        try:
+            with open(prompt_path, "r", encoding="utf-8") as f:
+                return f.read()
+        except FileNotFoundError:
+            logger.error(f"Prompt file not found at {prompt_path}")
+            return ""
+
     def _analyze_layout_with_llm(self, layers, do_objectID):
         """Analyzes layout using an LLM for complex, mixed layouts."""
         if not self.llm_service:
@@ -509,45 +521,15 @@ class SketchParser(BaseParser):
             for l in layers
         ]
 
-        prompt = f"""
-You are an expert UI layout analyst. Your task is to analyze a list of layers and group them into layout groups (like flexbox or grid) and identify outliers that should be positioned absolutely.
+        prompt_template = self._load_prompt("layout_analysis_prompt")
+        if not prompt_template:
+            return None
 
-**INSTRUCTIONS:**
-1.  Analyze the `frame` properties (x, y, width, height) of the layers. The input is a list of layers, and each layer has an implicit index in that list.
-2.  Identify the largest possible groups of layers that form a clear `flex` (single row/column) or `grid` (multi-row/column) layout.
-3.  Any layer that does not fit into a clear layout group is an "outlier".
-4.  You MUST respond with ONLY a single, raw JSON object. Do not use markdown. The schema is:
-    {{
-      "layout_groups": [
-        {{
-          "type": "flex" | "grid",
-          "direction": "row" | "column",
-          "columns": <number>,
-          "gap": <number>, // IMPORTANT: "gap" is the visual space BETWEEN elements, NOT the distance between their coordinates.
-          "children_indices": [<index_of_child_1>, <index_of_child_2>, ...]
-        }}
-      ],
-      "outlier_indices": [<index_of_outlier_1>, <index_of_outlier_2>, ...]
-    }}
-    - `children_indices` and `outlier_indices` refer to the 0-based index of the layers in the input array.
-    - Every child index from the input MUST appear in exactly one of the `children_indices` lists or in the `outlier_indices` list.
+        simplified_layers_json = json.dumps(simplified_layers, indent=2)
+        prompt = prompt_template.format(
+            simplified_layers_json=simplified_layers_json
+        )
 
-**EXAMPLE of GAP CALCULATION:**
-- If you have two layers in a column:
-  - Layer A: {{"frame": {{"x": 10, "y": 10, "width": 100, "height": 50}}}}
-  - Layer B: {{"frame": {{"x": 10, "y": 80, "width": 100, "height": 50}}}}
-- The distance between their 'y' coordinates is 70 (80 - 10).
-- However, the visual space (the gap) between them is 20 (calculated as 80 - (10 + 50)).
-- **You should return 20 as the `gap` value.**
-
-**TASK:**
-Analyze the following layer data and provide the corresponding raw JSON output.
-
-Input Layers:
-```json
-{json.dumps(simplified_layers, indent=2)}
-```
-"""
         try:
             response = self.llm_service.chat(
                 model=config.LLM_MODEL_NAME,
