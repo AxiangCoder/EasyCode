@@ -128,9 +128,6 @@ class SketchParser(BaseParser):
 
     def _map_styles_to_tokens(self, layer):
         """Maps layer styles to design tokens and reports unknown styles."""
-        if not self.tokens_data:
-            return {}
-
         dsl_style = {}
         style = layer.get("style", {})
         layer_name = layer.get("name", "Unnamed")
@@ -310,12 +307,33 @@ class SketchParser(BaseParser):
                     if self.llm_service
                     else None
                 )
-                if layout_analysis and "layout_groups" in layout_analysis:
+
+                # Check if LLM returned a single group with all children
+                is_simple_group = (
+                    layout_analysis
+                    and len(layout_analysis.get("layout_groups", [])) == 1
+                    and not layout_analysis.get("outlier_indices")
+                )
+
+                if is_simple_group:
+                    # Apply layout to parent instead of creating a virtual group
+                    layout_info = layout_analysis["layout_groups"][0]
+                    layout.update(layout_info)
+
+                    # Reverted change for Bug-014: iterate over original list
+                    for child in child_layers:
+                        if child_node := self._traverse_layer(
+                            child, parent_layout_type=layout.get("type")
+                        ):
+                            children_nodes.append(child_node)
+                elif layout_analysis and "layout_groups" in layout_analysis:
+                    # Original logic for complex cases (multiple groups/outliers)
                     layout["type"] = constants.LAYOUT_ABSOLUTE
                     children_nodes = self._process_llm_layout_analysis(
                         layout_analysis, child_layers
                     )
                 else:
+                    # Original rule-based fallback
                     layout_info = self._analyze_layout_with_rules(child_layers)
                     layout.update(layout_info)
                     for child in child_layers:
@@ -323,7 +341,7 @@ class SketchParser(BaseParser):
                             child, parent_layout_type=layout.get("type")
                         ):
                             children_nodes.append(child_node)
-
+                            
         if parent_layout_type == constants.LAYOUT_ABSOLUTE and not is_root_page:
             layout["position"] = constants.LAYOUT_ABSOLUTE
             layout["top"] = frame.get("y")

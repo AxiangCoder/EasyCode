@@ -145,6 +145,14 @@ class FrontendRenderer:
         # 只有在需要分析定位时才处理 layout 信息
         if analyze_layout:
             layout = node.get("layout") or {}
+
+            if layout.get("type") == "flex":
+                result["display"] = "flex"
+                if "direction" in layout:
+                    result["flexDirection"] = layout["direction"]
+                if "gap" in layout and layout["gap"] > 0:
+                    result["gap"] = f'{layout["gap"]}px'
+
             position = layout.get("position")
             if position:
                 result["position"] = position
