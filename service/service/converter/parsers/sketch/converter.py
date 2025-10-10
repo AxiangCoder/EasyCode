@@ -526,31 +526,47 @@ class SketchParser(BaseParser):
             return None
 
         simplified_layers_json = json.dumps(simplified_layers, indent=2)
-        prompt = prompt_template.format(
-            simplified_layers_json=simplified_layers_json
-        )
-
+        # Step 1: Initial Grouping
+        prompt1 = f"{prompt_template}\nInput Layers:\n```json\n{simplified_layers_json}\n```"  # Use f-string to safely insert data
         try:
-            response = self.llm_service.chat(
-                model=config.LLM_MODEL_NAME,
-                messages=[
-                    {
-                        "role": "system",
-                        "content": "You are an expert assistant that analyzes UI layouts. Your only output must be a single, raw JSON object, without any markdown formatting (like ```json), comments, or explanations.",
-                    },
-                    {"role": "user", "content": prompt},
-                ],
-                temperature=0.1,
-            )
-            response_text = response.choices[0].message.content
-            if "```json" in response_text:
-                response_text = (
-                    response_text.split("```json")[1].split("```")[0].strip()
-                )
+            response1 = self._call_llm(prompt1)
+            result1 = json.loads(response1)
 
-            layout_info = json.loads(response_text)
-            logger.info(f"LLM analysis successful: {layout_info}")
-            return layout_info
+            # Step 2: Gap and Padding
+            prompt2 = f"Based on this grouping: {json.dumps(result1)}, calculate gap and padding for each group. Follow the prompt instructions."
+            response2 = self._call_llm(prompt2)
+            result2 = json.loads(response2)
+
+            # Step 3: Alignment and Positioning
+            prompt3 = f"Based on: {json.dumps(result2)}, infer justifyContent, alignItems, and position (prefer relative). Follow the prompt instructions."
+            response3 = self._call_llm(prompt3)
+            result3 = json.loads(response3)
+
+            # Step 4: Final Validation
+            prompt4 = f"Validate and optimize: {json.dumps(result3)}. Merge groups if possible for simplicity. Follow the prompt instructions."
+            response4 = self._call_llm(prompt4)
+            final_result = json.loads(response4)
+
+            logger.info(f"Step-by-step LLM analysis successful: {final_result}")
+            return final_result
         except Exception as e:
-            logger.error(f"LLM API call failed: {do_objectID}:{e}")
+            logger.error(f"Step-by-step LLM failed: {e}")
+            # Fallback to rule-based analysis if LLM fails
+            logger.warning("Falling back to rule-based layout analysis due to LLM error.")
+            return self._analyze_layout_with_rules(layers)  # Assuming _analyze_layout_with_rules is available as fallback
             return None
+
+    def _call_llm(self, prompt):
+        """Helper for LLM calls."""
+        response = self.llm_service.chat(
+            model=config.LLM_MODEL_NAME,
+            messages=[
+                {"role": "system", "content": "Output only raw JSON."},
+                {"role": "user", "content": prompt},
+            ],
+            temperature=0.1,
+        )
+        text = response.choices[0].message.content.strip()
+        if "```json" in text:
+            text = text.split("```json")[1].split("```")[0].strip()
+        return text
