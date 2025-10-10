@@ -120,6 +120,10 @@ class FrontendRenderer:
         if dsl_id:
             props.append(f'data-converted-id="{self._escape_jsx(dsl_id)}"')
         
+        group_identifier = node.get("group_identifier")
+        if group_identifier:
+            props.append(f'data-group-identifier="{self._escape_jsx(group_identifier)}"')
+
         # 页面级组件不分析定位信息
         analyze_layout = not is_root
         style_dict = self._convert_styles(node, analyze_layout=analyze_layout)

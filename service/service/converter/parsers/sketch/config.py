@@ -23,9 +23,9 @@ LLM_MODEL_NAME = "Qwen/Qwen2.5-Coder-7B-Instruct"  # SiliconFlow (last used mode
 
 # --- Layout Analysis ---
 # Threshold for considering layers in the same row for rule-based analysis
-LAYOUT_Y_THRESHOLD = 10
+LAYOUT_Y_THRESHOLD = 10  # 增加垂直对齐容差，避免过度严格
 # Threshold for horizontal alignment in column detection
-LAYOUT_X_THRESHOLD = 5
+LAYOUT_X_THRESHOLD = 10  # 增加水平对齐容差，提高分组准确性
 
 # --- File Size Limits ---
 # Maximum file size allowed for processing (50MB)

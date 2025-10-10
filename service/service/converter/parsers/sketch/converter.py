@@ -2,8 +2,10 @@ import json
 import logging
 import os
 import statistics
+import uuid
 from collections import defaultdict
 from openai import OpenAI
+from typing import List, Dict, Any
 
 from . import config, constants, utils
 from ..base import BaseParser
@@ -319,46 +321,31 @@ class SketchParser(BaseParser):
                     ):
                         children_nodes.append(child_node)
             else:
-                layout_analysis = (
-                    self._analyze_layout_with_llm(child_layers, layer.get("do_objectID"))
-                    if self.llm_service
-                    else None
-                )
+                # 1. Try rule-based analysis first
+                layout_analysis = self._analyze_layout_with_rules(child_layers)
 
-                is_simple_group = (
-                    layout_analysis
-                    and len(layout_analysis.get("layout_groups", [])) == 1
-                    and not layout_analysis.get("outlier_indices")
-                )
+                # 2. If rules fail, fallback to LLM
+                if not layout_analysis.get("layout_groups"):
+                    logger.info("Rule-based analysis was inconclusive. Falling back to LLM.")
+                    layout_analysis = (
+                        self._analyze_layout_with_llm(child_layers, layer.get("do_objectID"))
+                        if self.llm_service
+                        else None
+                    )
 
-                if is_simple_group:
-                    layout_info = layout_analysis["layout_groups"][0]
-                    layout.update(layout_info)
-                    
-                    indices = layout_info.get("children_indices", [])
-                    layers_to_process = [child_layers[i] for i in indices if 0 <= i < len(child_layers)]
-
-                    self._sort_layers(layers_to_process, layout_info)
-
-                    for child in layers_to_process:
-                        if child_node := self._traverse_layer(
-                            child, parent_layout_type=layout.get("type")
-                        ):
-                            children_nodes.append(child_node)
-
-                elif layout_analysis and "layout_groups" in layout_analysis:
-                    # Complex case: virtual groups and outliers
+                # 3. Process the analysis result (from either rules or LLM)
+                if layout_analysis and layout_analysis.get("layout_groups"):
+                    logger.info("Processing layout analysis...")
                     layout["type"] = constants.LAYOUT_ABSOLUTE
-                    children_nodes = self._process_llm_layout_analysis(
+                    children_nodes = self._process_layout_analysis(
                         layout_analysis, child_layers
                     )
-                else:
-                    # Original rule-based fallback
-                    layout_info = self._analyze_layout_with_rules(child_layers)
-                    layout.update(layout_info)
+                else:  # Both failed, treat as absolute
+                    logger.info("All analysis failed. Treating as absolute.")
+                    layout["type"] = constants.LAYOUT_ABSOLUTE
                     for child in child_layers:
                         if child_node := self._traverse_layer(
-                            child, parent_layout_type=layout.get("type")
+                            child, parent_layout_type=constants.LAYOUT_ABSOLUTE
                         ):
                             children_nodes.append(child_node)
                             
@@ -371,7 +358,7 @@ class SketchParser(BaseParser):
         node["children"] = children_nodes
         return node
 
-    def _process_llm_layout_analysis(self, layout_analysis, all_child_layers):
+    def _process_layout_analysis(self, layout_analysis, all_child_layers):
         """Creates virtual groups and processes outliers based on LLM analysis."""
         children_nodes = []
         num_children = len(all_child_layers)
@@ -416,7 +403,8 @@ class SketchParser(BaseParser):
 
             virtual_group = {
                 "type": constants.NODE_GROUP,
-                "name": f"Virtual Group - {group_info.get('type')}",
+                "group_identifier": f"Virtual Group - {group_info.get('type')}",
+                "do_objectID": str(uuid.uuid4()),
                 "style": {"width": max_x - min_x, "height": max_y - min_y},
                 "layout": virtual_group_layout,
                 "children": virtual_group_children,
@@ -440,63 +428,82 @@ class SketchParser(BaseParser):
         return children_nodes
 
     def _analyze_layout_with_rules(self, layers):
-        """Analyzes layout based on geometric rules."""
+        """Analyzes layout based on geometric rules, capable of finding multiple groups."""
         if not layers or len(layers) < 2:
             return {"type": constants.LAYOUT_ABSOLUTE}
 
-        layers.sort(key=lambda l: (l["frame"]["y"], l["frame"]["x"]))
+        # Create a mutable list of layers with their original indices
+        indexed_layers = [{"layer": layer, "original_index": i} for i, layer in enumerate(layers)]
 
-        rows = defaultdict(list)
-        for layer in layers:
-            found = False
-            for y_key in list(rows.keys()):
-                if abs(layer["frame"]["y"] - y_key) < config.LAYOUT_Y_THRESHOLD:
-                    rows[y_key].append(layer)
-                    found = True
-                    break
-            if not found:
-                rows[layer["frame"]["y"]].append(layer)
+        layout_groups = []
+        outlier_indices = []
 
-        num_rows, items_per_row = len(rows), [len(r) for r in rows.values()]
+        while len(indexed_layers) > 1:
+            # --- Find Best Column ---
+            best_col = []
+            remaining_layers = list(indexed_layers)
+            for i in range(len(remaining_layers)):
+                for j in range(i + 1, len(remaining_layers)):
+                    col_candidate = [remaining_layers[i], remaining_layers[j]]
+                    x_coords = [l["layer"]["frame"]["x"] for l in col_candidate]
+                    if statistics.stdev(x_coords) < config.LAYOUT_X_THRESHOLD:
+                        # Greedily add more layers to this column
+                        for k in range(len(remaining_layers)):
+                            if k != i and k != j:
+                                temp_candidate = col_candidate + [remaining_layers[k]]
+                                temp_x_coords = [l["layer"]["frame"]["x"] for l in temp_candidate]
+                                if statistics.stdev(temp_x_coords) < config.LAYOUT_X_THRESHOLD:
+                                    col_candidate = temp_candidate
+                        if len(col_candidate) > len(best_col):
+                            best_col = col_candidate
+            
+            # --- Find Best Row ---
+            best_row = []
+            for i in range(len(remaining_layers)):
+                for j in range(i + 1, len(remaining_layers)):
+                    row_candidate = [remaining_layers[i], remaining_layers[j]]
+                    y_coords = [l["layer"]["frame"]["y"] for l in row_candidate]
+                    if statistics.stdev(y_coords) < config.LAYOUT_Y_THRESHOLD:
+                        # Greedily add more layers to this row
+                        for k in range(len(remaining_layers)):
+                            if k != i and k != j:
+                                temp_candidate = row_candidate + [remaining_layers[k]]
+                                temp_y_coords = [l["layer"]["frame"]["y"] for l in temp_candidate]
+                                if statistics.stdev(temp_y_coords) < config.LAYOUT_Y_THRESHOLD:
+                                    row_candidate = temp_candidate
+                        if len(row_candidate) > len(best_row):
+                            best_row = row_candidate
 
-        if num_rows > 1 and len(set(items_per_row)) == 1 and items_per_row[0] > 1:
-            return {"type": constants.LAYOUT_GRID, "columns": items_per_row[0]}
+            # Decide whether to form a group
+            if len(best_col) > 1 and len(best_col) >= len(best_row):
+                group_layers_indexed = best_col
+                direction = constants.LAYOUT_DIR_COLUMN
+            elif len(best_row) > 1:
+                group_layers_indexed = best_row
+                direction = constants.LAYOUT_DIR_ROW
+            else:
+                # No more groups can be formed
+                break
 
-        if num_rows == 1 and items_per_row[0] > 1:
-            gaps = [
-                layers[i + 1]["frame"]["x"]
-                - (layers[i]["frame"]["x"] + layers[i]["frame"]["width"])
-                for i in range(len(layers) - 1)
-            ]
-            if any(g < 0 for g in gaps):
-                return {"type": constants.LAYOUT_ABSOLUTE}
-            return {
-                "type": constants.LAYOUT_FLEX,
-                "direction": constants.LAYOUT_DIR_ROW,
-                "gap": round(sum(gaps) / len(gaps)) if gaps else 0,
-            }
+            group_info = {"type": constants.LAYOUT_FLEX, "direction": direction}
+            group_layers = [item["layer"] for item in group_layers_indexed]
+            self._calculate_layout_properties(group_info, group_layers)
+            group_info["children_indices"] = [item["original_index"] for item in group_layers_indexed]
+            layout_groups.append(group_info)
 
-        if items_per_row and all(c == 1 for c in items_per_row) and num_rows > 1:
-            x_coords = [l["frame"]["x"] for l in layers]
-            x_std_dev = statistics.stdev(x_coords) if len(x_coords) > 1 else 0
-            if x_std_dev <= config.LAYOUT_X_THRESHOLD:
-                gaps = [
-                    layers[i + 1]["frame"]["y"]
-                    - (layers[i]["frame"]["y"] + layers[i]["frame"]["height"])
-                    for i in range(len(layers) - 1)
-                ]
-                if any(g < 0 for g in gaps):
-                    return {"type": constants.LAYOUT_ABSOLUTE}
-                return {
-                    "type": constants.LAYOUT_FLEX,
-                    "direction": constants.LAYOUT_DIR_COLUMN,
-                    "gap": round(sum(gaps) / len(gaps)) if gaps else 0,
-                }
+            # Remove grouped layers from the list
+            indexed_layers = [item for item in indexed_layers if item not in group_layers_indexed]
 
-        logger.info(
-            "Rule-based analysis could not determine layout, falling back to absolute."
-        )
-        return {"type": constants.LAYOUT_ABSOLUTE}
+        # Add remaining as outliers
+        outlier_indices.extend([item["original_index"] for item in indexed_layers])
+
+        # 新增: 解决分组冲突
+        layout_groups = self._resolve_group_conflicts(layout_groups, layers)
+
+        if not layout_groups:
+            return {"type": constants.LAYOUT_ABSOLUTE}
+        
+        return {"layout_groups": layout_groups, "outlier_indices": outlier_indices}
 
     def _load_prompt(self, prompt_name: str) -> str:
         """Loads a prompt from the prompts directory."""
@@ -510,51 +517,112 @@ class SketchParser(BaseParser):
             return ""
 
     def _analyze_layout_with_llm(self, layers, do_objectID):
-        """Analyzes layout using an LLM for complex, mixed layouts."""
+        """Analyzes layout using a hybrid approach: LLM for grouping, Python for calculations."""
         if not self.llm_service:
             logger.warning("LLM client not available. Skipping LLM layout analysis.")
             return None
 
-        logger.info(f"Performing LLM layout analysis for {len(layers)} layers...")
+        logger.info(f"Performing LLM layout grouping for {len(layers)} layers...")
         simplified_layers = [
             {"name": l.get("name"), "class": l.get("_class"), "frame": l.get("frame")}
             for l in layers
         ]
 
-        prompt_template = self._load_prompt("layout_analysis_prompt")
+        prompt_template = self._load_prompt("layout_grouping_prompt")
         if not prompt_template:
             return None
 
         simplified_layers_json = json.dumps(simplified_layers, indent=2)
-        # Step 1: Initial Grouping
-        prompt1 = f"{prompt_template}\nInput Layers:\n```json\n{simplified_layers_json}\n```"  # Use f-string to safely insert data
+        prompt = f"{prompt_template}\nInput Layers:\n```json\n{simplified_layers_json}\n```"
+
         try:
-            response1 = self._call_llm(prompt1)
-            result1 = json.loads(response1)
+            response = self._call_llm(prompt)
+            layout_analysis = json.loads(response)
 
-            # Step 2: Gap and Padding
-            prompt2 = f"Based on this grouping: {json.dumps(result1)}, calculate gap and padding for each group. Follow the prompt instructions."
-            response2 = self._call_llm(prompt2)
-            result2 = json.loads(response2)
+            # Python-based calculation for gap, padding, etc.
+            for group in layout_analysis.get("layout_groups", []):
+                group_indices = group.get("children_indices", [])
+                group_layers = [layers[i] for i in group_indices]
+                self._calculate_layout_properties(group, group_layers)
 
-            # Step 3: Alignment and Positioning
-            prompt3 = f"Based on: {json.dumps(result2)}, infer justifyContent, alignItems, and position (prefer relative). Follow the prompt instructions."
-            response3 = self._call_llm(prompt3)
-            result3 = json.loads(response3)
+            # 新增：后处理以修复水平分组 bug，考虑相似性
+            def post_process_groups(layout_analysis):
+                groups = layout_analysis.get("layout_groups", [])
+                outliers = layout_analysis.get("outlier_indices", [])
+                
+                # 检测潜在水平行候选
+                potential_row = []
+                for i in range(len(layers)):
+                    if i in outliers or any(i in g["children_indices"] for g in groups):
+                        continue
+                    potential_row.append(i)
+                
+                if len(potential_row) >= 3:  # 至少3个元素视为潜在行
+                    y_values = [layers[i]["frame"]["y"] for i in potential_row]
+                    widths = [layers[i]["frame"]["width"] for i in potential_row]
+                    heights = [layers[i]["frame"]["height"] for i in potential_row]
+                    names = [layers[i].get("name", "") for i in potential_row]
+                    
+                    # 检查 y 相近
+                    if max(y_values) - min(y_values) < 5:
+                        # 检查尺寸相似：标准差小
+                        if statistics.stdev(widths) < 5 and statistics.stdev(heights) < 5:
+                            # 检查名称相似：至少一半包含共同关键词（如 "矩形" 或 "备份"）
+                            common_keywords = set.intersection(*[set(n.split()) for n in names if n])
+                            if len(common_keywords) > 0 or any("备份" in n for n in names):  # 示例规则，可调整
+                                groups.append({
+                                    "type": "flex",
+                                    "direction": "row",
+                                    "children_indices": sorted(potential_row)
+                                })
+                                # 从 outliers 或其他组移除
+                                outliers = [o for o in outliers if o not in potential_row]
+                
+                return {
+                    "layout_groups": groups,
+                    "outlier_indices": outliers
+                }
+            
+            # 调用后处理
+            layout_analysis = post_process_groups(layout_analysis)
 
-            # Step 4: Final Validation
-            prompt4 = f"Validate and optimize: {json.dumps(result3)}. Merge groups if possible for simplicity. Follow the prompt instructions."
-            response4 = self._call_llm(prompt4)
-            final_result = json.loads(response4)
-
-            logger.info(f"Step-by-step LLM analysis successful: {final_result}")
-            return final_result
+            logger.info(f"Hybrid LLM analysis successful: {layout_analysis}")
+            return layout_analysis
         except Exception as e:
-            logger.error(f"Step-by-step LLM failed: {e}")
-            # Fallback to rule-based analysis if LLM fails
-            logger.warning("Falling back to rule-based layout analysis due to LLM error.")
-            return self._analyze_layout_with_rules(layers)  # Assuming _analyze_layout_with_rules is available as fallback
-            return None
+            logger.error(f"Hybrid LLM analysis failed: {e}")
+            logger.warning("Falling back to rule-based layout analysis.")
+            return self._analyze_layout_with_rules(layers)
+
+    def _calculate_layout_properties(self, group_info, group_layers):
+        """Calculates gap, padding, and alignment for a given group of layers."""
+        if not group_layers:
+            return
+
+        layout_type = group_info.get("type")
+        direction = group_info.get("direction")
+
+        if layout_type == constants.LAYOUT_FLEX:
+            if direction == constants.LAYOUT_DIR_COLUMN:
+                group_layers.sort(key=lambda l: l["frame"]["y"])
+                gaps = [
+                    group_layers[i + 1]["frame"]["y"] - (group_layers[i]["frame"]["y"] + group_layers[i]["frame"]["height"])
+                    for i in range(len(group_layers) - 1)
+                ]
+                group_info["gap"] = round(statistics.mean(gaps)) if gaps else 0
+            elif direction == constants.LAYOUT_DIR_ROW:
+                group_layers.sort(key=lambda l: l["frame"]["x"])
+                gaps = [
+                    group_layers[i + 1]["frame"]["x"] - (group_layers[i]["frame"]["x"] + group_layers[i]["frame"]["width"])
+                    for i in range(len(group_layers) - 1)
+                ]
+                group_info["gap"] = round(statistics.mean(gaps)) if gaps else 0
+
+        # Set default values for other properties
+        group_info.setdefault("padding", {"top": 0, "right": 0, "bottom": 0, "left": 0})
+        group_info.setdefault("justifyContent", "flex-start")
+        group_info.setdefault("alignItems", "flex-start")
+        group_info.setdefault("position", "relative")
+
 
     def _call_llm(self, prompt):
         """Helper for LLM calls."""
@@ -570,3 +638,36 @@ class SketchParser(BaseParser):
         if "```json" in text:
             text = text.split("```json")[1].split("```")[0].strip()
         return text
+
+    def _resolve_group_conflicts(self, groups: List[Dict[str, Any]], layers: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """Resolves conflicts between groups by selecting the one with stronger alignment (lower variance)."""
+        from statistics import variance
+
+        resolved_groups = []
+        seen_indices = set()
+
+        for group in sorted(groups, key=lambda g: len(g['children_indices']), reverse=True):  # 优先大组
+            indices = set(group['children_indices'])
+            if indices.isdisjoint(seen_indices):  # 无冲突，直接添加
+                resolved_groups.append(group)
+                seen_indices.update(indices)
+            else:
+                # 有冲突，计算对齐强度（方差越小越强）
+                conflicting = indices.intersection(seen_indices)
+                if conflicting:
+                    # 对于 row 组，检查 Y 方差；对于 column，检查 X 方差
+                    if group['direction'] == constants.LAYOUT_DIR_ROW:
+                        y_coords = [layers[i]["frame"]["y"] for i in group['children_indices']]
+                        strength = variance(y_coords) if len(y_coords) > 1 else float('inf')
+                    else:
+                        x_coords = [layers[i]["frame"]["x"] for i in group['children_indices']]
+                        strength = variance(x_coords) if len(x_coords) > 1 else float('inf')
+                    
+                    # 如果强度（方差）小于阈值（如 25），则覆盖冲突部分
+                    if strength < 25:
+                        # 移除冲突组，从 resolved_groups 中删除
+                        resolved_groups = [g for g in resolved_groups if not set(g['children_indices']).intersection(conflicting)]
+                        resolved_groups.append(group)
+                        seen_indices = set().union(*(set(g['children_indices']) for g in resolved_groups))
+        
+        return resolved_groups
