@@ -155,7 +155,6 @@ media/
 
 # IDE
 .idea/
-# .vscode/
 *.swp
 *.swo
 
