@@ -321,27 +321,46 @@ class SketchParser(BaseParser):
                     ):
                         children_nodes.append(child_node)
             else:
-                # 1. Try rule-based analysis first
-                layout_analysis = self._analyze_layout_with_rules(child_layers)
+                # 1. Get all geometric candidate groups from the new non-greedy rules engine
+                rule_based_groups = self._analyze_layout_with_rules(child_layers)
+                logger.info(f"Rule-based analysis found {len(rule_based_groups)} potential groups.")
 
-                # 2. If rules fail, fallback to LLM
-                if not layout_analysis.get("layout_groups"):
-                    logger.info("Rule-based analysis was inconclusive. Falling back to LLM.")
-                    layout_analysis = (
-                        self._analyze_layout_with_llm(child_layers, layer.get("do_objectID"))
-                        if self.llm_service
-                        else None
-                    )
+                # 2. Get candidate groups from LLM
+                llm_analysis = (
+                    self._analyze_layout_with_llm(child_layers, layer.get("do_objectID"))
+                    if self.llm_service
+                    else None
+                )
+                llm_groups = llm_analysis.get("layout_groups", []) if llm_analysis else []
+                logger.info(f"LLM analysis found {len(llm_groups)} potential groups.")
 
-                # 3. Process the analysis result (from either rules or LLM)
-                if layout_analysis and layout_analysis.get("layout_groups"):
-                    logger.info("Processing layout analysis...")
+                # 3. Combine all candidates and resolve conflicts
+                all_candidate_groups = rule_based_groups + llm_groups
+
+                if all_candidate_groups:
+                    logger.info(f"Resolving conflicts among {len(all_candidate_groups)} total candidate groups.")
+                    resolved_groups = self._resolve_group_conflicts(all_candidate_groups, child_layers)
+                    logger.info(f"Found {len(resolved_groups)} final groups after conflict resolution.")
+
+                    # Determine outliers: children not in any resolved group
+                    processed_indices = set()
+                    for group in resolved_groups:
+                        processed_indices.update(group['children_indices'])
+
+                    all_indices = set(range(len(child_layers)))
+                    outlier_indices = sorted(list(all_indices - processed_indices))
+
+                    final_analysis = {
+                        "layout_groups": resolved_groups,
+                        "outlier_indices": outlier_indices
+                    }
+
                     layout["type"] = constants.LAYOUT_ABSOLUTE
                     children_nodes = self._process_layout_analysis(
-                        layout_analysis, child_layers
+                        final_analysis, child_layers
                     )
-                else:  # Both failed, treat as absolute
-                    logger.info("All analysis failed. Treating as absolute.")
+                else:  # No groups found by any method
+                    logger.info("All analysis methods failed to find any groups. Treating as absolute.")
                     layout["type"] = constants.LAYOUT_ABSOLUTE
                     for child in child_layers:
                         if child_node := self._traverse_layer(
@@ -427,83 +446,77 @@ class SketchParser(BaseParser):
 
         return children_nodes
 
-    def _analyze_layout_with_rules(self, layers):
-        """Analyzes layout based on geometric rules, capable of finding multiple groups."""
+    def _analyze_layout_with_rules(self, layers: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """
+        Analyzes layout based on geometric rules to find all potential (including overlapping) groups.
+        This replaces the old greedy algorithm.
+        """
         if not layers or len(layers) < 2:
-            return {"type": constants.LAYOUT_ABSOLUTE}
+            return []
 
-        # Create a mutable list of layers with their original indices
-        indexed_layers = [{"layer": layer, "original_index": i} for i, layer in enumerate(layers)]
+        num_layers = len(layers)
+        all_groups = []
 
-        layout_groups = []
-        outlier_indices = []
+        # Identify all sets of layers that are aligned either vertically or horizontally
+        # Columns
+        for i in range(num_layers):
+            current_col_indices = {i}
+            for j in range(num_layers):
+                if i == j:
+                    continue
+                # Check alignment against the first element of the potential column
+                if abs(layers[j]['frame']['x'] - layers[i]['frame']['x']) < config.LAYOUT_X_THRESHOLD:
+                    current_col_indices.add(j)
+            if len(current_col_indices) > 1:
+                all_groups.append({
+                    "type": constants.LAYOUT_FLEX,
+                    "direction": constants.LAYOUT_DIR_COLUMN,
+                    "children_indices": sorted(list(current_col_indices))
+                })
 
-        while len(indexed_layers) > 1:
-            # --- Find Best Column ---
-            best_col = []
-            remaining_layers = list(indexed_layers)
-            for i in range(len(remaining_layers)):
-                for j in range(i + 1, len(remaining_layers)):
-                    col_candidate = [remaining_layers[i], remaining_layers[j]]
-                    x_coords = [l["layer"]["frame"]["x"] for l in col_candidate]
-                    if statistics.stdev(x_coords) < config.LAYOUT_X_THRESHOLD:
-                        # Greedily add more layers to this column
-                        for k in range(len(remaining_layers)):
-                            if k != i and k != j:
-                                temp_candidate = col_candidate + [remaining_layers[k]]
-                                temp_x_coords = [l["layer"]["frame"]["x"] for l in temp_candidate]
-                                if statistics.stdev(temp_x_coords) < config.LAYOUT_X_THRESHOLD:
-                                    col_candidate = temp_candidate
-                        if len(col_candidate) > len(best_col):
-                            best_col = col_candidate
-            
-            # --- Find Best Row ---
-            best_row = []
-            for i in range(len(remaining_layers)):
-                for j in range(i + 1, len(remaining_layers)):
-                    row_candidate = [remaining_layers[i], remaining_layers[j]]
-                    y_coords = [l["layer"]["frame"]["y"] for l in row_candidate]
-                    if statistics.stdev(y_coords) < config.LAYOUT_Y_THRESHOLD:
-                        # Greedily add more layers to this row
-                        for k in range(len(remaining_layers)):
-                            if k != i and k != j:
-                                temp_candidate = row_candidate + [remaining_layers[k]]
-                                temp_y_coords = [l["layer"]["frame"]["y"] for l in temp_candidate]
-                                if statistics.stdev(temp_y_coords) < config.LAYOUT_Y_THRESHOLD:
-                                    row_candidate = temp_candidate
-                        if len(row_candidate) > len(best_row):
-                            best_row = row_candidate
+        # Rows
+        for i in range(num_layers):
+            current_row_indices = {i}
+            for j in range(num_layers):
+                if i == j:
+                    continue
+                # Check alignment against the first element of the potential row
+                if abs(layers[j]['frame']['y'] - layers[i]['frame']['y']) < config.LAYOUT_Y_THRESHOLD:
+                    current_row_indices.add(j)
+            if len(current_row_indices) > 1:
+                all_groups.append({
+                    "type": constants.LAYOUT_FLEX,
+                    "direction": constants.LAYOUT_DIR_ROW,
+                    "children_indices": sorted(list(current_row_indices))
+                })
 
-            # Decide whether to form a group
-            if len(best_col) > 1 and len(best_col) >= len(best_row):
-                group_layers_indexed = best_col
-                direction = constants.LAYOUT_DIR_COLUMN
-            elif len(best_row) > 1:
-                group_layers_indexed = best_row
-                direction = constants.LAYOUT_DIR_ROW
-            else:
-                # No more groups can be formed
-                break
+        # Deduplicate groups and perform a final validation check
+        final_groups = []
+        seen_groups = set()
+        for group in all_groups:
+            # Create a frozenset of indices to make it hashable for the 'seen' set
+            group_key = (group['direction'], frozenset(group['children_indices']))
+            if group_key not in seen_groups:
+                seen_groups.add(group_key)
+                group_layers = [layers[i] for i in group["children_indices"]]
 
-            group_info = {"type": constants.LAYOUT_FLEX, "direction": direction}
-            group_layers = [item["layer"] for item in group_layers_indexed]
-            self._calculate_layout_properties(group_info, group_layers)
-            group_info["children_indices"] = [item["original_index"] for item in group_layers_indexed]
-            layout_groups.append(group_info)
+                # Final validation on the whole group's alignment
+                try:
+                    if group['direction'] == constants.LAYOUT_DIR_COLUMN:
+                        coords = [l['frame']['x'] for l in group_layers]
+                        if statistics.stdev(coords) >= config.LAYOUT_X_THRESHOLD:
+                            continue
+                    else:  # ROW
+                        coords = [l['frame']['y'] for l in group_layers]
+                        if statistics.stdev(coords) >= config.LAYOUT_Y_THRESHOLD:
+                            continue
+                except statistics.StatisticsError:
+                    continue  # Skip if stdev fails (e.g., only one element somehow)
 
-            # Remove grouped layers from the list
-            indexed_layers = [item for item in indexed_layers if item not in group_layers_indexed]
+                self._calculate_layout_properties(group_info=group, group_layers=group_layers)
+                final_groups.append(group)
 
-        # Add remaining as outliers
-        outlier_indices.extend([item["original_index"] for item in indexed_layers])
-
-        # 新增: 解决分组冲突
-        layout_groups = self._resolve_group_conflicts(layout_groups, layers)
-
-        if not layout_groups:
-            return {"type": constants.LAYOUT_ABSOLUTE}
-        
-        return {"layout_groups": layout_groups, "outlier_indices": outlier_indices}
+        return final_groups
 
     def _load_prompt(self, prompt_name: str) -> str:
         """Loads a prompt from the prompts directory."""
