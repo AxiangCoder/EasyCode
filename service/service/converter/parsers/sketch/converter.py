@@ -11,50 +11,61 @@ from . import config, constants, utils
 from ..base import BaseParser
 from ...service.llm_service import LLMClient
 
-# Setup logging
+# 设置日志记录
 logger = logging.getLogger(__name__)
 
 
 class SketchParser(BaseParser):
     """
-    Parses Sketch JSON data into a design-specific DSL.
-    This class implements the BaseParser interface for Sketch files.
+    将 Sketch JSON 数据解析为特定于设计的 DSL (领域特定语言)。
+    该类为 Sketch 文件实现了 BaseParser 接口。
     """
 
     def __init__(self, source_data: dict, tokens_data: dict):
         """
-        Initializes the parser with source data and design tokens.
+        使用源数据和设计令牌 (design tokens) 初始化解析器。
+
+        :param source_data: 从 Sketch 文件解析出的原始 JSON 数据。
+        :param tokens_data: 包含颜色、字体、间距等的设计令牌数据。
         """
         super().__init__(source_data, tokens_data)
+        # 用于存储 symbolID 到其语义化名称的映射
         self.symbol_map = {}
+        # 用于生成报告，记录转换过程中遇到的未知令牌等问题
         self.report = defaultdict(lambda: defaultdict(list))
+        # LLM 服务客户端
         self.llm_service = None
+        # 记录 LLM 使用情况的统计信息
         self.llm_usage = {
             "prompt_tokens": 0,
             "completion_tokens": 0,
             "total_tokens": 0,
         }
         try:
+            # 尝试初始化 LLM 客户端
             self.llm_service = LLMClient(api_key=config.LLM_API_KEY, base_url=config.LLM_BASE_URL)
         except Exception as e:
-            logger.error(f"Failed to initialize LLM client: {e}")
+            logger.error(f"初始化 LLM 客户端失败: {e}")
             self.llm_service = None
 
     @staticmethod
     def count_nodes(source_data: dict, mode: str = "all") -> int:
-        """Counts nodes in the Sketch data.
+        """递归计算 Sketch 数据中的节点数量。
 
         :param source_data: 已解析的 Sketch 数据。
         :param mode: 'all' 统计所有节点；'hidden' 仅统计不可见节点。
+        :return: 节点总数。
         """
 
         if mode not in {"all", "hidden"}:
-            raise ValueError("mode 必须为 'all' 或 'hidden'")
+            raise ValueError("mode 参数必须是 'all' 或 'hidden'")
 
         def _count_recursive(node):
+            # 如果是列表，则递归计算列表中每个元素的节点数
             if isinstance(node, list):
                 return sum(_count_recursive(item) for item in node)
 
+            # 如果不是字典，则不是一个有效的节点
             if not isinstance(node, dict):
                 return 0
 
@@ -66,6 +77,7 @@ class SketchParser(BaseParser):
                 count_this_node = 1
 
             children_count = 0
+            # 如果节点不是导出项且包含子图层，则递归计算子图层的节点数
             if not utils.is_export(node) and isinstance(node.get("layers"), list):
                 children_count = _count_recursive(node.get("layers"))
 
@@ -75,24 +87,33 @@ class SketchParser(BaseParser):
 
     def run(self, progress_callback=None) -> tuple:
         """
-        Executes the full conversion pipeline.
+        执行完整的转换流程，从 Sketch JSON 到 DSL。
+        
+        :param progress_callback: 一个可选的回调函数，用于报告转换进度。
+        :return: 一个元组，包含 DSL 输出和元数据。
         """
-        logger.info("--- Sketch-to-DSL Converter --- ")
+        logger.info("--- Sketch-to-DSL 转换器启动 ---")
         self.progress_callback = progress_callback
 
+        # 步骤 1: 预处理 Symbols，建立 symbolID -> name 的映射
         self._preprocess_symbols()
+        
+        # 步骤 2: 找到要处理的主要画板或图层组
         target_layer = self._find_main_artboard()
         if not target_layer:
-            logger.error("No suitable artboard or group found to process.")
+            logger.error("未找到合适的画板或图层组进行处理。")
             return {}, {}
 
-        logger.info("Starting conversion...")
+        logger.info("开始转换...")
+        # 步骤 3: 从目标图层开始，递归遍历并生成 DSL
         dsl_output = self._traverse_layer(target_layer)
-        logger.info("Conversion process completed.")
+        logger.info("转换过程完成。")
 
+        # 如果使用了 LLM，记录其 token 使用量
         if self.llm_service:
             self.llm_usage = self.llm_service.usage
 
+        # 准备包含报告和 LLM 使用情况的元数据
         metadata = {
             "token_report": self.report,
             "llm_usage": self.llm_usage,
@@ -101,46 +122,57 @@ class SketchParser(BaseParser):
         return dsl_output, metadata
 
     def _preprocess_symbols(self):
-        """Builds a map from symbolID to its semantic name."""
+        """
+        构建一个从 symbolID 到其语义化名称的映射。
+        这对于解析 Symbol 实例至关重要，因为它允许我们获取组件的原始名称。
+        """
         pages = self.source_data.get("layers", [self.source_data])
         for page in pages:
             if "layers" not in page:
                 continue
             for artboard in page.get("layers", []):
+                # 遍历画板或 Symbol Master
                 if artboard.get("_class") in [
                     constants.LAYER_ARTBOARD,
                     constants.LAYER_SYMBOL_MASTER,
                 ]:
                     for item in artboard.get("layers", []):
+                        # 找到 Symbol Master 定义并存储其 ID 和名称
                         if item.get("_class") == constants.LAYER_SYMBOL_MASTER:
                             self.symbol_map[item.get("symbolID")] = item.get("name")
-        logger.info(f"Preprocessing complete. Found {len(self.symbol_map)} symbols.")
+        logger.info(f"符号预处理完成。找到 {len(self.symbol_map)} 个符号。")
 
     def _find_main_artboard(self):
-        """Finds the first visible artboard or group to process."""
+        """
+        找到第一个可见的画板或顶层组作为转换的起点。
+        通常，一个 Sketch 文件只包含一个主要的设计内容。
+        """
         if self.source_data.get("_class") in [
             constants.LAYER_PAGE,
             constants.LAYER_ARTBOARD,
             constants.LAYER_GROUP,
         ]:
             logger.info(
-                f"Found starting point: '{self.source_data.get('name')}' ({self.source_data.get('_class')})"
+                f"找到转换起点: '{self.source_data.get('name')}' ({self.source_data.get('_class')})"
             )
             return self.source_data
         return None
 
     def _map_styles_to_tokens(self, layer):
-        """Maps layer styles to design tokens and reports unknown styles."""
+        """
+        将图层的样式属性映射到设计令牌 (Design Tokens)。
+        如果找不到对应的令牌，则直接使用原始样式值，并记录在报告中。
+        """
         dsl_style = {}
         style = layer.get("style", {})
         layer_name = layer.get("name", "Unnamed")
 
-        # Opacity
+        # 透明度
         opacity = style.get("contextSettings", {}).get("opacity", 1.0)
         if opacity < 1.0:
             dsl_style["opacity"] = opacity
 
-        # Background Color (Fills)
+        # 背景色 (Fills)
         if (fills := style.get("fills")) and fills and fills[0].get("isEnabled"):
             hex_color = utils.convert_color_to_hex(fills[0].get("color"))
             if hex_color:
@@ -148,17 +180,18 @@ class SketchParser(BaseParser):
                 if token:
                     dsl_style["backgroundColor"] = token
                 else:
+                    # 未找到颜色令牌，记录并使用原始值
                     logger.warning(
-                        f"Unknown background color: {hex_color} (Layer: '{layer_name}')"
+                        f"未知的背景色: {hex_color} (图层: '{layer_name}')"
                     )
                     dsl_style["backgroundColor"] = hex_color
                     self.report["unknown_colors"][hex_color].append(layer_name)
 
-        # Text Style
+        # 文本样式
         if text_style := style.get("textStyle"):
             self._map_text_style(text_style, dsl_style, layer_name)
 
-        # Borders
+        # 边框
         if (
             (borders := style.get("borders"))
             and borders
@@ -166,26 +199,26 @@ class SketchParser(BaseParser):
         ):
             self._map_border_style(borders[0], dsl_style, layer_name)
 
-        # Corner Radius
+        # 圆角
         if (radius := layer.get("fixedRadius")) and radius > 0:
             radius_key = str(int(radius))
             token = self.tokens_data.get("radii", {}).get(radius_key)
             dsl_style["borderRadius"] = token if token else f"{radius_key}px"
 
-        # Shadows
+        # 阴影 (简化处理)
         if (
             (shadows := style.get("shadows"))
             and shadows
             and shadows[0].get("isEnabled")
         ):
-            dsl_style["shadow"] = "default"  # Simplified, can be tokenized
+            dsl_style["shadow"] = "default"  # 简化处理，未来可以令牌化
 
         return dsl_style
 
     def _map_text_style(self, text_style, dsl_style, layer_name):
-        """Helper to map text color and font."""
+        """辅助函数，用于映射文本颜色和字体。"""
         attrs = text_style.get("encodedAttributes", {})
-        # Text Color
+        # 文本颜色
         if color_attr := attrs.get("MSAttributedStringColorAttribute"):
             hex_color = utils.convert_color_to_hex(color_attr)
             if hex_color:
@@ -194,11 +227,11 @@ class SketchParser(BaseParser):
                     dsl_style["textColor"] = token
                 else:
                     logger.warning(
-                        f"Unknown text color: {hex_color} (Layer: '{layer_name}')"
+                        f"未知的文本颜色: {hex_color} (图层: '{layer_name}')"
                     )
                     dsl_style["textColor"] = hex_color
                     self.report["unknown_textColors"][hex_color].append(layer_name)
-        # Font
+        # 字体
         font_attrs = attrs.get("MSAttributedStringFontAttribute", {}).get(
             "attributes", {}
         )
@@ -209,11 +242,11 @@ class SketchParser(BaseParser):
             if token:
                 dsl_style["font"] = token
             else:
-                logger.warning(f"Unknown font: '{font_key}' (Layer: '{layer_name}')")
+                logger.warning(f"未知的字体: '{font_key}' (图层: '{layer_name}')")
                 self.report["unknown_fonts"][font_key].append(layer_name)
 
     def _map_border_style(self, border, dsl_style, layer_name):
-        """Helper to map border width and color."""
+        """辅助函数，用于映射边框宽度和颜色。"""
         dsl_style["borderWidth"] = f"{border.get('thickness', 1)}px"
         if hex_color := utils.convert_color_to_hex(border.get("color")):
             token = self.tokens_data.get("borderColors", {}).get(hex_color)
@@ -221,29 +254,35 @@ class SketchParser(BaseParser):
                 dsl_style["borderColor"] = token
             else:
                 logger.warning(
-                    f"Unknown border color: {hex_color} (Layer: '{layer_name}')"
+                    f"未知的边框颜色: {hex_color} (图层: '{layer_name}')"
                 )
                 dsl_style["borderColor"] = hex_color
                 self.report["unknown_borderColors"][hex_color].append(layer_name)
 
     def _sort_layers(self, layers, layout_info):
-        """Sorts a list of layers by visual coordinates based on layout info."""
+        """
+        根据布局信息（行或列），按视觉坐标对图层列表进行排序。
+        这确保了在生成代码时，DOM 元素的顺序与视觉顺序一致。
+        """
         direction = layout_info.get("direction")
         layout_type = layout_info.get("type")
 
-        # For rows and grids, the primary order is left-to-right, top-to-bottom.
+        # 对于行或网格布局，主要按从左到右，再从上到下排序
         if direction == constants.LAYOUT_DIR_ROW or layout_type == constants.LAYOUT_GRID:
             layers.sort(key=lambda l: (l["frame"]["x"], l["frame"]["y"]))
-        # For columns, the primary order is top-to-bottom, left-to-right.
+        # 对于列布局，主要按从上到下，再从左到右排序
         elif direction == constants.LAYOUT_DIR_COLUMN:
             layers.sort(key=lambda l: (l["frame"]["y"], l["frame"]["x"]))
-        # Default fallback sort (e.g., if layout is unknown) is top-to-bottom.
+        # 默认回退排序（例如布局未知时），按从上到下排序
         else:
             layers.sort(key=lambda l: (l["frame"]["y"], l["frame"]["x"]))
         return layers
 
     def _traverse_layer(self, layer, parent_layout_type=constants.LAYOUT_ABSOLUTE):
-        """Recursively traverses the layer tree to build the DSL structure."""
+        """
+        递归遍历图层树，构建 DSL 结构。
+        这是解析器的核心，负责节点类型判断、样式映射和布局分析。
+        """
         if not layer or not layer.get("isVisible", True):
             return None
 
@@ -251,7 +290,7 @@ class SketchParser(BaseParser):
         frame = layer.get("frame", {})
         node = {}
 
-        # 1. Determine node type and content
+        # 步骤 1: 确定节点类型和内容
         if layer_class == constants.LAYER_SYMBOL_INSTANCE:
             symbol_id = layer.get("symbolID")
             semantic_name = self.symbol_map.get(symbol_id, layer.get("name"))
@@ -286,7 +325,7 @@ class SketchParser(BaseParser):
             node["type"] = constants.NODE_TRIANGLE
         else:
             logger.info(
-                f"Ignoring layer type: {layer_class} (Name: '{layer.get('name')}')"
+                f"忽略未知图层类型: {layer_class} (名称: '{layer.get('name')}')"
             )
             node["type"] = constants.NODE_UNKNOWN_COMPONENT
             node["class"] = layer_class
@@ -294,7 +333,7 @@ class SketchParser(BaseParser):
         node["name"] = layer.get("name")
         node["do_objectID"] = layer.get("do_objectID")
 
-        # 2. Map styles and dimensions
+        # 步骤 2: 映射样式和尺寸
         style = self._map_styles_to_tokens(layer)
         style["width"] = frame.get("width")
         style["height"] = frame.get("height")
@@ -303,50 +342,54 @@ class SketchParser(BaseParser):
         if self.progress_callback:
             self.progress_callback()
 
+        # 如果图层被标记为可导出项，则将其视为图片节点，并终止递归
         if utils.is_export(layer):
             node["exportOptions"] = layer.get("exportOptions")
             node["type"] = constants.NODE_IMAGE
             return node
 
-        # 3. Handle layout and children
+        # 步骤 3: 处理布局和子节点 (核心逻辑)
         layout = {}
         children_nodes = []
         is_root_page = node.get("type") == constants.NODE_PAGE and parent_layout_type == constants.LAYOUT_ABSOLUTE
+        
         if layer.get("layers") and len(layer.get("layers")) > 0:
             child_layers = layer["layers"]
             if is_root_page:
+                # 如果是根页面，其子节点（画板）通常是绝对定位的
                 for child in child_layers:
                     if child_node := self._traverse_layer(
                         child, parent_layout_type=constants.LAYOUT_ABSOLUTE
                     ):
                         children_nodes.append(child_node)
             else:
-                # 1. Get all geometric candidate groups from the new non-greedy rules engine
+                # --- 混合布局分析策略 ---
+                # 1. 从几何规则引擎获取所有可能的候选组
                 rule_based_groups = self._analyze_layout_with_rules(child_layers)
-                logger.info(f"Rule-based analysis found {len(rule_based_groups)} potential groups.")
+                logger.info(f"规则分析找到 {len(rule_based_groups)} 个潜在组。")
 
-                # 2. Get candidate groups from LLM
+                # 2. 从 LLM 获取语义候选组
                 llm_analysis = (
                     self._analyze_layout_with_llm(child_layers, layer.get("do_objectID"))
                     if self.llm_service
                     else None
                 )
                 llm_groups = llm_analysis.get("layout_groups", []) if llm_analysis else []
-                logger.info(f"LLM analysis found {len(llm_groups)} potential groups.")
+                logger.info(f"LLM 分析找到 {len(llm_groups)} 个潜在组。")
 
-                # 3. Combine all candidates and resolve conflicts
+                # 3. 合并所有候选组并通过冲突解决机制进行仲裁
                 all_candidate_groups = rule_based_groups + llm_groups
 
                 if all_candidate_groups:
-                    logger.info(f"Resolving conflicts among {len(all_candidate_groups)} total candidate groups.")
+                    logger.info(f"在 {len(all_candidate_groups)} 个总候选组中解决冲突。")
                     resolved_groups = self._resolve_group_conflicts(all_candidate_groups, child_layers)
-                    logger.info(f"Found {len(resolved_groups)} final groups after conflict resolution.")
+                    logger.info(f"冲突解决后找到 {len(resolved_groups)} 个最终组。")
 
-                    # Determine outliers: children not in any resolved group
+                    # 确定未被任何组包含的离群点
                     processed_indices = set()
                     for group in resolved_groups:
                         processed_indices.update(group['children_indices'])
-
+                    
                     all_indices = set(range(len(child_layers)))
                     outlier_indices = sorted(list(all_indices - processed_indices))
 
@@ -355,12 +398,13 @@ class SketchParser(BaseParser):
                         "outlier_indices": outlier_indices
                     }
 
+                    # 使用最终分析结果处理子节点
                     layout["type"] = constants.LAYOUT_ABSOLUTE
                     children_nodes = self._process_layout_analysis(
                         final_analysis, child_layers
                     )
-                else:  # No groups found by any method
-                    logger.info("All analysis methods failed to find any groups. Treating as absolute.")
+                else:  # 所有方法都未能找到任何组
+                    logger.info("所有分析方法均未找到任何组，将作为绝对定位处理。")
                     layout["type"] = constants.LAYOUT_ABSOLUTE
                     for child in child_layers:
                         if child_node := self._traverse_layer(
@@ -368,6 +412,7 @@ class SketchParser(BaseParser):
                         ):
                             children_nodes.append(child_node)
                             
+        # 如果父容器是绝对布局，则当前节点也需要绝对定位的坐标
         if parent_layout_type == constants.LAYOUT_ABSOLUTE and not is_root_page:
             layout["position"] = constants.LAYOUT_ABSOLUTE
             layout["top"] = frame.get("y")
@@ -378,11 +423,14 @@ class SketchParser(BaseParser):
         return node
 
     def _process_layout_analysis(self, layout_analysis, all_child_layers):
-        """Creates virtual groups and processes outliers based on LLM analysis."""
+        """
+        根据最终的布局分析结果（已解决冲突），创建虚拟组并处理离群点。
+        """
         children_nodes = []
         num_children = len(all_child_layers)
         processed_indices = set()
 
+        # 为每个最终确定的布局组创建一个虚拟组节点
         for group_info in layout_analysis.get("layout_groups", []):
             group_indices = [
                 idx
@@ -394,20 +442,24 @@ class SketchParser(BaseParser):
 
             group_layers = [all_child_layers[j] for j in group_indices]
             
+            # 对虚拟组内的图层进行排序，以保证 DOM 顺序正确
             self._sort_layers(group_layers, group_info)
 
             processed_indices.update(group_indices)
 
+            # 计算虚拟组的边界框
             min_x = min(l["frame"]["x"] for l in group_layers)
             min_y = min(l["frame"]["y"] for l in group_layers)
             max_x = max(l["frame"]["x"] + l["frame"]["width"] for l in group_layers)
             max_y = max(l["frame"]["y"] + l["frame"]["height"] for l in group_layers)
 
+            # 虚拟组本身在父容器中是绝对定位的
             virtual_group_layout = group_info.copy()
             virtual_group_layout.update(
                 {"position": constants.LAYOUT_ABSOLUTE, "top": min_y, "left": min_x}
             )
 
+            # 递归处理虚拟组的子节点，并调整其坐标为相对于虚拟组
             virtual_group_children = []
             for child_layer in group_layers:
                 adjusted_layer = child_layer.copy()
@@ -420,6 +472,7 @@ class SketchParser(BaseParser):
                 ):
                     virtual_group_children.append(child_node)
 
+            # 创建虚拟组节点
             virtual_group = {
                 "type": constants.NODE_GROUP,
                 "group_identifier": f"Virtual Group - {group_info.get('type')}",
@@ -430,6 +483,7 @@ class SketchParser(BaseParser):
             }
             children_nodes.append(virtual_group)
 
+        # 处理离群点，它们被视为父容器中的绝对定位元素
         outlier_indices = [
             idx
             for idx in layout_analysis.get("outlier_indices", [])
@@ -448,8 +502,8 @@ class SketchParser(BaseParser):
 
     def _analyze_layout_with_rules(self, layers: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """
-        Analyzes layout based on geometric rules to find all potential (including overlapping) groups.
-        This replaces the old greedy algorithm.
+        基于几何规则分析布局，找出所有潜在的（包括重叠的）组。
+        此函数取代了旧的贪心算法，作为候选生成引擎。
         """
         if not layers or len(layers) < 2:
             return []
@@ -457,14 +511,14 @@ class SketchParser(BaseParser):
         num_layers = len(layers)
         all_groups = []
 
-        # Identify all sets of layers that are aligned either vertically or horizontally
-        # Columns
+        # 识别所有垂直或水平对齐的图层集合
+        # 查找列
         for i in range(num_layers):
             current_col_indices = {i}
             for j in range(num_layers):
                 if i == j:
                     continue
-                # Check alignment against the first element of the potential column
+                # 检查与当前列的第一个元素的对齐情况
                 if abs(layers[j]['frame']['x'] - layers[i]['frame']['x']) < config.LAYOUT_X_THRESHOLD:
                     current_col_indices.add(j)
             if len(current_col_indices) > 1:
@@ -474,13 +528,13 @@ class SketchParser(BaseParser):
                     "children_indices": sorted(list(current_col_indices))
                 })
 
-        # Rows
+        # 查找行
         for i in range(num_layers):
             current_row_indices = {i}
             for j in range(num_layers):
                 if i == j:
                     continue
-                # Check alignment against the first element of the potential row
+                # 检查与当前行的第一个元素的对齐情况
                 if abs(layers[j]['frame']['y'] - layers[i]['frame']['y']) < config.LAYOUT_Y_THRESHOLD:
                     current_row_indices.add(j)
             if len(current_row_indices) > 1:
@@ -490,17 +544,17 @@ class SketchParser(BaseParser):
                     "children_indices": sorted(list(current_row_indices))
                 })
 
-        # Deduplicate groups and perform a final validation check
+        # 对找到的组进行去重和最终验证
         final_groups = []
         seen_groups = set()
         for group in all_groups:
-            # Create a frozenset of indices to make it hashable for the 'seen' set
+            # 使用 frozenset 作为键来确保唯一性
             group_key = (group['direction'], frozenset(group['children_indices']))
             if group_key not in seen_groups:
                 seen_groups.add(group_key)
                 group_layers = [layers[i] for i in group["children_indices"]]
 
-                # Final validation on the whole group's alignment
+                # 对整个组的对齐情况进行最终验证
                 try:
                     if group['direction'] == constants.LAYOUT_DIR_COLUMN:
                         coords = [l['frame']['x'] for l in group_layers]
@@ -511,31 +565,36 @@ class SketchParser(BaseParser):
                         if statistics.stdev(coords) >= config.LAYOUT_Y_THRESHOLD:
                             continue
                 except statistics.StatisticsError:
-                    continue  # Skip if stdev fails (e.g., only one element somehow)
+                    continue  # 如果标准差计算失败（例如只有一个元素），则跳过
 
+                # 计算组的布局属性（如 gap）
                 self._calculate_layout_properties(group_info=group, group_layers=group_layers)
                 final_groups.append(group)
 
         return final_groups
 
     def _load_prompt(self, prompt_name: str) -> str:
-        """Loads a prompt from the prompts directory."""
+        """从 prompts 目录加载指定的提示模板。"""
         current_dir = os.path.dirname(os.path.abspath(__file__))
         prompt_path = os.path.join(current_dir, "prompts", f"{prompt_name}.md")
         try:
             with open(prompt_path, "r", encoding="utf-8") as f:
                 return f.read()
         except FileNotFoundError:
-            logger.error(f"Prompt file not found at {prompt_path}")
+            logger.error(f"提示文件未找到: {prompt_path}")
             return ""
 
     def _analyze_layout_with_llm(self, layers, do_objectID):
-        """Analyzes layout using a hybrid approach: LLM for grouping, Python for calculations."""
+        """
+        使用混合方法分析布局：LLM 负责分组，Python 负责计算。
+        作为语义分析引擎，与规则分析并行工作。
+        """
         if not self.llm_service:
-            logger.warning("LLM client not available. Skipping LLM layout analysis.")
+            logger.warning("LLM 客户端不可用，跳过 LLM 布局分析。")
             return None
 
-        logger.info(f"Performing LLM layout grouping for {len(layers)} layers...")
+        logger.info(f"正在为 {len(layers)} 个图层执行 LLM 布局分组...")
+        # 简化图层信息，减少 prompt 的 token 数量
         simplified_layers = [
             {"name": l.get("name"), "class": l.get("_class"), "frame": l.get("frame")}
             for l in layers
@@ -552,12 +611,13 @@ class SketchParser(BaseParser):
             response = self._call_llm(prompt)
             layout_analysis = json.loads(response)
 
-            # Python-based calculation for gap, padding, etc.
+            # 对 LLM 返回的每个组，使用 Python 计算其精确的布局属性
             for group in layout_analysis.get("layout_groups", []):
                 group_indices = group.get("children_indices", [])
                 group_layers = [layers[i] for i in group_indices]
                 self._calculate_layout_properties(group, group_layers)
 
+            # TODO: 这个后处理逻辑可能需要重新评估或移除，因为它可能与新的冲突解决机制重叠。
             # 新增：后处理以修复水平分组 bug，考虑相似性
             def post_process_groups(layout_analysis):
                 groups = layout_analysis.get("layout_groups", [])
@@ -599,15 +659,15 @@ class SketchParser(BaseParser):
             # 调用后处理
             layout_analysis = post_process_groups(layout_analysis)
 
-            logger.info(f"Hybrid LLM analysis successful: {layout_analysis}")
+            logger.info(f"混合 LLM 分析成功: {layout_analysis}")
             return layout_analysis
         except Exception as e:
-            logger.error(f"Hybrid LLM analysis failed: {e}")
-            logger.warning("Falling back to rule-based layout analysis.")
-            return self._analyze_layout_with_rules(layers)
+            logger.error(f"混合 LLM 分析失败: {e}")
+            # LLM 分析失败时，返回空结果，让冲突解决机制处理
+            return None
 
     def _calculate_layout_properties(self, group_info, group_layers):
-        """Calculates gap, padding, and alignment for a given group of layers."""
+        """为给定的图层组计算 gap, padding 和对齐方式。"""
         if not group_layers:
             return
 
@@ -617,6 +677,7 @@ class SketchParser(BaseParser):
         if layout_type == constants.LAYOUT_FLEX:
             if direction == constants.LAYOUT_DIR_COLUMN:
                 group_layers.sort(key=lambda l: l["frame"]["y"])
+                # 计算垂直方向的 gap
                 gaps = [
                     group_layers[i + 1]["frame"]["y"] - (group_layers[i]["frame"]["y"] + group_layers[i]["frame"]["height"])
                     for i in range(len(group_layers) - 1)
@@ -624,13 +685,14 @@ class SketchParser(BaseParser):
                 group_info["gap"] = round(statistics.mean(gaps)) if gaps else 0
             elif direction == constants.LAYOUT_DIR_ROW:
                 group_layers.sort(key=lambda l: l["frame"]["x"])
+                # 计算水平方向的 gap
                 gaps = [
                     group_layers[i + 1]["frame"]["x"] - (group_layers[i]["frame"]["x"] + group_layers[i]["frame"]["width"])
                     for i in range(len(group_layers) - 1)
                 ]
                 group_info["gap"] = round(statistics.mean(gaps)) if gaps else 0
 
-        # Set default values for other properties
+        # 设置其他 flex 属性的默认值
         group_info.setdefault("padding", {"top": 0, "right": 0, "bottom": 0, "left": 0})
         group_info.setdefault("justifyContent", "flex-start")
         group_info.setdefault("alignItems", "flex-start")
@@ -638,7 +700,7 @@ class SketchParser(BaseParser):
 
 
     def _call_llm(self, prompt):
-        """Helper for LLM calls."""
+        """对 LLM 调用的封装。"""
         response = self.llm_service.chat(
             model=config.LLM_MODEL_NAME,
             messages=[
@@ -648,39 +710,48 @@ class SketchParser(BaseParser):
             temperature=0.1,
         )
         text = response.choices[0].message.content.strip()
+        # 从 markdown 代码块中提取 JSON
         if "```json" in text:
             text = text.split("```json")[1].split("```")[0].strip()
         return text
 
     def _resolve_group_conflicts(self, groups: List[Dict[str, Any]], layers: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-        """Resolves conflicts between groups by selecting the one with stronger alignment (lower variance)."""
+        """
+        解决候选组之间的冲突，选择对齐更强（方差更小）或更大的组。
+        这是混合分析策略的核心仲裁者。
+        """
         from statistics import variance
 
         resolved_groups = []
         seen_indices = set()
 
-        for group in sorted(groups, key=lambda g: len(g['children_indices']), reverse=True):  # 优先大组
+        # 按组成员数量降序排序，优先处理更大的组
+        for group in sorted(groups, key=lambda g: len(g['children_indices']), reverse=True):
             indices = set(group['children_indices'])
-            if indices.isdisjoint(seen_indices):  # 无冲突，直接添加
+            
+            # 如果当前组与已选中的组没有冲突，直接添加
+            if indices.isdisjoint(seen_indices):
                 resolved_groups.append(group)
                 seen_indices.update(indices)
             else:
-                # 有冲突，计算对齐强度（方差越小越强）
+                # 如果存在冲突
                 conflicting = indices.intersection(seen_indices)
                 if conflicting:
-                    # 对于 row 组，检查 Y 方差；对于 column，检查 X 方差
+                    # 计算当前组的“对齐强度”（方差越小，对齐越强）
                     if group['direction'] == constants.LAYOUT_DIR_ROW:
                         y_coords = [layers[i]["frame"]["y"] for i in group['children_indices']]
                         strength = variance(y_coords) if len(y_coords) > 1 else float('inf')
-                    else:
+                    else: # COLUMN
                         x_coords = [layers[i]["frame"]["x"] for i in group['children_indices']]
                         strength = variance(x_coords) if len(x_coords) > 1 else float('inf')
                     
-                    # 如果强度（方差）小于阈值（如 25），则覆盖冲突部分
-                    if strength < 25:
-                        # 移除冲突组，从 resolved_groups 中删除
+                    # 如果当前组的对齐强度足够高（方差足够小），则它有权“覆盖”之前的选择
+                    if strength < 25: # 阈值可以调整
+                        # 从已选中的组中，移除所有与当前组有冲突的旧组
                         resolved_groups = [g for g in resolved_groups if not set(g['children_indices']).intersection(conflicting)]
+                        # 添加当前这个更强的组
                         resolved_groups.append(group)
+                        # 更新已处理的索引集合
                         seen_indices = set().union(*(set(g['children_indices']) for g in resolved_groups))
         
         return resolved_groups
