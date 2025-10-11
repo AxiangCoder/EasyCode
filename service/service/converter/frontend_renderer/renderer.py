@@ -149,13 +149,19 @@ class FrontendRenderer:
         # 只有在需要分析定位时才处理 layout 信息
         if analyze_layout:
             layout = node.get("layout") or {}
+            layout_type = layout.get("type")
 
-            if layout.get("type") == "flex":
+            if layout_type == "flex":
                 result["display"] = "flex"
                 if "direction" in layout:
                     result["flexDirection"] = layout["direction"]
-                if "gap" in layout and layout["gap"] > 0:
-                    result["gap"] = f'{layout["gap"]}px'
+            elif layout_type == "grid":
+                result["display"] = "grid"
+                # 未来可在此处添加 grid-template-columns/rows 等属性
+            
+            # 同时为 flex 和 grid 布局处理 gap 属性
+            if "gap" in layout and layout.get("gap", 0) > 0:
+                result["gap"] = f'{layout["gap"]}px'
 
             position = layout.get("position")
             if position:
