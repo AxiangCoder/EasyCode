@@ -372,9 +372,13 @@ class SketchParser(BaseParser):
 
                 if final_analysis and final_analysis.get("layout_groups"):
                     # 使用最终分析结果处理子节点
-                    layout["type"] = constants.LAYOUT_ABSOLUTE
+                    # 容器的布局由策略决定
+                    layout.update(final_analysis.get("container_layout", {"type": constants.LAYOUT_ABSOLUTE}))
+                    
                     children_nodes = self._process_layout_analysis(
-                        final_analysis, child_layers
+                        final_analysis,
+                        all_child_layers=child_layers,
+                        parent_layout=layout
                     )
                 else:  # 所有方法都未能找到任何组
                     logger.info("所有分析方法均未找到任何组，将作为绝对定位处理。")
@@ -390,18 +394,21 @@ class SketchParser(BaseParser):
             layout["position"] = constants.LAYOUT_ABSOLUTE
             layout["top"] = frame.get("y")
             layout["left"] = frame.get("x")
-
         node["layout"] = layout
         node["children"] = children_nodes
         return node
 
-    def _process_layout_analysis(self, layout_analysis, all_child_layers):
+    def _process_layout_analysis(self, layout_analysis, all_child_layers, parent_layout: Dict[str, Any]):
         """
         根据最终的布局分析结果（已解决冲突），创建虚拟组并处理离群点。
         """
         children_nodes = []
         num_children = len(all_child_layers)
         processed_indices = set()
+        parent_layout_type = parent_layout.get("type", constants.LAYOUT_ABSOLUTE)
+
+        # 用于排序的临时列表
+        sortable_children = []
 
         # 为每个最终确定的布局组创建一个虚拟组节点
         for group_info in layout_analysis.get("layout_groups", []):
@@ -426,11 +433,12 @@ class SketchParser(BaseParser):
             max_x = max(l["frame"]["x"] + l["frame"]["width"] for l in group_layers)
             max_y = max(l["frame"]["y"] + l["frame"]["height"] for l in group_layers)
 
-            # 虚拟组本身在父容器中是绝对定位的
             virtual_group_layout = group_info.copy()
-            virtual_group_layout.update(
-                {"position": constants.LAYOUT_ABSOLUTE, "top": min_y, "left": min_x}
-            )
+            # 如果父容器是绝对布局，则虚拟组也绝对定位
+            if parent_layout_type == constants.LAYOUT_ABSOLUTE:
+                virtual_group_layout.update(
+                    {"position": constants.LAYOUT_ABSOLUTE, "top": min_y, "left": min_x}
+                )
 
             # 递归处理虚拟组的子节点，并调整其坐标为相对于虚拟组
             virtual_group_children = []
@@ -454,9 +462,9 @@ class SketchParser(BaseParser):
                 "layout": virtual_group_layout,
                 "children": virtual_group_children,
             }
-            children_nodes.append(virtual_group)
+            sortable_children.append({"node": virtual_group, "x": min_x, "y": min_y})
 
-        # 处理离群点，它们被视为父容器中的绝对定位元素
+        # 处理离群点
         outlier_indices = [
             idx
             for idx in layout_analysis.get("outlier_indices", [])
@@ -465,11 +473,19 @@ class SketchParser(BaseParser):
         for outlier_index in outlier_indices:
             if outlier_index in processed_indices:
                 continue
+            
+            outlier_layer = all_child_layers[outlier_index]
             if child_node := self._traverse_layer(
-                all_child_layers[outlier_index],
-                parent_layout_type=constants.LAYOUT_ABSOLUTE,
+                outlier_layer,
+                parent_layout_type=parent_layout_type,
             ):
-                children_nodes.append(child_node)
+                sortable_children.append({"node": child_node, "x": outlier_layer["frame"]["x"], "y": outlier_layer["frame"]["y"]})
 
+        # 如果父容器是流式布局，则根据其方向对子元素排序
+        if parent_layout_type == constants.LAYOUT_FLEX:
+            sort_key = "y" if parent_layout.get("direction") == constants.LAYOUT_DIR_COLUMN else "x"
+            sortable_children.sort(key=lambda item: item[sort_key])
+
+        children_nodes = [item["node"] for item in sortable_children]
         return children_nodes
 

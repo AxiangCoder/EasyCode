@@ -73,7 +73,44 @@ class HybridExpertArbitrationStrategy(BaseLayoutStrategy):
         all_indices = set(range(len(layers)))
         outlier_indices = sorted(list(all_indices - processed_indices))
 
+        # 6. 分析容器的主布局方向
+        container_direction = constants.LAYOUT_DIR_COLUMN  # 默认为列
+        top_level_items_bounds = []
+
+        # 获取所有组的边界
+        for group in resolved_groups:
+            group_layers = [layers[i] for i in group['children_indices']]
+            if not group_layers:
+                continue
+            min_x = min(l["frame"]["x"] for l in group_layers)
+            min_y = min(l["frame"]["y"] for l in group_layers)
+            max_x = max(l["frame"]["x"] + l["frame"]["width"] for l in group_layers)
+            max_y = max(l["frame"]["y"] + l["frame"]["height"] for l in group_layers)
+            top_level_items_bounds.append({"x": min_x, "y": min_y, "width": max_x - min_x, "height": max_y - min_y})
+
+        # 获取所有离群点的边界
+        for index in outlier_indices:
+            top_level_items_bounds.append(layers[index]["frame"])
+
+        if len(top_level_items_bounds) > 1:
+            centers_x = [b['x'] + b['width'] / 2 for b in top_level_items_bounds]
+            centers_y = [b['y'] + b['height'] / 2 for b in top_level_items_bounds]
+            try:
+                variance_x = variance(centers_x)
+                variance_y = variance(centers_y)
+                if variance_x > variance_y:
+                    container_direction = constants.LAYOUT_DIR_ROW
+            except statistics.StatisticsError:
+                # 如果只有一个元素或方差无法计算，则保持默认值
+                pass
+        
+        container_layout = {
+            "type": constants.LAYOUT_FLEX,
+            "direction": container_direction
+        }
+
         final_analysis = {
+            "container_layout": container_layout,
             "layout_groups": resolved_groups,
             "outlier_indices": outlier_indices
         }
