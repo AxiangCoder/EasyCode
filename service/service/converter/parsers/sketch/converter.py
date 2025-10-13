@@ -355,45 +355,54 @@ class SketchParser(BaseParser):
         # 步骤 3: 处理布局和子节点 (核心逻辑)
         layout = {}
         children_nodes = []
-        is_root_page = node.get("type") == constants.NODE_PAGE and parent_layout_type == constants.LAYOUT_ABSOLUTE
         
         if layer.get("layers") and len(layer.get("layers")) > 0:
             child_layers = layer["layers"]
-            if is_root_page:
-                # 如果是根页面，其子节点（画板）通常是绝对定位的
+            
+            # --- 调用布局策略进行分析 ---
+            final_analysis = self.layout_strategy.analyze(child_layers)
+
+            if final_analysis and final_analysis.get("layout_groups"):
+                # 使用最终分析结果处理子节点
+                # 容器的布局由策略决定
+                layout.update(final_analysis.get("container_layout", {"type": constants.LAYOUT_ABSOLUTE}))
+                
+                children_nodes = self._process_layout_analysis(
+                    final_analysis,
+                    all_child_layers=child_layers,
+                    parent_layout=layout
+                )
+            else:  # 所有方法都未能找到任何组
+                logger.info("所有分析方法均未找到任何组，将作为绝对定位处理。")
+                layout["type"] = constants.LAYOUT_ABSOLUTE
                 for child in child_layers:
                     if child_node := self._traverse_layer(
                         child, parent_layout_type=constants.LAYOUT_ABSOLUTE
                     ):
                         children_nodes.append(child_node)
-            else:
-                # --- 调用布局策略进行分析 ---
-                final_analysis = self.layout_strategy.analyze(child_layers)
-
-                if final_analysis and final_analysis.get("layout_groups"):
-                    # 使用最终分析结果处理子节点
-                    # 容器的布局由策略决定
-                    layout.update(final_analysis.get("container_layout", {"type": constants.LAYOUT_ABSOLUTE}))
-                    
-                    children_nodes = self._process_layout_analysis(
-                        final_analysis,
-                        all_child_layers=child_layers,
-                        parent_layout=layout
-                    )
-                else:  # 所有方法都未能找到任何组
-                    logger.info("所有分析方法均未找到任何组，将作为绝对定位处理。")
-                    layout["type"] = constants.LAYOUT_ABSOLUTE
-                    for child in child_layers:
-                        if child_node := self._traverse_layer(
-                            child, parent_layout_type=constants.LAYOUT_ABSOLUTE
-                        ):
-                            children_nodes.append(child_node)
                             
-        # 如果父容器是绝对布局，则当前节点也需要绝对定位的坐标
-        if parent_layout_type == constants.LAYOUT_ABSOLUTE and not is_root_page:
-            layout["position"] = constants.LAYOUT_ABSOLUTE
-            layout["top"] = frame.get("y")
-            layout["left"] = frame.get("x")
+        # 智能选择定位方式：根据布局类型和父容器类型决定
+        layout_type = layout.get("type", constants.LAYOUT_ABSOLUTE)
+        
+        # 对于页面级组件（PAGE 和 ARTBOARD），优先使用布局分析的结果
+        if layer_class in [constants.LAYER_PAGE, constants.LAYER_ARTBOARD]:
+            # 页面级组件根据布局类型智能选择定位方式
+            if layout_type == constants.LAYOUT_FLEX:
+                layout["position"] = "relative"  # flex 布局使用相对定位
+            elif layout_type == constants.LAYOUT_GRID:
+                layout["position"] = "relative"  # grid 布局使用相对定位
+            else:
+                # 绝对布局或未识别时，使用绝对定位
+                layout["position"] = constants.LAYOUT_ABSOLUTE
+                layout["top"] = frame.get("y")
+                layout["left"] = frame.get("x")
+        else:
+            # 非页面级组件，如果父容器是绝对布局，则当前节点也需要绝对定位的坐标
+            if parent_layout_type == constants.LAYOUT_ABSOLUTE:
+                layout["position"] = constants.LAYOUT_ABSOLUTE
+                layout["top"] = frame.get("y")
+                layout["left"] = frame.get("x")
+        
         node["layout"] = layout
         node["children"] = children_nodes
         return node

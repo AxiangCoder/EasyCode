@@ -158,8 +158,8 @@ conversion_out/{task_id}/
 │   │   │   ├── ListPage.tsx
 │   │   │   ├── LoginPage.tsx
 │   │   │   └── Page.tsx
-│   │   ├── App.tsx         # 应用入口
-│   │   ├── router.tsx      # 路由配置
+│   │   ├── App.tsx         # 应用入口，渲染路由出口 <Outlet />
+│   │   ├── router.tsx      # 动态生成的路由配置文件
 │   │   ├── main.tsx        # 应用启动
 │   │   ├── index.css       # 样式文件
 │   │   └── assets/         # 静态资源
@@ -193,9 +193,23 @@ const ListPage: FC = () => (
 export default ListPage
 ```
 
-#### 4.2 路由配置示例
+#### 4.2 路由生成详解
 
-自动生成的路由配置支持多页面导航：
+系统能够根据 DSL 自动生成一个完整的前端路由配置 (`src/router.tsx`)，该过程由 `FrontendRenderer` 类负责，具体逻辑如下：
+
+1.  **页面识别**：渲染器会遍历 DSL 根节点的直接子元素，并将每一个子元素（通常对应 Sketch 中的一个画板）识别为一个独立的页面。
+2.  **组件与路径命名**：
+    -   每个页面的 `name` 属性（如图层名 "Login"）会被转换为大驼峰格式的 React 组件名（如 `LoginPage`）。
+    -   该组件名同时被用作路由的路径（如 `/LoginPage`）。
+3.  **路由配置生成**：
+    -   自动为每个页面组件生成一个路由对象，包含 `path` 和 `element` 属性。
+    -   自动导入所有页面组件。
+    -   自动配置一个根路径 (`/`) 重定向，指向识别到的第一个页面的路由，确保应用启动后能正确显示默认页面。
+4.  **应用入口集成**：生成的 `App.tsx` 文件会包含 `react-router-dom` 的 `<Outlet />` 组件，作为所有页面路由的渲染出口。
+
+##### 路由配置示例
+
+以下是一个根据包含 `ListPage` 和 `LoginPage` 两个画板的 DSL 生成的 `router.tsx` 文件示例：
 
 ```tsx
 import { createBrowserRouter, Navigate } from 'react-router-dom'
@@ -307,8 +321,8 @@ export const router = createBrowserRouter([
 
 #### 6.2 文件生成
 - **页面组件**：为每个 DSL 页面生成 React 组件
-- **路由配置**：生成 React Router 配置
-- **应用入口**：生成应用启动文件
+- **路由配置**：根据 DSL 中的顶层节点（画板）动态生成 `router.tsx`，包含所有页面的路由规则和默认重定向。
+- **应用入口**：生成集成了路由出口 (`<Outlet />`) 的 `App.tsx`。
 
 #### 6.3 生成文件的特点
 
@@ -354,6 +368,8 @@ export const router = createBrowserRouter([
 - **功能**：与 `ConversionTask` 一对一关联，存储转换产物
 
 ### 2. API 端点 (`views.py`)
+
+应用的后端路由通过 Django Rest Framework 的 `DefaultRouter` 进行管理，自动为各个 `ViewSet` 生成标准的 RESTful API 端点。这些端点是驱动整个设计到代码转换流程（包括前端路由生成）的入口。
 
 #### 2.1 转换任务管理
 - **`POST /api/v1/converter/tasks/`**: 创建转换任务
