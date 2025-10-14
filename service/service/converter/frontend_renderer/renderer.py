@@ -124,9 +124,8 @@ class FrontendRenderer:
         if group_identifier:
             props.append(f'data-group-identifier="{self._escape_jsx(group_identifier)}"')
 
-        # 页面级组件不分析定位信息
-        analyze_layout = not is_root
-        style_dict = self._convert_styles(node, analyze_layout=analyze_layout)
+        # 页面级组件也需要分析布局信息，以支持 Flex/Grid 布局 (修复 SKETCH-25)
+        style_dict = self._convert_styles(node)
         
         # 为根元素添加宽高 100% 样式
         if is_root:
@@ -140,35 +139,38 @@ class FrontendRenderer:
             return f"{ind}<{tag} {' '.join(props)}>\n{children_str}\n{ind}</{tag}>"
         return f"{ind}<{tag} {' '.join(props)} />" if props else f"{ind}<{tag} />"
 
-    def _convert_styles(self, node: dict, analyze_layout: bool = True) -> dict:
+    def _convert_styles(self, node: dict) -> dict:
         style = node.get("style") or {}
         result: dict[str, str | int | float] = {}
         for key, value in style.items():
             result[self._to_camel_case(key)] = value
         
-        # 只有在需要分析定位时才处理 layout 信息
-        if analyze_layout:
-            layout = node.get("layout") or {}
-            layout_type = layout.get("type")
+        # 总是处理 layout 信息 (修复 SKETCH-25)
+        layout = node.get("layout") or {}
+        layout_type = layout.get("type")
 
-            if layout_type == "flex":
-                result["display"] = "flex"
-                if "direction" in layout:
-                    result["flexDirection"] = layout["direction"]
-            elif layout_type == "grid":
-                result["display"] = "grid"
-                # 未来可在此处添加 grid-template-columns/rows 等属性
-            
-            # 同时为 flex 和 grid 布局处理 gap 属性
-            if "gap" in layout and layout.get("gap", 0) > 0:
-                result["gap"] = f'{layout["gap"]}px'
+        if layout_type == "flex":
+            result["display"] = "flex"
+            if "direction" in layout:
+                result["flexDirection"] = layout["direction"]
+            if "justifyContent" in layout:
+                result["justifyContent"] = layout["justifyContent"]
+            if "alignItems" in layout:
+                result["alignItems"] = layout["alignItems"]
+        elif layout_type == "grid":
+            result["display"] = "grid"
+            # 未来可在此处添加 grid-template-columns/rows 等属性
+        
+        # 同时为 flex 和 grid 布局处理 gap 属性
+        if "gap" in layout and layout.get("gap", 0) > 0:
+            result["gap"] = f'{layout["gap"]}px'
 
-            position = layout.get("position")
-            if position:
-                result["position"] = position
-            for key in ("top", "left", "right", "bottom"):
-                if key in layout:
-                    result[key] = layout[key]
+        position = layout.get("position")
+        if position:
+            result["position"] = position
+        for key in ("top", "left", "right", "bottom"):
+            if key in layout:
+                result[key] = layout[key]
         
         return result
 

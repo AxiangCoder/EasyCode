@@ -113,6 +113,20 @@ class SketchParser(BaseParser):
         dsl_output = self._traverse_layer(target_layer)
         logger.info("转换过程完成。")
 
+        # 步骤 4: 后处理 - 修正页面级组件的定位 (修复 SKETCH-26)
+        # 根据业务规则，作为独立页面的顶层画板(Artboard)不应使用绝对定位。
+        # 此处遍历 DSL 根节点的直接子节点（即页面级组件），并移除任何可能被错误添加的绝对定位。
+        if dsl_output and dsl_output.get("children"):
+            for page_component_node in dsl_output["children"]:
+                layout = page_component_node.get("layout", {})
+                if layout.get("position") == constants.LAYOUT_ABSOLUTE:
+                    logger.debug(f"为页面组件 '{page_component_node.get('name')}' 移除绝对定位。")
+                    del layout["position"]
+                    if "top" in layout:
+                        del layout["top"]
+                    if "left" in layout:
+                        del layout["left"]
+
         # 如果使用了 LLM，记录其 token 使用量
         if self.llm_service:
             self.llm_usage = self.llm_service.usage
@@ -358,28 +372,42 @@ class SketchParser(BaseParser):
         
         if layer.get("layers") and len(layer.get("layers")) > 0:
             child_layers = layer["layers"]
-            
-            # --- 调用布局策略进行分析 ---
-            final_analysis = self.layout_strategy.analyze(child_layers)
 
-            if final_analysis and final_analysis.get("layout_groups"):
-                # 使用最终分析结果处理子节点
-                # 容器的布局由策略决定
-                layout.update(final_analysis.get("container_layout", {"type": constants.LAYOUT_ABSOLUTE}))
+            # 如果是顶层页面节点，其子节点（画板）不应被包裹在虚拟组中
+            if layer_class == constants.LAYER_PAGE:
+                # 分析其子节点（画板）的整体布局
+                final_analysis = self.layout_strategy.analyze(child_layers)
+                # 将容器布局应用到页面节点自身
+                layout.update(final_analysis.get("container_layout", {}))
                 
-                children_nodes = self._process_layout_analysis(
-                    final_analysis,
-                    all_child_layers=child_layers,
-                    parent_layout=layout
-                )
-            else:  # 所有方法都未能找到任何组
-                logger.info("所有分析方法均未找到任何组，将作为绝对定位处理。")
-                layout["type"] = constants.LAYOUT_ABSOLUTE
+                # 直接递归遍历子节点（画板），不创建虚拟组
                 for child in child_layers:
                     if child_node := self._traverse_layer(
-                        child, parent_layout_type=constants.LAYOUT_ABSOLUTE
+                        child, parent_layout_type=layout.get("type")
                     ):
                         children_nodes.append(child_node)
+            else:
+                # 对于所有其他节点，使用标准布局分析（可能会创建虚拟组）
+                final_analysis = self.layout_strategy.analyze(child_layers)
+
+                if final_analysis and (final_analysis.get("layout_groups") or final_analysis.get("outlier_indices")):
+                    # 使用最终分析结果处理子节点
+                    # 容器的布局由策略决定
+                    layout.update(final_analysis.get("container_layout", {"type": constants.LAYOUT_ABSOLUTE}))
+                    
+                    children_nodes = self._process_layout_analysis(
+                        final_analysis,
+                        all_child_layers=child_layers,
+                        parent_layout=layout
+                    )
+                else:  # 所有方法都未能找到任何组
+                    logger.info("所有分析方法均未找到任何组，将作为绝对定位处理。")
+                    layout["type"] = constants.LAYOUT_ABSOLUTE
+                    for child in child_layers:
+                        if child_node := self._traverse_layer(
+                            child, parent_layout_type=constants.LAYOUT_ABSOLUTE
+                        ):
+                            children_nodes.append(child_node)
                             
         # 智能选择定位方式：根据布局类型和父容器类型决定
         layout_type = layout.get("type", constants.LAYOUT_ABSOLUTE)
