@@ -41,7 +41,3 @@ Step 4: Validate and optimize: If outliers are few (<=2), incorporate them as ab
 **TASK:**
 Analyze the following layer data and provide the corresponding raw JSON output.
 
-Input Layers:
-```json
-{simplified_layers_json}
-```

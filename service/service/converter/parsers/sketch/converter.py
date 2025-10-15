@@ -10,6 +10,7 @@ from typing import List, Dict, Any
 from . import config, constants, utils
 from ..base import BaseParser
 from ...service.llm_service import LLMClient
+from ...layout_strategies.llm_only_strategy import LLMOnlyStrategy
 
 # 设置日志记录
 logger = logging.getLogger(__name__)
@@ -49,8 +50,7 @@ class SketchParser(BaseParser):
             self.llm_service = None
 
         # 初始化布局策略
-        from ...layout_strategies.hybrid_expert_arbitration_strategy import HybridExpertArbitrationStrategy
-        self.layout_strategy = HybridExpertArbitrationStrategy(self.llm_service)
+        self.layout_strategy = LLMOnlyStrategy(self.llm_service)
 
     @staticmethod
     def count_nodes(source_data: dict, mode: str = "all") -> int:
@@ -307,6 +307,11 @@ class SketchParser(BaseParser):
         layer_class = layer.get("_class")
         frame = layer.get("frame", {})
         node = {}
+        # 新增日志：打印正在分析的节点信息
+        if layer:
+            node_id = layer.get("do_objectID", "Unknown")
+            node_name = layer.get("name", "Unnamed")
+            logger.info(f"Analyzing layout for node: ID={node_id}, Name={node_name}")
 
         # 步骤 1: 确定节点类型和内容
         if layer_class == constants.LAYER_SYMBOL_INSTANCE:

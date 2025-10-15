@@ -45,10 +45,10 @@ def validate_groups_geometry(groups: List[Dict[str, Any]], layers: List[Dict[str
                     is_geometrically_valid = False
                     logger.warning(f"一个 ROW 组因 Y 坐标方差过大而被拒绝。索引: {group_indices}")
             elif direction == constants.LAYOUT_DIR_COLUMN:
-                x_coords = [l["frame"]["x"] for l in group_layers]
-                if statistics.stdev(x_coords) >= config.LAYOUT_X_THRESHOLD:
+                y_coords = [l["frame"]["y"] for l in group_layers]
+                if statistics.stdev(y_coords) >= config.LAYOUT_Y_THRESHOLD:
                     is_geometrically_valid = False
-                    logger.warning(f"一个 COLUMN 组因 X 坐标方差过大而被拒绝。索引: {group_indices}")
+                    logger.warning(f"一个 COLUMN 组因 Y 坐标方差过大而被拒绝。索引: {group_indices}")
         except statistics.StatisticsError:
             is_geometrically_valid = False
             logger.warning(f"计算建议组的标准差时出错，已拒绝。索引: {group_indices}")
@@ -131,12 +131,28 @@ def analyze_with_llm(layers: List[Dict[str, Any]], llm_service: Any):
         for l in layers
     ]
 
+    # 新增：计算父容器 bounds
+    if layers:
+        parent_min_x = min(l["frame"]["x"] for l in layers)
+        parent_min_y = min(l["frame"]["y"] for l in layers)
+        parent_max_x = max(l["frame"]["x"] + l["frame"]["width"] for l in layers)
+        parent_max_y = max(l["frame"]["y"] + l["frame"]["height"] for l in layers)
+        parent_bounds = {
+            "width": parent_max_x - parent_min_x,
+            "height": parent_max_y - parent_min_y
+        }
+        parent_info = f"Parent container bounds: {json.dumps(parent_bounds)}\n"
+    else:
+        parent_info = ""
+
     prompt_template = _load_prompt("layout_grouping_prompt")
     if not prompt_template:
         return None
 
     simplified_layers_json = json.dumps(simplified_layers, indent=2)
-    prompt = f"{prompt_template}\nInput Layers:\n```json\n{simplified_layers_json}\n```"
+    prompt = f"{prompt_template}\n{parent_info}Input Layers:\n```json\n{simplified_layers_json}\n```"
+
+    logger.info(f"Prompt: {prompt}")
 
     try:
         response = _call_llm(prompt, llm_service)

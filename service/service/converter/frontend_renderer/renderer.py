@@ -141,12 +141,12 @@ class FrontendRenderer:
 
     def _convert_styles(self, node: dict) -> dict:
         style = node.get("style") or {}
+        layout = node.get("layout") or {}
         result: dict[str, str | int | float] = {}
         for key, value in style.items():
             result[self._to_camel_case(key)] = value
         
         # 总是处理 layout 信息 (修复 SKETCH-25)
-        layout = node.get("layout") or {}
         layout_type = layout.get("type")
 
         if layout_type == "flex":
@@ -162,8 +162,9 @@ class FrontendRenderer:
             # 未来可在此处添加 grid-template-columns/rows 等属性
         
         # 同时为 flex 和 grid 布局处理 gap 属性
-        if "gap" in layout and layout.get("gap", 0) > 0:
-            result["gap"] = f'{layout["gap"]}px'
+        gap = layout.get("gap")
+        if gap is not None and gap > 0:
+            result["gap"] = f'{gap}px'
 
         position = layout.get("position")
         if position:
