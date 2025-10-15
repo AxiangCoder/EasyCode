@@ -381,7 +381,7 @@ class SketchParser(BaseParser):
             # 如果是顶层页面节点，其子节点（画板）不应被包裹在虚拟组中
             if layer_class == constants.LAYER_PAGE:
                 # 分析其子节点（画板）的整体布局
-                final_analysis = self.layout_strategy.analyze(child_layers)
+                final_analysis = self.layout_strategy.analyze(layer)
                 # 将容器布局应用到页面节点自身
                 layout.update(final_analysis.get("container_layout", {}))
                 
@@ -393,7 +393,7 @@ class SketchParser(BaseParser):
                         children_nodes.append(child_node)
             else:
                 # 对于所有其他节点，使用标准布局分析（可能会创建虚拟组）
-                final_analysis = self.layout_strategy.analyze(child_layers)
+                final_analysis = self.layout_strategy.analyze(layer)
 
                 if final_analysis and (final_analysis.get("layout_groups") or final_analysis.get("outlier_indices")):
                     # 使用最终分析结果处理子节点
@@ -402,13 +402,13 @@ class SketchParser(BaseParser):
                     
                     children_nodes = self._process_layout_analysis(
                         final_analysis,
-                        all_child_layers=child_layers,
+                        all_child_layers=layer["layers"],  # 用 layer["layers"]
                         parent_layout=layout
                     )
                 else:  # 所有方法都未能找到任何组
                     logger.info("所有分析方法均未找到任何组，将作为绝对定位处理。")
                     layout["type"] = constants.LAYOUT_ABSOLUTE
-                    for child in child_layers:
+                    for child in layer["layers"]:
                         if child_node := self._traverse_layer(
                             child, parent_layout_type=constants.LAYOUT_ABSOLUTE
                         ):

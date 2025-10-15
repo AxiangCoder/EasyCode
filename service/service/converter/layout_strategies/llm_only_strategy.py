@@ -17,23 +17,41 @@ class LLMOnlyStrategy(BaseLayoutStrategy):
     def __init__(self, llm_service: Any):
         self.llm_service = llm_service
 
-    def analyze(self, layers: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def analyze(self, parent_layer: Dict[str, Any]) -> Dict[str, Any]:
         """
         使用 LLM 进行完整布局分析。
         """
+        layers = parent_layer.get("layers", [])
+
         if not layers:
             return {"container_layout": {}, "layout_groups": [], "outlier_indices": list(range(len(layers)))}
 
-        # 计算父容器 bounds
-        parent_min_x = min(l["frame"]["x"] for l in layers)
-        parent_min_y = min(l["frame"]["y"] for l in layers)
-        parent_max_x = max(l["frame"]["x"] + l["frame"]["width"] for l in layers)
-        parent_max_y = max(l["frame"]["y"] + l["frame"]["height"] for l in layers)
-        parent_bounds = {
-            "x": parent_min_x, "y": parent_min_y,
-            "width": parent_max_x - parent_min_x,
-            "height": parent_max_y - parent_min_y
-        }
+        # 从 parent_layer 提取 bounds 和其他 info
+        logger.info(f"Parent layer frame: {parent_layer['frame']}")
+        if "frame" in parent_layer:
+            frame = parent_layer["frame"]
+            parent_bounds = {
+                "x": frame.get("x", 0),
+                "y": frame.get("y", 0),
+                "width": frame.get("width", 0),
+                "height": frame.get("height", 0)
+            }
+            parent_name = parent_layer.get("name", "Unnamed")
+        else:
+            # Fallback 计算
+            if layers:
+                parent_min_x = min(l["frame"].get("x", 0) for l in layers)
+                parent_min_y = min(l["frame"].get("y", 0) for l in layers)
+                parent_max_x = max(l["frame"].get("x", 0) + l["frame"].get("width", 0) for l in layers)
+                parent_max_y = max(l["frame"].get("y", 0) + l["frame"].get("height", 0) for l in layers)
+                parent_bounds = {
+                    "x": 0, "y": 0,
+                    "width": max(parent_max_x - parent_min_x, 0),
+                    "height": max(parent_max_y - parent_min_y, 0)
+                }
+            else:
+                parent_bounds = {"x": 0, "y": 0, "width": 0, "height": 0}
+            parent_name = "Virtual Group"
 
         # 简化 layers
         simplified_layers = [
@@ -47,8 +65,10 @@ class LLMOnlyStrategy(BaseLayoutStrategy):
             return {"container_layout": {}, "layout_groups": [], "outlier_indices": list(range(len(layers)))}
 
         simplified_layers_json = json.dumps(simplified_layers, indent=2)
-        parent_info = f"Parent container bounds: {json.dumps(parent_bounds)}\n"
+        parent_info = f"Parent container name: {parent_name}\nParent container bounds: {json.dumps(parent_bounds)}\n"
         prompt = f"{prompt_template}\n{parent_info}Input Layers:\n```json\n{simplified_layers_json}\n```"
+
+        logger.info(f"Prompt: {prompt}")
 
         try:
             response = _call_llm(prompt, self.llm_service)
